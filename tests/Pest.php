@@ -1,5 +1,7 @@
 <?php
 
+use Mcamara\LaravelLocalization\LaravelLocalization;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -41,7 +43,16 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function refreshApplicationWithLocale(string $locale): void
 {
-    // ..
+    /** @var \Tests\TestCase $test */
+    $test = test();
+
+    $test->tearDown();
+    putenv(LaravelLocalization::ENV_ROUTE_KEY.'='.$locale);
+    $test->setUp();
 }
+
+pest()->afterEach(function (): void {
+    putenv(LaravelLocalization::ENV_ROUTE_KEY);
+});

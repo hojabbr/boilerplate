@@ -27,7 +27,6 @@ Use `search-docs` for detailed Pennant patterns and documentation.
 <!-- Defining Features -->
 ```php
 use Laravel\Pennant\Feature;
-```
 
 Feature::define('new-dashboard', function (User $user) {
     return $user->isAdmin();

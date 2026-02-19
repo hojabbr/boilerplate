@@ -9,7 +9,13 @@
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
-        "types": "tsc --noEmit"
+        "types": "tsc --noEmit",
+        "prepare": "husky"
+    },
+    "lint-staged": {
+        "*.{ts,tsx,js,jsx}": ["eslint --fix", "prettier --write", "npx -y react-doctor@latest . --verbose"],
+        "*.{json,md,css}": ["prettier --write"],
+        "*.php": ["vendor/bin/pint", "./vendor/bin/phpstan analyse"]
     },
     "devDependencies": {
         "@commitlint/cli": "^20.4.2",
@@ -35,6 +41,7 @@
         "eslint-plugin-react-hooks": "^7.0.1",
         "globals": "^17.3.0",
         "husky": "^9.1.7",
+        "lint-staged": "^15.4.3",
         "laravel-echo": "^2.3.0",
         "playwright": "^1.58.2",
         "prettier": "^3.8.1",

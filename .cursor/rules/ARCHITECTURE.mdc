@@ -62,18 +62,16 @@ app/
 
 ### 🔁 Routing & Middleware
 
-Use **mcamara/laravel‑localization** to prefix all routes with locale identifiers:
+Use **mcamara/laravel‑localization** to prefix all routes with locale identifiers.
 
-Route::group(
-[‘prefix’ => LaravelLocalization::setLocale(),
-‘middleware’ => [‘localize’,‘localeSessionRedirect’,‘localizationRedirect’]],
-function () {
-Route::inertia(’/’, ‘Home’)->name(‘home’);
-}
-);
+**bootstrap/app.php:** Register middleware aliases: `localize` (LaravelLocalizationRoutes), `localizationRedirect` (LaravelLocalizationRedirectFilter), `localeSessionRedirect` (LocaleSessionRedirect), `localeCookieRedirect` (LocaleCookieRedirect), `localeViewPath` (LaravelLocalizationViewPath), `setLocalizedFortifyRedirects` (SetLocalizedFortifyRedirects). Prepend `LocaleSessionRedirect` to the web stack so `/` redirects to the preferred locale.
+
+**routes/web.php:** Use a route group with `prefix => LaravelLocalization::setLocale()` and middleware `localeSessionRedirect`, `localizationRedirect`, `localeViewPath`, `setLocalizedFortifyRedirects`. The package sets app locale (and translator/regional) when the prefix is evaluated per request. Call `Fortify::ignoreRoutes()` in FortifyServiceProvider::register(), then require Fortify routes inside the locale group so auth is under `/{locale}/login`, etc. SetLocalizedFortifyRedirects sets Fortify redirect config from `app()->getLocale()` so login/logout stay in the current locale.
+
+**config/laravellocalization urlsIgnored:** Only `/skipped` and `/admin`, `/admin/*`. Do not ignore login/register so they stay under the locale prefix.
 
 - Language is detected from URL, session, or browser headers.
-- **middleware layers** ensure locale persistence and correct redirection.  [oai_citation:0‡LEXO Informatik, Webdesign & Accounting](https://www.lexo.ch/blog/2025/09/master-laravel-localization-in-laravel-12/?utm_source=chatgpt.com)
+- **middleware layers** ensure locale persistence and correct redirection.
 
 ### 📚 Multi‑Locale Content
 
@@ -118,6 +116,17 @@ MEILISEARCH_KEY=masterKey
 - Use **Laravel Fortify** for credentials, MFA, and session handling.  
 - Shared auth props provided to Inertia every request.  
 - Define **Policies** per resource to enforce business rules.
+
+---
+
+## 🚩 **5a. Feature Flags — Laravel Pennant**
+
+Use **Laravel Pennant** for all feature flagging: gradual rollouts, A/B tests, and conditional features.
+
+- **Define features** in `app/Features/` (or Pennant’s default location). Use the `Feature` facade and the `@feature` Blade directive (or server-side checks) to gate UI and behavior.
+- **Current usage:** Gate registration, two-factor auth, or other Fortify/application features so they can be toggled per environment or audience.
+- **Future features:** Any new optional or experimental feature (e.g. new dashboards, beta APIs, UI variants) should be controlled via Pennant. Keep feature definitions in one place and document them in the project README or ARCHITECTURE.
+- **Testing:** Use Pennant’s in-memory driver or `Feature::activate()` / `Feature::deactivate()` in tests to assert both on/off states.
 
 ---
 
@@ -238,7 +247,7 @@ Shadcn UI drastically accelerates UI scaffolding of consistent design components
 
 Use **i18next** + **i18next‑browser‑languagedetector** with React:
 
-- Define supported languages (`en`, `it`, `de`, `es`, `fr`, `ru`, `zh`, `fa`, `ar`)
+- Define supported languages (`en`, `it`, `de`, `es`, `fr`, `ru`, `zh`, `fa`, `ar`, `jp`, `kr`)
 - Use lazy loading of translation namespaces per page/feature to optimize bundle size and avoid loading all languages at once. ([turn0search12])
 - Sync backend locale with i18next on Inertia SSR props so both ends share current locale context.
 
@@ -274,6 +283,28 @@ Pass backend locale to frontend via Inertia shared props:
 Inertia::share('locale', app()->getLocale());
 
 Use this to pre‑set i18next and adjust UI direction (ltr / rtl) dynamically; e.g., document.documentElement.setAttribute('dir', 'rtl') for Arabic.
+
+---
+
+🎨 Theme (light / dark / system)
+
+Always use **light / dark / system** appearance for the frontend and all UI:
+
+- Use a single source of truth (e.g. `useAppearance` hook) that supports `light`, `dark`, and `system`. Persist choice in localStorage and a cookie so SSR can align.
+- Apply theme to the document root: toggle a `dark` class on `<html>` and set `color-scheme` so Shadcn/Tailwind dark variants and system UI (scrollbars, etc.) match.
+- All layouts and components should rely on this theme (no ad‑hoc dark mode toggles). Prefer Tailwind `dark:` utilities and Shadcn theme-aware components.
+- If using Sonner/Toaster, feed its `theme` prop from the same source (e.g. `useAppearance().resolvedAppearance`) so there is a single source of truth; avoid mixing next-themes and a custom appearance hook.
+
+---
+
+↔️ RTL and direction‑aware UI
+
+Support RTL (e.g. `ar`, `fa`) consistently:
+
+- Set `document.documentElement.setAttribute('dir', …)` from the active locale (e.g. in Inertia setup). Use a small set of RTL locales (e.g. `ar`, `fa`) and default to `ltr` otherwise.
+- **Icons and arrows:** Use direction-aware icons (e.g. chevrons that flip in RTL, or separate “next”/“previous” semantics) so navigation and flows make sense in both directions.
+- **Spacing:** Prefer logical properties: use Tailwind `ps-*`/`pe-*` or `start`/`end` (e.g. `ms-2` → `ms-2` for “margin after content in reading direction”) so padding and margins respect RTL/LTR. Avoid hard-coded `ml`/`mr` for directional meaning.
+- **Refactor:** After adding these rules, refactor existing layouts, nav, and forms to use RTL-friendly spacing and icons so behavior is consistent in all locales.
 
 ---
 
@@ -377,8 +408,9 @@ test('localized homepage loads', function () {
 
 Concern	Solution
 UI Library	Shadcn + Radix + Tailwind
+Theme	Light / dark / system via useAppearance; document root class + color-scheme
 Locales	i18next + Inertia shared props
-RTL	Dynamic dir + Tailwind
+RTL	Dynamic dir; direction-aware icons and logical spacing (start/end, ps/pe)
 Global State	Zustand
 SEO/SSR	Inertia SSR + Inertia Head metadata
 Performance	Prefetch + lazy load

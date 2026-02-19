@@ -1,0 +1,9 @@
+{
+    "app": {
+        "name": "Laravel"
+    },
+    "common": {
+        "save": "Guardar",
+        "cancel": "Cancelar"
+    }
+}
