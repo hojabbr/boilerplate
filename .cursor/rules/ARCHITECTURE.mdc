@@ -1,0 +1,618 @@
+---
+alwaysApply: true
+name: enterprise‑rilt‑stack‑part‑1
+description: "Part 1 of the architecture definition for a fully localized Laravel 12 + Inertia 2.3.7 + React 19.2.0 application with Scout/Meilisearch, mcamara/localization, SOLID/CLEAN/DRY design, Filament admin, SSR/SEO optimization, and backend conventions. Optimized for AI reasoning and code generation."
+license: MIT
+metadata:
+  author: your‑team
+---
+
+# 🧠 Architecture — Part 1: Backend Core (Laravel 12)
+
+## 🚀 **1. Core Architectural Vision**
+
+This backend architecture is designed for:
+
+- **Scalable, maintainable domains** with clear separation of concerns
+- **SOLID / CLEAN / DRY** principles enforced through structure
+- **Inertia SSR** delivering SEO‑ready server renders
+- **Localization** with route prefixes and internal content translation
+- **Search** via **Laravel Scout + Meilisearch** for real‑time search features
+- **Admin UI** via Filament
+- **Real‑time** updates via broadcast
+
+This structure enables multiple teams to work in parallel while minimizing coupling and maximizing reuse.
+
+---
+
+## 📁 **2. Backend Folder & Domain Structure**
+
+app/
+├── Actions/                    # Business logic operations (use cases)
+├── Data/DTOs/                  # Typed data transfer objects
+├── Http/
+│   ├── Controllers/
+│   │   ├── Auth/              # Authentication & Fortify overrides
+│   │   ├── Web/               # Inertia controllers
+│   │   └── Api/               # API controllers (if needed)
+│   ├── Middleware/            # Locale detection, auth, role guards
+│   └── Requests/              # FormRequests (validation)
+├── Jobs/                      # Queued jobs (e.g., indexing, emails)
+├── Models/                    # Eloquent models + relations
+├── Policies/                  # Authorization policies
+├── Notifications/             # Notification definitions
+├── Providers/                 # Service providers (bindings, schedules)
+├── Queries/                   # Spatie Query Builder query objects
+├── Search/                    # Scout/Meilisearch indexing configuration
+├── Services/                  # Shared domain services (SearchSync, Pricing)
+└── Rules/                     # Custom validation rules
+
+### 📌 Domain Concepts
+
+- **Controllers** act as adapters translating HTTP → Actions.  
+- **Actions** encapsulate single business flows, improving testability.  
+- **DTOs** unify inputs/outputs between controllers and services.  
+- **Policies** secure resource access.  
+- **Queries** centralize query logic (filtering, sorting, relations).  
+- **Services** manage cross‑cutting concerns (search syncing, jobs, reports).
+
+---
+
+## 🌍 **3. Localization (Global Backend Strategy)**
+
+### 🔁 Routing & Middleware
+
+Use **mcamara/laravel‑localization** to prefix all routes with locale identifiers:
+
+Route::group(
+[‘prefix’ => LaravelLocalization::setLocale(),
+‘middleware’ => [‘localize’,‘localeSessionRedirect’,‘localizationRedirect’]],
+function () {
+Route::inertia(’/’, ‘Home’)->name(‘home’);
+}
+);
+
+- Language is detected from URL, session, or browser headers.
+- **middleware layers** ensure locale persistence and correct redirection.  [oai_citation:0‡LEXO Informatik, Webdesign & Accounting](https://www.lexo.ch/blog/2025/09/master-laravel-localization-in-laravel-12/?utm_source=chatgpt.com)
+
+### 📚 Multi‑Locale Content
+
+- Leverage Laravel’s translation system for static strings (JSON or PHP).  
+- For dynamic content (titles/descriptions stored in DB), use JSON columns or translation tables (row‑per‑language pattern).  [oai_citation:1‡Reddit](https://www.reddit.com/r/laravel/comments/1j3613p?utm_source=chatgpt.com)
+
+### 🪝 Best Practices
+
+- Use PHP arrays for structured groups; use JSON for UI labels/shared strings.  [oai_citation:2‡Reddit](https://www.reddit.com/r/laravel/comments/1q09zk6/which_translation_style_do_you_use/?utm_source=chatgpt.com)  
+- Combine with Carbon locale settings for date, number, currency formatting.  [oai_citation:3‡Phrase](https://phrase.com/blog/posts/laravel-i18n-frontend-best-practices/?utm_source=chatgpt.com)
+
+---
+
+## 🔍 **4. Full Search — Scout + Meilisearch**
+
+Use **Laravel Scout** configured to use **Meilisearch** for full‑text, faceted, typo‑tolerant search.  [oai_citation:4‡Laravel](https://laravel.com/docs/12.x/scout?utm_source=chatgpt.com)
+
+### 🚀 Setup
+
+- Install Meilisearch driver and packages.  
+- Set environment variables in `.env`:  
+
+SCOUT_DRIVER=meilisearch
+MEILISEARCH_HOST=http://127.0.0.1:7700
+MEILISEARCH_KEY=masterKey
+
+### 📦 Search Integration
+
+- Mark searchable models with Scout trait.
+- Implement `toSearchableArray()` to tailor indexed data.
+- Use filters & synonyms to support multilingual search relevance.
+
+### 📌 Tips
+
+- Always flush and sync after changing searchable fields to avoid stale index states.  [oai_citation:5‡Reddit](https://www.reddit.com/r/laravel/comments/1b0271f?utm_source=chatgpt.com)  
+- For large datasets, incremental indexing jobs are recommended.
+
+---
+
+## 👤 **5. Authentication & Authorization**
+
+- Use **Laravel Fortify** for credentials, MFA, and session handling.  
+- Shared auth props provided to Inertia every request.  
+- Define **Policies** per resource to enforce business rules.
+
+---
+
+## 🌐 **6. Real‑Time & Background Jobs**
+
+- **Laravel Reverb** for WebSockets and user notifications.  
+- Use Events + Listeners for domain events (e.g., user registered, order placed).  
+- **Jobs/Queues** handle async tasks (email, search reindexing, analytics).
+
+---
+
+## 🧑‍💼 **7. Admin Dashboard — Filament**
+
+Filament manages administrative UIs, forms, tables, and resource pages.
+
+app/
+└── Filament/
+├── Resources/
+│   ├── UsersResource.php
+│   ├── RolesResource.php
+
+- Leverage policies & roles for admin access control.
+- Extend Filament with custom tools, reports, and charts.
+
+---
+
+## 📦 **8. Metadata & SEO Backend Strategy**
+
+- Inject SEO meta (title/description/OG) via Inertia SSR props.  
+- Provide **hreflang** alternate links for each locale in head.  
+- Generate sitemap & robots via scheduled commands.
+
+---
+
+## 🧪 **9. Testing Backend with Pest + PHPUnit**
+
+**Backend Tests:**
+
+- Unit test services and actions
+- Feature test controllers with Inertia payload asserts
+- Localization route tests
+- Search indexing & result tests
+- Policy tests
+- Queue job behavior
+
+Example:
+```php
+test('homepage localized', function () {
+    $this->get('/en')->assertInertia(fn($page) => $page->where('locale','en'));
+});
+```
+
+Scenarios should be contrived to ensure locale fallbacks and error states.
+
+---
+
+📌 Summary & Backend Principles
+
+Objective	Strategy
+Separation of concerns	Actions + DTOs + Controllers
+Search	MeiliSearch via Scout
+Localization	Route prefixes + i18next sync
+Real‑Time	Reverb + Echo
+Admin	Filament resources
+SEO	SSR + meta + sitemap
+Testing	Pest + PHPUnit coverage
+
+
+---
+
+# 🧠 Architecture — Part 2: Frontend & UI
+
+## 📦 Overview: Frontend Stack
+
+Frontend is built with:
+
+- **React 19.2.0** with **Inertia.js** as the BFF/SSR glue  
+- **Shadcn UI** primitives and **Radix** for accessible components  
+- **Tailwind CSS** + **Tailwind‑Merge** for atomic utility styles  
+- **i18next** + **i18next‑browser‑languagedetector** for UI i18n  
+- **Zustand** for UI and client state not provided by backend  
+- **Vite** as build tool with SSR capabilities
+
+This setup reflects common modern patterns for Laravel + React with **no separate API** layer, reducing complexity and keeping routing / SSR tightly integrated. ([turn0search7])
+
+---
+
+## 🧩 Directory Structure (Frontend)
+
+resources/
+└── js/
+├── app.tsx                     # Inertia entry and SSR integration
+├── pages/                      # Inertia page components (SSR)
+├── layouts/                    # Shared layout components
+├── components/                 # Shared reusable components
+│   ├── ui/                     # Shadcn UI extensions/adapters
+│   ├── common/                 # Generic, shared UI parts
+│   └── feature/                # Feature‑scoped components
+├── i18n/                       # i18next configuration + translation files
+├── store/                      # Zustand state modules
+├── utils/                      # Helpers (fetch, inertia helpers)
+├── types/                      # Shared TS types (backend DTO mirrors)
+└── tests/                      # Frontend tests (Jest/Playwright)
+
+### 🍃 UI Principles
+
+- Shadcn UI + Radix for accessible, composable UI primitives.  
+- Tailwind CSS for consistent layout & responsive styles.  
+- Use **atomic UI systems** with Tailwind variants and `class‑variance‑authority` for strongly‑typed style configs.
+
+Shadcn UI drastically accelerates UI scaffolding of consistent design components and props patterns. ([turn0search1])
+
+---
+
+## 🌍 Localization (Frontend)
+
+### 🧠 i18next Setup
+
+Use **i18next** + **i18next‑browser‑languagedetector** with React:
+
+- Define supported languages (`en`, `it`, `de`, `es`, `fr`, `ru`, `zh`, `fa`, `ar`)
+- Use lazy loading of translation namespaces per page/feature to optimize bundle size and avoid loading all languages at once. ([turn0search12])
+- Sync backend locale with i18next on Inertia SSR props so both ends share current locale context.
+
+Example i18n init:
+
+```ts
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import { initReactI18next } from 'react-i18next';
+
+i18n.use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    supportedLngs: [...],
+    fallbackLng: 'en',
+    detection: { order: ['querystring','cookie','localStorage'] },
+    interpolation: { escapeValue: false },
+  });
+```
+
+export default i18n;
+
+🔑 Ensure translation files are namespaced (core, pages, components) for scalability.
+
+⚠️ Avoid loading all languages on initial load — prefer namespace lazy loads to reduce bundle size and improve performance. (See best practices for i18n). ([turn0search12], [turn0reddit28])
+
+---
+
+🔁 Sync Locale with Backend
+
+Pass backend locale to frontend via Inertia shared props:
+
+Inertia::share('locale', app()->getLocale());
+
+Use this to pre‑set i18next and adjust UI direction (ltr / rtl) dynamically; e.g., document.documentElement.setAttribute('dir', 'rtl') for Arabic.
+
+---
+
+🧠 Global State (Zustand)
+
+Use Zustand for frontend state not derived from backend domain data:
+
+store/
+├── ui.ts        # modal, alert state
+├── preferences.ts  # theme, locale UI preferences
+├── form.ts      # persistent form state outside backend
+
+Example store:
+
+const useUIStore = create((set) => ({
+  theme: 'light',
+  setTheme: (theme) => set({ theme }),
+}));
+
+Zustand avoids mounting multiple contexts and scales well with selectors for optimized re‑rendering.
+
+---
+
+📡 Realtime & Inertia
+
+Inertia 2’s SSR and async features allow:
+	•	Deferred, lazy props to reduce blocking time on heavy queries
+	•	Async navigation looks instant with prefetch + caching
+	•	Inertia reduces the need for a traditional API layer, decreasing surface area and overhead. ([turn0search7])
+
+---
+
+🔍 SEO & SSR
+
+📢 Inertia SSR
+	•	Inertia SSR outputs full HTML with localized <head> tags (title, description, OG).
+	•	Meta tags are page scoped and passed in SSR props.
+	•	Use Inertia <Head> component per page for SEO.
+
+Example:
+
+<Head title={t('home.title')} meta={[{name:'description', content:t('home.desc')}, ...]} />
+
+⚠️ Always include localized hreflang for alternate languages to signal search engines. Ensure sitemap entries include locales.
+
+SSR strategy:
+	•	Render content server side to improve search indexing and initial load.
+	•	Use HTTP cache headers to improve performance.
+
+---
+
+⚙️ UI Component Categorization
+
+📦 ui/ (Shadcn + Radix)
+	•	Button
+	•	Form fields
+	•	Dropdowns
+	•	Modals
+	•	Alerts
+	•	Navigation
+
+📦 common/
+	•	Shared UI used across pages (e.g., card, list, table)
+
+📦 feature/
+	•	Feature scoped UI (e.g., product card, user profile widgets)
+
+Design intent: components are isolated by scope and shared where appropriate, minimizing redundancy and maximizing reusability.
+
+---
+
+📈 Performance & Optimization
+	•	Lazy load page props and translation namespaces.
+	•	Use SSR + caching for meta/critical resources.
+	•	Vite prefetch bundles, route prefetching, and code splitting.
+	•	Use optimized image handling and dynamic imports.
+
+---
+
+🧪 Frontend Testing
+
+🧩 Component Tests
+	•	Jest + React Testing Library
+	•	Test UI logic, interactions, and localized content.
+
+🧪 End‑to‑End Tests
+	•	Playwright via Pest plugin for browser flows
+	•	Combined with Inertia SSR ensures full coverage.
+
+Example Playwright E2E:
+
+test('localized homepage loads', function () {
+  $page = visit('/');
+  $page->assertSee('Welcome');
+});
+
+
+---
+
+📌 Summary (Frontend)
+
+Concern	Solution
+UI Library	Shadcn + Radix + Tailwind
+Locales	i18next + Inertia shared props
+RTL	Dynamic dir + Tailwind
+Global State	Zustand
+SEO/SSR	Inertia SSR + Inertia Head metadata
+Performance	Prefetch + lazy load
+Testing	Jest + Playwright
+
+
+---
+
+# 🤖 Architecture — Part 3: DevOps, Quality, CI/CD & Releases
+
+## 📈 Continuous Integration & Delivery (CI/CD)
+
+### 🚀 GitHub Actions Workflow
+
+Use GitHub Actions as the primary CI/CD engine.  
+Define workflows for:  
+- **linting & formatting**
+- **type checking**
+- **unit & feature tests**
+- **e2e/browser tests**
+- **deployment**
+- **semantic release automation**
+
+Example pipeline stages:
+
+.name: CI
+
+on:
+pull_request:
+push:
+branches: [main, release/*]
+
+jobs:
+lint:
+runs-on: ubuntu-latest
+steps:
+- checkout
+- setup node
+- install deps
+- run eslint & prettier checks
+
+test:
+runs-on: ubuntu-latest
+strategy:
+matrix:
+php-version: [8.2, 8.3]
+node-version: [18.x]
+steps:
+- checkout
+- setup php & composer
+- setup node & npm
+- install backend & frontend deps
+- run backend tests (Pest)
+- run frontend tests (Jest)
+- run browser tests (Playwright)
+
+release:
+needs: test
+runs-on: ubuntu-latest
+steps:
+- checkout
+- setup node
+- setup composer
+- run semantic-release
+env:
+GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+- Run lint and formatting checks before tests to stop invalid pushes early.  
+- Matrix tests allow multi‑environment validation.  
+- Semantic release triggers only when all tests pass validating merges adhere to commit conventions. (CI/CD best practices)  [oai_citation:0‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/?utm_source=chatgpt.com)
+
+---
+
+## ⚙️ Code Quality & Tooling
+
+### 🧹 Linting & Formatting
+
+Use standardized tooling ecosystem:
+
+ESLint + @eslint/js + typescript-eslint
+Prettier + prettier‑plugin‑organize‑imports + prettier‑plugin‑tailwindcss
+eslint‑config‑prettier
+
+- ESLint enforces JS/TS best practices.
+- Prettier ensures uniform formatting.
+- Prettier plugins optimize Tailwind utilities and import ordering.
+- Configured to run via **Husky pre‑commit hooks** to guarantee consistency on staging branches.  [oai_citation:1‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/?utm_source=chatgpt.com)
+
+---
+
+## 🪝 Pre‑Commit Hooks (Husky + Commitlint)
+
+Husky hooks enforce local safety checks:
+
+.pre-commit:
+lint-staged:
+- ‘.ts?(x)’: eslint
+- ’.js?(x)’: eslint
+- ‘.json’: prettier
+- ’.php’: laravel pint
+
+Commit message standardization:
+
+@commitlint/config-conventional
+
+Commitlint ensures messages follow Conventional Commits spec, enabling automated semantic versioning and release changelog generation.  [oai_citation:2‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/?utm_source=chatgpt.com)
+
+---
+
+## 📦 Automated Releases (semantic‑release)
+
+Use **semantic‑release** to automate:
+
+- Version bumping (semver)  
+- Changelog generation (@semantic-release/changelog)  
+- Git tagging & version commits (@semantic-release/git)  
+- GitHub Releases (@semantic-release/github)
+
+Rules driven by commit messages:
+
+feat: minor bump
+fix: patch bump
+BREAKING CHANGE: major bump
+
+Semantic release eliminates manual version updates and standardizes release artifacts.  [oai_citation:3‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/?utm_source=chatgpt.com)
+
+---
+
+## 🧪 Testing Workflows
+
+### 💥 Backend Testing (Pest + PHPUnit)
+
+Focus areas:
+
+- Unit tests for services, actions, helpers  
+- Feature tests for HTTP + Inertia responses  
+- Policy/authorization tests
+- Scout + Meilisearch indexing tests
+- Localization routing & fallback tests
+- Notification & broadcast behavior
+
+Example backend scenario:
+
+test(‘localized homepage returns correct props’, function () {
+$this->get(’/en’)->assertInertia(fn($page) => $page->where(‘locale’,‘en’));
+});
+
+Pest improves readable tests and integrates with Laravel seamlessly.  [oai_citation:4‡Reddit](https://www.reddit.com/r/laravel/comments/1b73mv3?utm_source=chatgpt.com)
+
+---
+
+### 🧠 Frontend Testing
+
+#### 🧩 Unit & Component Tests
+
+Use **Jest + React Testing Library**:
+
+- Test isolated React components
+- Mock Zustand stores + i18next
+- Validate UI behavior and accessibility
+
+Examples:
+
+test(‘renders localized text’, () => {
+render();
+expect(screen.getByText(/welcome/i)).toBeInTheDocument();
+});
+
+---
+
+### 🌐 End‑to‑End (Playwright)
+
+Browser tests simulate real user flows including:
+
+- Navigation
+- Localization behavior
+- Form interactions
+- Authentication flows
+- SSR hydration behavior
+
+Use **pest‑plugin‑browser** to run E2E tests via PHP test suite for consistency. Tests can verify full stack flows in a CI environment.  [oai_citation:5‡Reddit](https://www.reddit.com/r/laravel/comments/1j052ij?utm_source=chatgpt.com)
+
+---
+
+## 📈 Deployment & Infrastructure
+
+### Dockerized Deployment
+
+Use multi‑stage Docker builds:
+
+FROM composer as vendor
+COPY composer.json composer.lock ./
+RUN composer install –no-dev
+
+FROM node as frontend
+COPY package.json package-lock.json ./
+RUN npm install
+
+FROM laravel/app
+COPY . .
+COPY –from=vendor /vendor ./vendor
+COPY –from=frontend /node_modules ./node_modules
+RUN npm run build
+
+CMD [“php-fpm”]
+
+Add web server (Nginx) config for SSR and Inertia routing.
+
+---
+
+## 🪙 Performance & Monitoring
+
+Integrate:
+
+- Application performance monitoring (Sentry, Datadog)
+- Real‑time metrics (Prometheus, Grafana)
+- Logging & observability (ELK, Seq)
+- Health checks & uptime monitoring
+
+---
+
+## 📌 Summary (DevOps, Testing & CI/CD)
+
+| Concern | Tooling / Strategy |
+|---------|------------------|
+| Linting | ESLint + Prettier |
+| Formatting | Prettier + Tailwind Plugin |
+| Commit Quality | Husky + Commitlint |
+| Automated Releases | semantic‑release |
+| Backend Tests | Pest + PHPUnit |
+| Frontend Tests | Jest + RTL |
+| Browser E2E | Playwright |
+| CI/CD | GitHub Actions Matrix |
+| Dockerization | Multi‑stage images |
+| Monitoring | Sentry + Prometheus |
+
+---
