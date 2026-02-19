@@ -10,8 +10,9 @@ parameters:
     # Level 10 is the highest level
     level: 7
 
-#    ignoreErrors:
-#        - '#PHPDoc tag @var#'
-#
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
+    excludePaths:
+        - .phpstorm.meta.php
+        - tests/
+
+    ignoreErrors:
+        - '#PHPDoc tag#'

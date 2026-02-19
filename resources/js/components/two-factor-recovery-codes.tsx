@@ -9,8 +9,13 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import AlertError from './alert-error';
 import { regenerateRecoveryCodes } from '@/routes/two-factor';
+import AlertError from './alert-error';
+
+const RECOVERY_SKELETON_KEYS = Array.from(
+    { length: 8 },
+    (_, i) => `recovery-skeleton-${i}` as const,
+);
 
 type Props = {
     recoveryCodesList: string[];
@@ -115,9 +120,9 @@ export default function TwoFactorRecoveryCodes({
                                     aria-label="Recovery codes"
                                 >
                                     {recoveryCodesList.length ? (
-                                        recoveryCodesList.map((code, index) => (
+                                        recoveryCodesList.map((code) => (
                                             <div
-                                                key={index}
+                                                key={code}
                                                 role="listitem"
                                                 className="select-text"
                                             >
@@ -129,11 +134,10 @@ export default function TwoFactorRecoveryCodes({
                                             className="space-y-2"
                                             aria-label="Loading recovery codes"
                                         >
-                                            {Array.from(
-                                                { length: 8 },
-                                                (_, index) => (
+                                            {RECOVERY_SKELETON_KEYS.map(
+                                                (key) => (
                                                     <div
-                                                        key={index}
+                                                        key={key}
                                                         className="h-4 animate-pulse rounded bg-muted-foreground/20"
                                                         aria-hidden="true"
                                                     />

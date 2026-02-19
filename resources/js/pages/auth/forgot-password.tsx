@@ -35,7 +35,6 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                     type="email"
                                     name="email"
                                     autoComplete="off"
-                                    autoFocus
                                     placeholder="email@example.com"
                                 />
 

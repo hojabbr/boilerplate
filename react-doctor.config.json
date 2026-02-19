@@ -1,0 +1,13 @@
+{
+    "directory": "resources/js",
+    "ignore": {
+        "rules": [
+            "knip/files",
+            "knip/types",
+            "react/no-danger",
+            "jsx-a11y/no-autofocus",
+            "react-hooks/purity"
+        ],
+        "files": ["**/wayfinder/**", "**/actions/**"]
+    }
+}

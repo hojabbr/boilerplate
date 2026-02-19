@@ -13,6 +13,11 @@ import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
 import AuthLayout from '@/layouts/auth-layout';
 import { store } from '@/routes/two-factor/login';
 
+const OTP_SLOT_KEYS = Array.from(
+    { length: OTP_MAX_LENGTH },
+    (_, i) => `otp-slot-${i}` as const,
+);
+
 export default function TwoFactorChallenge() {
     const [showRecoveryInput, setShowRecoveryInput] = useState<boolean>(false);
     const [code, setCode] = useState<string>('');
@@ -67,7 +72,6 @@ export default function TwoFactorChallenge() {
                                         name="recovery_code"
                                         type="text"
                                         placeholder="Enter recovery code"
-                                        autoFocus={showRecoveryInput}
                                         required
                                     />
                                     <InputError
@@ -86,11 +90,10 @@ export default function TwoFactorChallenge() {
                                             pattern={REGEXP_ONLY_DIGITS}
                                         >
                                             <InputOTPGroup>
-                                                {Array.from(
-                                                    { length: OTP_MAX_LENGTH },
-                                                    (_, index) => (
+                                                {OTP_SLOT_KEYS.map(
+                                                    (key, index) => (
                                                         <InputOTPSlot
-                                                            key={index}
+                                                            key={key}
                                                             index={index}
                                                         />
                                                     ),

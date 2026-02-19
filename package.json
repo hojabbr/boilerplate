@@ -13,9 +13,17 @@
         "prepare": "husky"
     },
     "lint-staged": {
-        "*.{ts,tsx,js,jsx}": ["eslint --fix", "prettier --write", "npx -y react-doctor@latest . --verbose"],
-        "*.{json,md,css}": ["prettier --write"],
-        "*.php": ["vendor/bin/pint", "./vendor/bin/phpstan analyse"]
+        "*.{ts,tsx,js,jsx}": [
+            "eslint --fix",
+            "prettier --write"
+        ],
+        "*.{json,md,css}": [
+            "prettier --write"
+        ],
+        "*.php": [
+            "bash -c './vendor/bin/pint --dirty'",
+            "bash -c './vendor/bin/phpstan analyse'"
+        ]
     },
     "devDependencies": {
         "@commitlint/cli": "^20.4.2",

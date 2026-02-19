@@ -31,10 +31,10 @@ import { UserMenuContent } from '@/components/user-menu-content';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
+import { dashboard } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
-import { dashboard } from '@/routes';
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];
@@ -64,7 +64,9 @@ const rightNavItems: NavItem[] = [
 const activeItemStyles =
     'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
-export function AppHeader({ breadcrumbs = [] }: Props) {
+const EMPTY_BREADCRUMBS: Props['breadcrumbs'] = [];
+
+export function AppHeader({ breadcrumbs = EMPTY_BREADCRUMBS }: Props) {
     const page = usePage();
     const { auth } = page.props;
     const getInitials = useInitials();
@@ -146,9 +148,9 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                     <div className="ml-6 hidden h-full items-center space-x-6 lg:flex">
                         <NavigationMenu className="flex h-full items-stretch">
                             <NavigationMenuList className="flex h-full items-stretch space-x-2">
-                                {mainNavItems.map((item, index) => (
+                                {mainNavItems.map((item) => (
                                     <NavigationMenuItem
-                                        key={index}
+                                        key={item.title}
                                         className="relative flex h-full items-center"
                                     >
                                         <Link

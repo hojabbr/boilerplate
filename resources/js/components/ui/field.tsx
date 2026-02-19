@@ -1,11 +1,11 @@
 "use client"
 
-import { useMemo } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { useMemo } from "react"
 
-import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (
@@ -208,12 +208,25 @@ function FieldError({
       return uniqueErrors[0]?.message
     }
 
+    const errorItems: { key: string; message: string }[] = []
+    const messageCount = new Map<string, number>()
+    for (const error of uniqueErrors) {
+      if (!error?.message) continue
+      const msg = error.message
+      const count = (messageCount.get(msg) ?? 0) + 1
+      messageCount.set(msg, count)
+      const slug = String(msg).replace(/\s+/g, "-")
+      errorItems.push({
+        key: `field-error-${slug}${count > 1 ? `-${count}` : ""}`,
+        message: msg,
+      })
+    }
+
     return (
       <ul className="ml-4 flex list-disc flex-col gap-1">
-        {uniqueErrors.map(
-          (error, index) =>
-            error?.message && <li key={index}>{error.message}</li>
-        )}
+        {errorItems.map((item) => (
+          <li key={item.key}>{item.message}</li>
+        ))}
       </ul>
     )
   }, [children, errors])

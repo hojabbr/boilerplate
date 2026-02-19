@@ -19,9 +19,14 @@ import {
 import { useAppearance } from '@/hooks/use-appearance';
 import { useClipboard } from '@/hooks/use-clipboard';
 import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
-import AlertError from './alert-error';
-import { Spinner } from './ui/spinner';
 import { confirm } from '@/routes/two-factor';
+import AlertError from './alert-error';
+
+const CONFIRM_OTP_SLOT_KEYS = Array.from(
+    { length: OTP_MAX_LENGTH },
+    (_, i) => `confirm-otp-${i}` as const,
+);
+import { Spinner } from './ui/spinner';
 
 function GridScanIcon() {
     return (
@@ -149,9 +154,10 @@ function TwoFactorVerificationStep({
     const pinInputContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             pinInputContainerRef.current?.querySelector('input')?.focus();
         }, 0);
+        return () => clearTimeout(timer);
     }, []);
 
     return (
@@ -172,6 +178,7 @@ function TwoFactorVerificationStep({
                     <div
                         ref={pinInputContainerRef}
                         className="relative w-full space-y-3"
+                        suppressHydrationWarning
                     >
                         <div className="flex w-full flex-col items-center space-y-3 py-2">
                             <InputOTP
@@ -183,15 +190,9 @@ function TwoFactorVerificationStep({
                                 pattern={REGEXP_ONLY_DIGITS}
                             >
                                 <InputOTPGroup>
-                                    {Array.from(
-                                        { length: OTP_MAX_LENGTH },
-                                        (_, index) => (
-                                            <InputOTPSlot
-                                                key={index}
-                                                index={index}
-                                            />
-                                        ),
-                                    )}
+                                    {CONFIRM_OTP_SLOT_KEYS.map((key, index) => (
+                                        <InputOTPSlot key={key} index={index} />
+                                    ))}
                                 </InputOTPGroup>
                             </InputOTP>
                             <InputError

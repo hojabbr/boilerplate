@@ -4,9 +4,11 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import type { AppLayoutProps } from '@/types';
 
+const EMPTY_BREADCRUMBS: AppLayoutProps['breadcrumbs'] = [];
+
 export default function AppSidebarLayout({
     children,
-    breadcrumbs = [],
+    breadcrumbs = EMPTY_BREADCRUMBS,
 }: AppLayoutProps) {
     return (
         <AppShell variant="sidebar">

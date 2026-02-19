@@ -1,10 +1,10 @@
-import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/lib/utils"
 
 function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -63,6 +63,7 @@ function InputGroupAddon({
   return (
     <div
       role="group"
+      tabIndex={0}
       data-slot="input-group-addon"
       data-align={align}
       className={cn(inputGroupAddonVariants({ align }), className)}
@@ -71,6 +72,15 @@ function InputGroupAddon({
           return
         }
         e.currentTarget.parentElement?.querySelector("input")?.focus()
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          const input = (e.currentTarget as HTMLElement).parentElement?.querySelector("input")
+          if (input && !(e.target as HTMLElement).closest("button")) {
+            input.focus()
+          }
+        }
       }}
       {...props}
     />
