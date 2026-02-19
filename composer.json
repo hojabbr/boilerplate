@@ -3,11 +3,15 @@
     "name": "laravel/react-starter-kit",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
         "filament/filament": "^5.0",
+        "http-interop/http-factory-guzzle": "^1.2",
         "inertiajs/inertia-laravel": "^2.0",
         "lara-zeus/spatie-translatable": "^2.0",
         "laravel/fortify": "^1.30",
@@ -21,7 +25,9 @@
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
         "mcamara/laravel-localization": "^2.3",
+        "meilisearch/meilisearch-php": "^1.16",
         "pbmedia/laravel-ffmpeg": "^8.7",
+        "spatie/laravel-medialibrary": "^11.20",
         "spatie/laravel-permission": "^7.2",
         "spatie/laravel-query-builder": "^6.4",
         "spatie/laravel-translatable": "^6.12"

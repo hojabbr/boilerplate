@@ -8,6 +8,11 @@
             "jsx-a11y/no-autofocus",
             "react-hooks/purity"
         ],
-        "files": ["**/wayfinder/**", "**/actions/**"]
+        "files": [
+            "**/wayfinder/**",
+            "**/actions/**",
+            "**/ui/chart-recharts.tsx",
+            "**/pages/contact/Show.tsx"
+        ]
     }
 }

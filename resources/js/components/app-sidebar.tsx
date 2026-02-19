@@ -1,8 +1,10 @@
 import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import LanguageSwitcher from '@/components/language-switcher';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
+import ThemeSwitcher from '@/components/theme-switcher';
 import {
     Sidebar,
     SidebarContent,
@@ -58,6 +60,10 @@ export function AppSidebar() {
 
             <SidebarFooter>
                 <NavFooter items={footerNavItems} className="mt-auto" />
+                <div className="flex items-center justify-center gap-1 py-2">
+                    <ThemeSwitcher variant="ghost" size="icon" />
+                    <LanguageSwitcher variant="ghost" size="icon" />
+                </div>
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

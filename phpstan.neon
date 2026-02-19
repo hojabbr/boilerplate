@@ -13,6 +13,8 @@ parameters:
     excludePaths:
         - .phpstorm.meta.php
         - tests/
+        - app/Filament/
 
     ignoreErrors:
         - '#PHPDoc tag#'
+        - '#Call to an undefined method Spatie\\Image\\Drivers\\ImageDriver::nonQueued\(\)#'

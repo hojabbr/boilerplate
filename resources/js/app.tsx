@@ -3,6 +3,7 @@ import { configureEcho } from '@laravel/echo-react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { DirectionProvider } from '@/components/ui/direction';
 import '../css/app.css';
 import { initializeTheme } from './hooks/use-appearance';
 import i18n from './i18n';
@@ -23,21 +24,25 @@ createInertiaApp({
             import.meta.glob('./pages/**/*.tsx'),
         ),
     setup({ el, App, props }) {
-        const locale = (props.initialPage.props as { locale?: string }).locale;
+        const { locale, dir } = props.initialPage.props as {
+            locale?: string;
+            dir?: 'ltr' | 'rtl';
+        };
         if (locale) {
             void i18n.changeLanguage(locale);
             document.documentElement.lang = locale;
-            document.documentElement.setAttribute(
-                'dir',
-                rtlLocales.has(locale) ? 'rtl' : 'ltr',
-            );
         }
+        const resolvedDir =
+            dir ?? (locale && rtlLocales.has(locale) ? 'rtl' : 'ltr');
+        document.documentElement.setAttribute('dir', resolvedDir);
 
         const root = createRoot(el);
 
         root.render(
             <StrictMode>
-                <App {...props} />
+                <DirectionProvider dir={resolvedDir}>
+                    <App {...props} />
+                </DirectionProvider>
             </StrictMode>,
         );
     },

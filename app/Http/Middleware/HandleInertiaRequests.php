@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -27,6 +28,28 @@ class HandleInertiaRequests extends Middleware
     }
 
     /**
+     * @return array<int, array{code: string, name: string, native: string, url: string}>
+     */
+    private function localeSwitchUrls(): array
+    {
+        $supported = config('laravellocalization.supportedLocales', []);
+
+        $urls = [];
+        foreach ($supported as $code => $props) {
+            $url = LaravelLocalization::getLocalizedURL($code, null, [], true);
+
+            $urls[] = [
+                'code' => $code,
+                'name' => (string) ($props['name'] ?? $code),
+                'native' => (string) ($props['native'] ?? $code),
+                'url' => $url !== false ? $url : '',
+            ];
+        }
+
+        return $urls;
+    }
+
+    /**
      * Define the props that are shared by default.
      *
      * @see https://inertiajs.com/shared-data
@@ -35,6 +58,9 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $locale = app()->getLocale();
+        $rtlLocales = ['ar', 'fa'];
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -42,8 +68,10 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-            'locale' => app()->getLocale(),
+            'locale' => $locale,
+            'dir' => in_array($locale, $rtlLocales, true) ? 'rtl' : 'ltr',
             'supportedLocales' => config('laravellocalization.supportedLocales', []),
+            'locale_switch_urls' => $this->localeSwitchUrls(),
         ];
     }
 }

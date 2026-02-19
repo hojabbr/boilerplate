@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\EnsureUserHasAdminRole;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -18,16 +19,20 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use LaraZeus\SpatieTranslatable\SpatieTranslatablePlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $locales = array_keys(config('laravellocalization.supportedLocales', []));
+
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
+            ->plugin(SpatieTranslatablePlugin::make()->defaultLocales($locales))
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -54,6 +59,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                EnsureUserHasAdminRole::class,
             ]);
     }
 }

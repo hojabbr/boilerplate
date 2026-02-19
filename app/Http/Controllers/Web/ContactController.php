@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Http\Controllers\Web;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreContactSubmissionRequest;
+use App\Models\ContactSubmission;
+use App\Models\Setting;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
+use Laravel\Pennant\Feature;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
+
+class ContactController extends Controller
+{
+    public function show(Request $request): Response|HttpResponse
+    {
+        if (! Feature::active('contact-form')) {
+            abort(404);
+        }
+
+        $setting = Setting::site();
+
+        return Inertia::render('contact/Show', [
+            'settings' => [
+                'company_name' => $setting->company_name,
+                'tagline' => $setting->tagline,
+                'email' => $setting->email,
+                'phone' => $setting->phone,
+            ],
+            'features' => [
+                'pages' => Feature::active('pages'),
+                'blog' => Feature::active('blog'),
+                'contactForm' => Feature::active('contact-form'),
+            ],
+            'contactStoreUrl' => route('contact.store'),
+            'success' => session('success'),
+        ]);
+    }
+
+    public function store(StoreContactSubmissionRequest $request): RedirectResponse
+    {
+        if (! Feature::active('contact-form')) {
+            abort(404);
+        }
+
+        ContactSubmission::create($request->validated());
+
+        return redirect()->back()->with('success', __('Your message has been sent.'));
+    }
+}

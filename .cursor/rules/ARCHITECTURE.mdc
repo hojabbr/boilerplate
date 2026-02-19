@@ -56,6 +56,17 @@ app/
 - **Queries** centralize query logic (filtering, sorting, relations).  
 - **Services** manage cross‑cutting concerns (search syncing, jobs, reports).
 
+### 🗑️ Soft Deletes and Cascading
+
+All CMS and future domain models use `SoftDeletes`.
+
+- **Cascaded soft deletes:** When a parent is soft-deleted, child models are soft-deleted (e.g. via model events, observers, or explicit `delete()` in `boot()`). Prefer a trait or base observer when the pattern repeats.
+- **Cascaded hard deletes:** When a parent is force-deleted, related rows are force-deleted: use DB foreign key `cascadeOnDelete()` where applicable, plus application-level force-delete in observers for soft-deletable children so they are force-deleted when the parent is force-deleted.
+
+**Parent/child relationships:** `Language` is parent of `Page` (pages cascade when a language is force-deleted). **BlogPost** is parent of Media (polymorphic, via Spatie Media Library): when a BlogPost is force-deleted, all associated media (gallery, videos, documents) are deleted (files and DB rows) by the media library trait. `Setting` and `ContactSubmission` have no child entities; document any new cascade rules in this section when adding relations.
+
+**User model:** `User` also uses `SoftDeletes`; the Filament User resource supports trashed filter, restore, and force-delete actions. **Setting** has no soft deletes by design (singleton site settings).
+
 ---
 
 ## 🌍 **3. Localization (Global Backend Strategy)**
@@ -77,6 +88,14 @@ Use **mcamara/laravel‑localization** to prefix all routes with locale identifi
 
 - Leverage Laravel’s translation system for static strings (JSON or PHP).  
 - For dynamic content (titles/descriptions stored in DB), use JSON columns or translation tables (row‑per‑language pattern).  [oai_citation:1‡Reddit](https://www.reddit.com/r/laravel/comments/1j3613p?utm_source=chatgpt.com)
+
+### 📄 Localized CMS (multi‑locale content)
+
+- **Pages:** Row-per-locale: `Page` has `language_id` (FK to `languages`). One row per locale per logical page (e.g. privacy EN, privacy DE). Slug/title/body on `Page`; resolve by locale/slug in controllers.
+- **Settings:** Single global site settings. Translatable fields (company name, tagline, address, etc.) via **Spatie Laravel Translatable** (JSON columns). No `language_id`; locale chosen at runtime.
+- **Blog:** `BlogPost` uses Spatie Translatable for `title`, `excerpt`, `body`, `meta_description`. Rely on Translatable and app locale. Blog posts support rich content (WYSIWYG in Filament), media (images in `gallery`, videos in `videos`, files in `documents` via Spatie Media Library). The public show page uses Yet Another React Lightbox (YARL) for gallery and video with plugins: Captions, Fullscreen, Slideshow, Thumbnails, Video, Zoom.
+- **Contact form:** `ContactSubmission` stores submissions (name, email, subject, message). No translation; optionally store `locale` for analytics.
+- **Language model:** `languages` table keyed by code (e.g. `en`, `de`). Seed from `config('laravellocalization.supportedLocales')`. Used by `Page` (`language_id`) and anywhere an FK to a locale is needed.
 
 ### 🪝 Best Practices
 
@@ -117,15 +136,20 @@ MEILISEARCH_KEY=masterKey
 - Shared auth props provided to Inertia every request.  
 - Define **Policies** per resource to enforce business rules.
 
+### Roles and permissions workflow (Spatie Permission)
+
+When adding new guarded features or Filament resources: (1) Add the permission(s) (e.g. `manage X`) in `database/seeders/RoleAndPermissionSeeder.php`. (2) Assign to the appropriate role (e.g. admin). (3) Document new permissions in that seeder or in ARCHITECTURE. (4) Use policies and Filament authorization so only users with the right permission can access the resource. When adding a new Filament resource, add a corresponding permission and seed it so roles can be updated over time.
+
 ---
 
 ## 🚩 **5a. Feature Flags — Laravel Pennant**
 
-Use **Laravel Pennant** for all feature flagging: gradual rollouts, A/B tests, and conditional features.
+Use **Laravel Pennant** for all feature flagging: gradual rollouts, A/B tests, and conditional features. **Always** gate optional or experimental features (blog, static pages, contact form, registration, 2FA, any new module) via Pennant.
 
-- **Define features** in `app/Features/` (or Pennant’s default location). Use the `Feature` facade and the `@feature` Blade directive (or server-side checks) to gate UI and behavior.
-- **Current usage:** Gate registration, two-factor auth, or other Fortify/application features so they can be toggled per environment or audience.
-- **Future features:** Any new optional or experimental feature (e.g. new dashboards, beta APIs, UI variants) should be controlled via Pennant. Keep feature definitions in one place and document them in the project README or ARCHITECTURE.
+- **Define features** in `app/Features/` and register with `Feature::define()` in `AppServiceProvider`. Use the `Feature` facade and the `@feature` Blade directive (or server-side checks) in controllers and Filament to gate UI and behavior.
+- **Toggle in Filament:** Admins can enable/disable feature flags from the **Feature flags** resource in Filament (Settings group). Document toggleable features in `config/features.php` (keys and labels). Seed with `FeatureFlagSeeder`; add new entries to config and run the seeder when introducing a new toggleable feature.
+- **Current usage:** Gate registration, two-factor auth, blog, pages, contact form, and other Fortify/application features so they can be toggled per environment or audience.
+- **Future features:** Any new optional or experimental feature must get a Pennant flag, be added to `config/features.php` if admin-toggleable, and be documented in ARCHITECTURE or README.
 - **Testing:** Use Pennant’s in-memory driver or `Feature::activate()` / `Feature::deactivate()` in tests to assert both on/off states.
 
 ---
@@ -145,11 +169,27 @@ Filament manages administrative UIs, forms, tables, and resource pages.
 app/
 └── Filament/
 ├── Resources/
+│   ├── FeatureFlags/
+│   │   └── FeatureFlagResource.php   # Feature flags: list and edit (syncs to Pennant)
 │   ├── UsersResource.php
 │   ├── RolesResource.php
+│   └── …
+├── Pages/
+├── Widgets/
 
 - Leverage policies & roles for admin access control.
+- **Feature flags resource:** Under Settings, lists and edits feature flags (from `config/features.php`; seeded by `FeatureFlagSeeder`). Changes sync to Pennant. Access via “manage feature flags” permission.
 - Extend Filament with custom tools, reports, and charts.
+
+### Filament CLI (resources and widgets)
+
+- **Resources:** `php artisan make:filament-resource ModelName --generate --soft-deletes` when the model uses soft deletes. Use `--simple` for no dedicated List/Create/Edit/View when appropriate.
+- **Widgets:** `php artisan make:filament-widget WidgetName`; add `--stats-overview` or `--chart` as needed.
+- Resources, pages, and widgets are discovered from `app/Filament/Resources`, `app/Filament/Pages`, `app/Filament/Widgets`. See [Filament 5 Navigation](https://filamentphp.com/docs/5.x/navigation/overview) for navigation groups, labels, and icons: use `$navigationGroup`, `$navigationLabel`, `$navigationSort`, `$navigationIcon` on resources and pages.
+
+### Translatable resources (Lara Zeus)
+
+For models using **Spatie Laravel Translatable**, use **lara-zeus/spatie-translatable** in Filament: apply the resource/page `Translatable` trait and add `LocaleSwitcher::make()` in `getHeaderActions()` on List, Create, Edit (and View) pages. Configure translatable locales to match `config('laravellocalization.supportedLocales')` or override `getTranslatableLocales()` on the resource.
 
 ---
 
@@ -239,6 +279,12 @@ resources/
 
 Shadcn UI drastically accelerates UI scaffolding of consistent design components and props patterns. ([turn0search1])
 
+### Use ui first
+
+- Prefer **Shadcn components in `components/ui`** for all interactive and structural UI: buttons, links that look like buttons, form fields (inputs, textareas, labels), cards, alerts, modals, navigation, etc.
+- Use **custom Tailwind only when** no ui component fits (e.g. layout, spacing, one-off decorative elements) or to extend a ui component via `className`.
+- Do not reinvent buttons, form controls, or cards with raw HTML and Tailwind; use `Button`, `Input`, `Label`, `Textarea`, `Card`, `Alert`, etc. from `components/ui`.
+
 ---
 
 ## 🌍 Localization (Frontend)
@@ -294,6 +340,7 @@ Always use **light / dark / system** appearance for the frontend and all UI:
 - Apply theme to the document root: toggle a `dark` class on `<html>` and set `color-scheme` so Shadcn/Tailwind dark variants and system UI (scrollbars, etc.) match.
 - All layouts and components should rely on this theme (no ad‑hoc dark mode toggles). Prefer Tailwind `dark:` utilities and Shadcn theme-aware components.
 - If using Sonner/Toaster, feed its `theme` prop from the same source (e.g. `useAppearance().resolvedAppearance`) so there is a single source of truth; avoid mixing next-themes and a custom appearance hook.
+- **Theme switcher** and **language switcher** are available in the public layout (header) and app layout (sidebar footer). The theme switcher uses `useAppearance` and persists via cookie/localStorage; the language switcher uses shared `locale_switch_urls` from the backend (mcamara `getLocalizedURL`) so each option links to the same page in another locale.
 
 ---
 
@@ -359,20 +406,16 @@ SSR strategy:
 ⚙️ UI Component Categorization
 
 📦 ui/ (Shadcn + Radix)
-	•	Button
-	•	Form fields
-	•	Dropdowns
-	•	Modals
-	•	Alerts
-	•	Navigation
+	•	Button, Input, Label, Textarea, Card, Alert, Sheet, Popover, Dropdowns, Modals, Navigation, etc.
+	•	**First choice for all UI.** Use these before adding custom markup.
 
 📦 common/
-	•	Shared UI used across pages (e.g., card, list, table)
+	•	Shared compositions that **use** ui primitives and are used across multiple pages (e.g. NavSearch, language switcher, theme switcher). Not a replacement for ui; common components should be built from ui.
 
 📦 feature/
-	•	Feature scoped UI (e.g., product card, user profile widgets)
+	•	Feature-specific compositions built from ui (and optionally common) for a single feature area (e.g. product card, user profile widgets).
 
-Design intent: components are isolated by scope and shared where appropriate, minimizing redundancy and maximizing reusability.
+Design intent: components are isolated by scope and shared where appropriate; always prefer ui primitives over reinventing with raw HTML and Tailwind.
 
 ---
 
@@ -407,9 +450,10 @@ test('localized homepage loads', function () {
 📌 Summary (Frontend)
 
 Concern	Solution
+Component choice	Prefer components/ui (Shadcn); custom Tailwind only when no ui component fits
 UI Library	Shadcn + Radix + Tailwind
-Theme	Light / dark / system via useAppearance; document root class + color-scheme
-Locales	i18next + Inertia shared props
+Theme	Light / dark / system via useAppearance; document root class + color-scheme; theme + language switchers in public and app layouts
+Locales	i18next + Inertia shared props; language switcher uses shared locale_switch_urls (mcamara)
 RTL	Dynamic dir; direction-aware icons and logical spacing (start/end, ps/pe)
 Global State	Zustand
 SEO/SSR	Inertia SSR + Inertia Head metadata

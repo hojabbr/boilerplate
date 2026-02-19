@@ -2,11 +2,17 @@
 
 namespace App\Providers;
 
+use App\Features\BlogFeature;
+use App\Features\ContactFormFeature;
+use App\Features\PagesFeature;
+use App\Models\Language;
+use App\Observers\LanguageObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Laravel\Pennant\Feature;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Feature::define('blog', BlogFeature::class);
+        Feature::define('pages', PagesFeature::class);
+        Feature::define('contact-form', ContactFormFeature::class);
+        Language::observe(LanguageObserver::class);
         $this->configureDefaults();
     }
 
