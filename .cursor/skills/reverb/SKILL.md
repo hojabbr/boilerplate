@@ -31,6 +31,7 @@ Enable broadcasting in your application using the Artisan command:
 
 ```bash
 php artisan install:broadcasting
+```
 
 This creates config/broadcasting.php and routes/channels.php where you can define authorization callbacks. Supported broadcast drivers include Laravel Reverb, Pusher Channels, Ably, log, and null.  ￼
 

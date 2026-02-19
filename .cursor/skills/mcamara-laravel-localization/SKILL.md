@@ -32,6 +32,7 @@ This package offers localized routing, automatic language detection, smart redir
 
 ```bash
 composer require mcamara/laravel-localization
+```
 
 This installs the package into your Laravel project.  ￼
 

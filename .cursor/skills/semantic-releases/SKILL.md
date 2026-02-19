@@ -53,6 +53,7 @@ npm install \
   @semantic-release/changelog \
   @semantic-release/git \
   @semantic-release/github --save-dev
+```
 
 Also ensure you have a CI environment configured (GitHub Actions, GitLab CI, etc.) and set appropriate tokens (e.g., GH_TOKEN for GitHub).  ￼
 

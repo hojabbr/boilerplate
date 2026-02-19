@@ -41,10 +41,13 @@ Install Laravel globally via Composer:
 
 ```bash
 composer global require laravel/installer
+```
 
 Create a new Laravel project:
 
+```bash
 laravel new my-app
+```
 
 Or via Composer directly:
 

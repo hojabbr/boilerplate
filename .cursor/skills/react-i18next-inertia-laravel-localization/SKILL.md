@@ -46,6 +46,7 @@ Install required packages:
 
 ```bash
 npm install i18next react-i18next i18next-browser-languagedetector @inertiajs/react
+```
 
 Also ensure React and Inertia helpers are installed:
 

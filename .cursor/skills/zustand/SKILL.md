@@ -47,6 +47,7 @@ Zustand (German for “state”) is a small, fast, and scalable state management
 
 ```bash
 npm install zustand
+```
 
 Create a Store
 

@@ -36,6 +36,7 @@ Install the plugin via Composer:
 
 ```bash
 composer require pestphp/pest-plugin-browser --dev
+```
 
 Then install the Playwright dependency and browsers:
 

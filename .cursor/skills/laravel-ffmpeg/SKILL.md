@@ -31,6 +31,7 @@ Require the package via Composer:
 
 ```bash
 composer require pbmedia/laravel-ffmpeg
+```
 
 This installs the Laravel FFmpeg integration that Unify-SoftTech’s package is based on.  ￼
 

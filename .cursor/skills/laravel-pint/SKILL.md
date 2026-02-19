@@ -39,6 +39,7 @@ Pint comes bundled with Laravel 12, but if it’s missing or you’re adding it 
 
 ```bash
 composer require laravel/pint --dev
+```
 
 Once installed, a pint binary becomes available in your project’s vendor/bin directory.  ￼
 

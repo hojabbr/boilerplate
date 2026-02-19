@@ -30,6 +30,7 @@ Install the package via Composer:
 
 ```bash
 composer require spatie/laravel-query-builder
+```
 
 Laravel auto‑registers the service provider. Optionally publish the config:
 
