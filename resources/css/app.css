@@ -176,6 +176,17 @@ html.dark {
     }
 }
 
+/* WCAG 2.3.3: respect user preference for reduced motion (CSS animations/transitions) */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
 @theme inline {
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);

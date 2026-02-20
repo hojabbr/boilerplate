@@ -1,7 +1,7 @@
 import { createInertiaApp } from '@inertiajs/react';
 import { configureEcho } from '@laravel/echo-react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { LazyMotion, domAnimation } from 'motion/react';
+import { LazyMotion, domAnimation, MotionConfig } from 'motion/react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { DirectionProvider } from '@/components/ui/direction';
@@ -42,9 +42,11 @@ createInertiaApp({
         root.render(
             <StrictMode>
                 <LazyMotion features={domAnimation} strict>
-                    <DirectionProvider dir={resolvedDir}>
-                        <App {...props} />
-                    </DirectionProvider>
+                    <MotionConfig reducedMotion="user">
+                        <DirectionProvider dir={resolvedDir}>
+                            <App {...props} />
+                        </DirectionProvider>
+                    </MotionConfig>
                 </LazyMotion>
             </StrictMode>,
         );
