@@ -21,12 +21,12 @@ import { useClipboard } from '@/hooks/use-clipboard';
 import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
 import { confirm } from '@/routes/two-factor';
 import AlertError from './alert-error';
+import { Spinner } from './ui/spinner';
 
 const CONFIRM_OTP_SLOT_KEYS = Array.from(
     { length: OTP_MAX_LENGTH },
     (_, i) => `confirm-otp-${i}` as const,
 );
-import { Spinner } from './ui/spinner';
 
 function GridScanIcon() {
     return (
