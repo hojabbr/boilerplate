@@ -40,14 +40,6 @@ type Props = {
     breadcrumbs?: BreadcrumbItem[];
 };
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
-
 const rightNavItems: NavItem[] = [
     {
         title: 'Repository',
@@ -68,9 +60,20 @@ const EMPTY_BREADCRUMBS: Props['breadcrumbs'] = [];
 
 export function AppHeader({ breadcrumbs = EMPTY_BREADCRUMBS }: Props) {
     const page = usePage();
-    const { auth } = page.props;
+    const { auth, locale } = page.props as {
+        auth: { user: { name: string; avatar?: string } };
+        locale?: string;
+    };
+    const prefix = locale ? `/${locale}` : '';
     const getInitials = useInitials();
     const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
+    const mainNavItemsWithPrefix: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: `${prefix}${dashboard.url()}`,
+            icon: LayoutGrid,
+        },
+    ];
     return (
         <>
             <div className="border-b border-sidebar-border/80">
@@ -100,18 +103,22 @@ export function AppHeader({ breadcrumbs = EMPTY_BREADCRUMBS }: Props) {
                                 <div className="flex h-full flex-1 flex-col space-y-4 p-4">
                                     <div className="flex h-full flex-col justify-between text-sm">
                                         <div className="flex flex-col space-y-4">
-                                            {mainNavItems.map((item) => (
-                                                <Link
-                                                    key={item.title}
-                                                    href={item.href}
-                                                    className="flex items-center space-x-2 font-medium"
-                                                >
-                                                    {item.icon && (
-                                                        <item.icon className="h-5 w-5" />
-                                                    )}
-                                                    <span>{item.title}</span>
-                                                </Link>
-                                            ))}
+                                            {mainNavItemsWithPrefix.map(
+                                                (item) => (
+                                                    <Link
+                                                        key={item.title}
+                                                        href={item.href}
+                                                        className="flex items-center space-x-2 font-medium"
+                                                    >
+                                                        {item.icon && (
+                                                            <item.icon className="h-5 w-5" />
+                                                        )}
+                                                        <span>
+                                                            {item.title}
+                                                        </span>
+                                                    </Link>
+                                                ),
+                                            )}
                                         </div>
 
                                         <div className="flex flex-col space-y-4">
@@ -137,7 +144,7 @@ export function AppHeader({ breadcrumbs = EMPTY_BREADCRUMBS }: Props) {
                     </div>
 
                     <Link
-                        href={dashboard()}
+                        href={`${prefix}${dashboard.url()}`}
                         prefetch
                         className="flex items-center space-x-2"
                     >
@@ -148,7 +155,7 @@ export function AppHeader({ breadcrumbs = EMPTY_BREADCRUMBS }: Props) {
                     <div className="ml-6 hidden h-full items-center space-x-6 lg:flex">
                         <NavigationMenu className="flex h-full items-stretch">
                             <NavigationMenuList className="flex h-full items-stretch space-x-2">
-                                {mainNavItems.map((item) => (
+                                {mainNavItemsWithPrefix.map((item) => (
                                     <NavigationMenuItem
                                         key={item.title}
                                         className="relative flex h-full items-center"

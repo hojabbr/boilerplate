@@ -1,4 +1,5 @@
-import { Head, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
+import { SeoHead } from '@/components/common/SeoHead';
 import InputError from '@/components/input-error';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -12,11 +13,29 @@ import PublicLayout, {
     type PublicSettings,
 } from '@/layouts/public-layout';
 
+interface Seo {
+    title: string;
+    description?: string;
+}
+
+interface ContactMessages {
+    heading?: string;
+    form_name?: string;
+    form_email?: string;
+    form_subject?: string;
+    form_message?: string;
+    form_send?: string;
+    label_email?: string;
+    label_phone?: string;
+}
+
 export default function ContactShow({
     settings = EMPTY_PUBLIC_SETTINGS,
     features = EMPTY_PUBLIC_FEATURES,
     success,
     contactStoreUrl,
+    seo,
+    messages = {},
 }: {
     settings?: PublicSettings & {
         email?: string | null;
@@ -25,6 +44,8 @@ export default function ContactShow({
     features?: PublicFeatures;
     success?: string;
     contactStoreUrl: string;
+    seo?: Seo;
+    messages?: ContactMessages;
 }) {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
@@ -32,13 +53,18 @@ export default function ContactShow({
         subject: '',
         message: '',
     });
+    const labelEmail = messages.label_email ?? 'Email';
+    const labelPhone = messages.label_phone ?? 'Phone';
 
     return (
         <PublicLayout settings={settings} features={features}>
-            <Head title="Contact" />
+            <SeoHead
+                title={seo?.title ?? 'Contact'}
+                description={seo?.description}
+            />
             <div className="mx-auto max-w-xl">
                 <h1 className="mb-6 text-2xl font-semibold text-foreground">
-                    Contact us
+                    {messages.heading ?? 'Contact us'}
                 </h1>
                 {success && (
                     <Alert className="mb-4">
@@ -56,7 +82,9 @@ export default function ContactShow({
                     className="space-y-4"
                 >
                     <div className="grid gap-2">
-                        <Label htmlFor="name">Name</Label>
+                        <Label htmlFor="name">
+                            {messages.form_name ?? 'Name'}
+                        </Label>
                         <Input
                             id="name"
                             type="text"
@@ -69,7 +97,9 @@ export default function ContactShow({
                         />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email">
+                            {messages.form_email ?? 'Email'}
+                        </Label>
                         <Input
                             id="email"
                             type="email"
@@ -82,7 +112,9 @@ export default function ContactShow({
                         />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="subject">Subject</Label>
+                        <Label htmlFor="subject">
+                            {messages.form_subject ?? 'Subject'}
+                        </Label>
                         <Input
                             id="subject"
                             type="text"
@@ -95,7 +127,9 @@ export default function ContactShow({
                         />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="message">Message</Label>
+                        <Label htmlFor="message">
+                            {messages.form_message ?? 'Message'}
+                        </Label>
                         <Textarea
                             id="message"
                             rows={5}
@@ -108,15 +142,23 @@ export default function ContactShow({
                         />
                     </div>
                     <Button type="submit" disabled={processing}>
-                        Send
+                        {messages.form_send ?? 'Send'}
                     </Button>
                 </form>
                 {(settings.email || settings.phone) && (
                     <div className="mt-8 border-t border-border pt-6">
                         <p className="text-sm text-muted-foreground">
-                            {settings.email && <>Email: {settings.email}</>}
+                            {settings.email && (
+                                <>
+                                    {labelEmail}: {settings.email}
+                                </>
+                            )}
                             {settings.email && settings.phone && ' • '}
-                            {settings.phone && <>Phone: {settings.phone}</>}
+                            {settings.phone && (
+                                <>
+                                    {labelPhone}: {settings.phone}
+                                </>
+                            )}
                         </p>
                     </div>
                 )}

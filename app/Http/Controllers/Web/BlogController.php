@@ -55,6 +55,14 @@ class BlogController extends Controller
                 'blog' => Feature::active('blog'),
                 'contactForm' => Feature::active('contact-form'),
             ],
+            'seo' => [
+                'title' => __('Blog'),
+                'description' => __('Our latest news and articles.'),
+            ],
+            'messages' => [
+                'title' => __('blog.title'),
+                'no_posts' => __('blog.no_posts'),
+            ],
         ]);
     }
 
@@ -96,6 +104,9 @@ class BlogController extends Controller
             'type' => 'file',
         ])->values()->all();
 
+        $firstImage = $post->getFirstMedia('gallery');
+        $ogImage = $firstImage?->getUrl('full') ?: null;
+
         return Inertia::render('blog/Show', [
             'post' => [
                 'title' => $post->title,
@@ -106,6 +117,16 @@ class BlogController extends Controller
                 'gallery' => $gallery,
                 'videos' => $videos,
                 'documents' => $documents,
+            ],
+            'seo' => [
+                'title' => $post->title,
+                'description' => $post->meta_description ?: $post->excerpt,
+                'image' => $ogImage,
+                'type' => 'article',
+            ],
+            'messages' => [
+                'media_gallery' => __('blog.media_gallery'),
+                'documents' => __('blog.documents'),
             ],
             'settings' => [
                 'company_name' => $setting->company_name,

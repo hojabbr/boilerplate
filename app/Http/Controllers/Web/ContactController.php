@@ -37,6 +37,20 @@ class ContactController extends Controller
             ],
             'contactStoreUrl' => route('contact.store'),
             'success' => session('success'),
+            'seo' => [
+                'title' => __('Contact'),
+                'description' => __('Get in touch with us.'),
+            ],
+            'messages' => [
+                'heading' => __('contact.heading'),
+                'form_name' => __('contact.form.name'),
+                'form_email' => __('contact.form.email'),
+                'form_subject' => __('contact.form.subject'),
+                'form_message' => __('contact.form.message'),
+                'form_send' => __('contact.form.send'),
+                'label_email' => __('contact.label_email'),
+                'label_phone' => __('contact.label_phone'),
+            ],
         ]);
     }
 
@@ -48,6 +62,6 @@ class ContactController extends Controller
 
         ContactSubmission::create($request->validated());
 
-        return redirect()->back()->with('success', __('Your message has been sent.'));
+        return redirect()->back()->with('success', __('contact.message_sent'));
     }
 }

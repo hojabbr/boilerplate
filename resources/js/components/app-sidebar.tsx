@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
 import LanguageSwitcher from '@/components/language-switcher';
 import { NavFooter } from '@/components/nav-footer';
@@ -18,14 +18,6 @@ import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
-
 const footerNavItems: NavItem[] = [
     {
         title: 'Repository',
@@ -40,13 +32,23 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { locale } = usePage().props as { locale?: string };
+    const prefix = locale ? `/${locale}` : '';
+    const mainNavItems: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: `${prefix}${dashboard.url()}`,
+            icon: LayoutGrid,
+        },
+    ];
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={`${prefix}${dashboard.url()}`} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

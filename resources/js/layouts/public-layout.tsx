@@ -47,37 +47,44 @@ export default function PublicLayout({
     features = EMPTY_PUBLIC_FEATURES,
     canRegister = true,
 }: PublicLayoutProps) {
-    const { auth, locale } = usePage().props as {
+    const { auth, locale, translations } = usePage().props as {
         auth: { user: unknown };
         locale: string;
+        translations?: Record<string, string>;
     };
+    const t = translations ?? {};
     const prefix = locale ? `/${locale}` : '';
     const showPages = features.pages ?? false;
     const showBlog = features.blog ?? false;
     const showContact = features.contactForm ?? false;
-    const siteName = settings.company_name || 'App';
+    const siteName =
+        settings.company_name || (t['common.app_fallback'] ?? 'App');
 
     const mainNavItems: NavItem[] = [
-        { label: 'Home', href: prefix || home.url(), show: true },
         {
-            label: 'About',
+            label: t['nav.home'] ?? 'Home',
+            href: prefix ? prefix : home.url(),
+            show: true,
+        },
+        {
+            label: t['nav.about'] ?? 'About',
             href: `${prefix}${page.show.url({ slug: 'about-us' })}`,
             show: showPages,
             desktopClass: 'hidden sm:inline-flex',
         },
         {
-            label: 'Privacy',
+            label: t['nav.privacy'] ?? 'Privacy',
             href: `${prefix}${page.show.url({ slug: 'privacy-policy' })}`,
             show: showPages,
             desktopClass: 'hidden md:inline-flex',
         },
         {
-            label: 'Blog',
+            label: t['nav.blog'] ?? 'Blog',
             href: `${prefix}${blog.index.url()}`,
             show: showBlog,
         },
         {
-            label: 'Contact',
+            label: t['nav.contact'] ?? 'Contact',
             href: `${prefix}${contact.show.url()}`,
             show: showContact,
         },
@@ -88,7 +95,7 @@ export default function PublicLayout({
             <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
                 <div className="mx-auto flex h-14 max-w-6xl flex-wrap items-center justify-between gap-4 px-4 sm:h-16 sm:px-6 lg:px-8">
                     <Link
-                        href={prefix || home.url()}
+                        href={prefix ? prefix : home.url()}
                         className="text-lg font-semibold text-foreground"
                     >
                         {siteName}
@@ -132,17 +139,23 @@ export default function PublicLayout({
                         </div>
                         {auth?.user ? (
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={dashboard.url()}>Dashboard</Link>
+                                <Link href={`${prefix}${dashboard.url()}`}>
+                                    {t['nav.dashboard'] ?? 'Dashboard'}
+                                </Link>
                             </Button>
                         ) : (
                             <>
                                 <Button variant="ghost" size="sm" asChild>
-                                    <Link href={login.url()}>Log in</Link>
+                                    <Link href={`${prefix}${login.url()}`}>
+                                        {t['nav.login'] ?? 'Log in'}
+                                    </Link>
                                 </Button>
                                 {canRegister && (
                                     <Button variant="outline" size="sm" asChild>
-                                        <Link href={register.url()}>
-                                            Register
+                                        <Link
+                                            href={`${prefix}${register.url()}`}
+                                        >
+                                            {t['nav.register'] ?? 'Register'}
                                         </Link>
                                     </Button>
                                 )}
@@ -169,7 +182,9 @@ export default function PublicLayout({
                                     variant="ghost"
                                     size="icon"
                                     className="text-muted-foreground hover:text-foreground"
-                                    aria-label="Open menu"
+                                    aria-label={
+                                        t['nav.open_menu'] ?? 'Open menu'
+                                    }
                                 >
                                     <Menu className="size-5" />
                                 </Button>
@@ -202,8 +217,11 @@ export default function PublicLayout({
                                             className="mt-2 w-full justify-start"
                                             asChild
                                         >
-                                            <Link href={dashboard.url()}>
-                                                Dashboard
+                                            <Link
+                                                href={`${prefix}${dashboard.url()}`}
+                                            >
+                                                {t['nav.dashboard'] ??
+                                                    'Dashboard'}
                                             </Link>
                                         </Button>
                                     ) : (
@@ -214,8 +232,10 @@ export default function PublicLayout({
                                                 className="mt-2 w-full justify-start"
                                                 asChild
                                             >
-                                                <Link href={login.url()}>
-                                                    Log in
+                                                <Link
+                                                    href={`${prefix}${login.url()}`}
+                                                >
+                                                    {t['nav.login'] ?? 'Log in'}
                                                 </Link>
                                             </Button>
                                             {canRegister && (
@@ -225,8 +245,11 @@ export default function PublicLayout({
                                                     className="w-full justify-start"
                                                     asChild
                                                 >
-                                                    <Link href={register.url()}>
-                                                        Register
+                                                    <Link
+                                                        href={`${prefix}${register.url()}`}
+                                                    >
+                                                        {t['nav.register'] ??
+                                                            'Register'}
                                                     </Link>
                                                 </Button>
                                             )}
@@ -253,19 +276,19 @@ export default function PublicLayout({
                                     href={`${prefix}${page.show.url({ slug: 'privacy-policy' })}`}
                                     className="hover:text-foreground"
                                 >
-                                    Privacy
+                                    {t['nav.privacy'] ?? 'Privacy'}
                                 </Link>
                                 <Link
                                     href={`${prefix}${page.show.url({ slug: 'terms-of-use' })}`}
                                     className="hover:text-foreground"
                                 >
-                                    Terms
+                                    {t['nav.terms'] ?? 'Terms'}
                                 </Link>
                                 <Link
                                     href={`${prefix}${page.show.url({ slug: 'about-us' })}`}
                                     className="hover:text-foreground"
                                 >
-                                    About
+                                    {t['nav.about'] ?? 'About'}
                                 </Link>
                             </>
                         )}
@@ -274,7 +297,7 @@ export default function PublicLayout({
                                 href={`${prefix}${blog.index.url()}`}
                                 className="hover:text-foreground"
                             >
-                                Blog
+                                {t['nav.blog'] ?? 'Blog'}
                             </Link>
                         )}
                         {showContact && (
@@ -282,7 +305,7 @@ export default function PublicLayout({
                                 href={`${prefix}${contact.show.url()}`}
                                 className="hover:text-foreground"
                             >
-                                Contact
+                                {t['nav.contact'] ?? 'Contact'}
                             </Link>
                         )}
                     </nav>

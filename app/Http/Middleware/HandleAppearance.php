@@ -17,6 +17,7 @@ class HandleAppearance
     public function handle(Request $request, Closure $next): Response
     {
         View::share('appearance', $request->cookie('appearance') ?? 'system');
+        View::share('isRtl', in_array(app()->getLocale(), ['ar', 'fa'], true));
 
         return $next($request);
     }

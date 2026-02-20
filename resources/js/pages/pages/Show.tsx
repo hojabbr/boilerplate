@@ -1,8 +1,8 @@
-import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import Lightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
+import { SeoHead } from '@/components/common/SeoHead';
 import { Button } from '@/components/ui/button';
 import PublicLayout, {
     EMPTY_PUBLIC_FEATURES,
@@ -26,18 +26,25 @@ interface PageData {
     gallery?: GalleryItem[];
 }
 
+interface Seo {
+    title: string;
+    description?: string | null;
+    image?: string | null;
+}
+
 export default function PageShow({
     page,
     settings = EMPTY_PUBLIC_SETTINGS,
     features = EMPTY_PUBLIC_FEATURES,
+    seo,
 }: {
     page: PageData;
     settings?: PublicSettings;
     features?: PublicFeatures;
+    seo?: Seo;
 }) {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(0);
-    const title = page.meta_title || page.title;
     const gallery = page.gallery ?? [];
     const slides = gallery.map((item) => ({
         src: item.full_url || item.url,
@@ -45,11 +52,11 @@ export default function PageShow({
 
     return (
         <PublicLayout settings={settings} features={features}>
-            <Head title={title}>
-                {page.meta_description && (
-                    <meta name="description" content={page.meta_description} />
-                )}
-            </Head>
+            <SeoHead
+                title={seo?.title ?? page.meta_title ?? page.title}
+                description={seo?.description ?? page.meta_description}
+                image={seo?.image}
+            />
             <article className="mx-auto max-w-3xl">
                 <h1 className="mb-4 text-2xl font-semibold text-foreground">
                     {page.title}

@@ -1,4 +1,4 @@
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, usePage } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -22,15 +22,26 @@ export default function Login({
     canResetPassword,
     canRegister,
 }: Props) {
+    const { translations, locale } = usePage().props as {
+        translations?: Record<string, string>;
+        locale?: string;
+    };
+    const t = translations ?? {};
+    const prefix = locale ? `/${locale}` : '';
+
     return (
         <AuthLayout
-            title="Log in to your account"
-            description="Enter your email and password below to log in"
+            title={t['auth.login_title'] ?? 'Log in to your account'}
+            description={
+                t['auth.login_description'] ??
+                'Enter your email and password below to log in'
+            }
         >
-            <Head title="Log in" />
+            <Head title={t['auth.login'] ?? 'Log in'} />
 
             <Form
                 {...store.form()}
+                action={`${prefix}${store.form().action}`}
                 resetOnSuccess={['password']}
                 className="flex flex-col gap-6"
             >
@@ -38,27 +49,35 @@ export default function Login({
                     <>
                         <div className="grid gap-6">
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                                <Label htmlFor="email">
+                                    {t['auth.email'] ?? 'Email address'}
+                                </Label>
                                 <Input
                                     id="email"
                                     type="email"
                                     name="email"
                                     required
                                     autoComplete="email"
-                                    placeholder="email@example.com"
+                                    placeholder={
+                                        t['auth.placeholder_email'] ??
+                                        'email@example.com'
+                                    }
                                 />
                                 <InputError message={errors.email} />
                             </div>
 
                             <div className="grid gap-2">
                                 <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
+                                    <Label htmlFor="password">
+                                        {t['auth.password'] ?? 'Password'}
+                                    </Label>
                                     {canResetPassword && (
                                         <TextLink
-                                            href={request()}
+                                            href={`${prefix}${request().url}`}
                                             className="ml-auto text-sm"
                                         >
-                                            Forgot password?
+                                            {t['auth.forgot_password'] ??
+                                                'Forgot password?'}
                                         </TextLink>
                                     )}
                                 </div>
@@ -68,14 +87,19 @@ export default function Login({
                                     name="password"
                                     required
                                     autoComplete="current-password"
-                                    placeholder="Password"
+                                    placeholder={
+                                        t['auth.placeholder_password'] ??
+                                        'Password'
+                                    }
                                 />
                                 <InputError message={errors.password} />
                             </div>
 
                             <div className="flex items-center space-x-3">
                                 <Checkbox id="remember" name="remember" />
-                                <Label htmlFor="remember">Remember me</Label>
+                                <Label htmlFor="remember">
+                                    {t['auth.remember_me'] ?? 'Remember me'}
+                                </Label>
                             </div>
 
                             <Button
@@ -85,14 +109,17 @@ export default function Login({
                                 data-test="login-button"
                             >
                                 {processing && <Spinner />}
-                                Log in
+                                {t['auth.login'] ?? 'Log in'}
                             </Button>
                         </div>
 
                         {canRegister && (
                             <div className="text-center text-sm text-muted-foreground">
-                                Don't have an account?{' '}
-                                <TextLink href={register()}>Sign up</TextLink>
+                                {t['auth.no_account'] ??
+                                    "Don't have an account?"}{' '}
+                                <TextLink href={`${prefix}${register.url()}`}>
+                                    {t['auth.sign_up'] ?? 'Sign up'}
+                                </TextLink>
                             </div>
                         )}
                     </>

@@ -19,7 +19,11 @@ Route::group(
         Route::get('/', LandingController::class)->name('home');
 
         Route::get('dashboard', function () {
-            return Inertia::render('dashboard');
+            return Inertia::render('dashboard', [
+                'messages' => [
+                    'title' => __('common.dashboard'),
+                ],
+            ]);
         })->middleware(['auth', 'verified'])->name('dashboard');
 
         Route::get('search', SearchController::class)->name('search');

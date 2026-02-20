@@ -1,4 +1,4 @@
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, usePage } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,23 +8,41 @@ import AuthLayout from '@/layouts/auth-layout';
 import { store } from '@/routes/password/confirm';
 
 export default function ConfirmPassword() {
+    const { translations, locale } = usePage().props as {
+        translations?: Record<string, string>;
+        locale?: string;
+    };
+    const t = translations ?? {};
+    const prefix = locale ? `/${locale}` : '';
+
     return (
         <AuthLayout
-            title="Confirm your password"
-            description="This is a secure area of the application. Please confirm your password before continuing."
+            title={t['auth.confirm_title'] ?? 'Confirm your password'}
+            description={
+                t['auth.confirm_description'] ??
+                'This is a secure area of the application. Please confirm your password before continuing.'
+            }
         >
-            <Head title="Confirm password" />
+            <Head title={t['auth.confirm_title'] ?? 'Confirm password'} />
 
-            <Form {...store.form()} resetOnSuccess={['password']}>
+            <Form
+                {...store.form()}
+                action={`${prefix}${store.form().action}`}
+                resetOnSuccess={['password']}
+            >
                 {({ processing, errors }) => (
                     <div className="space-y-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">
+                                {t['auth.password'] ?? 'Password'}
+                            </Label>
                             <Input
                                 id="password"
                                 type="password"
                                 name="password"
-                                placeholder="Password"
+                                placeholder={
+                                    t['auth.placeholder_password'] ?? 'Password'
+                                }
                                 autoComplete="current-password"
                             />
 
@@ -38,7 +56,8 @@ export default function ConfirmPassword() {
                                 data-test="confirm-password-button"
                             >
                                 {processing && <Spinner />}
-                                Confirm password
+                                {t['auth.confirm_password_button'] ??
+                                    'Confirm password'}
                             </Button>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import { SeoHead } from '@/components/common/SeoHead';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -17,24 +18,51 @@ import blog from '@/routes/blog';
 import contact from '@/routes/contact';
 import page from '@/routes/page';
 
+interface Seo {
+    title: string;
+    description?: string;
+}
+
+interface WelcomeMessages {
+    heading?: string;
+    tagline_fallback?: string;
+    cta_get_started?: string;
+    cta_contact_us?: string;
+    explore?: string;
+    about_us_title?: string;
+    about_us_description?: string;
+    blog_title?: string;
+    blog_description?: string;
+    contact_title?: string;
+    contact_description?: string;
+}
+
 interface WelcomeProps {
     canRegister?: boolean;
     settings?: PublicSettings;
     features?: PublicFeatures;
+    seo?: Seo;
+    messages?: WelcomeMessages;
 }
+
+const EMPTY_WELCOME_MESSAGES: WelcomeMessages = {};
 
 export default function Welcome({
     canRegister = true,
     settings = EMPTY_PUBLIC_SETTINGS,
     features = EMPTY_PUBLIC_FEATURES,
+    seo,
+    messages = EMPTY_WELCOME_MESSAGES,
 }: WelcomeProps) {
     const { locale } = usePage().props as { locale: string };
     const prefix = locale ? `/${locale}` : '';
     const showPages = features.pages ?? false;
     const showBlog = features.blog ?? false;
     const showContact = features.contactForm ?? false;
-    const tagline = settings.tagline || 'Build something great.';
-    const companyName = settings.company_name || 'App';
+    const tagline =
+        settings.tagline ||
+        (messages.tagline_fallback ?? 'Build something great.');
+    const companyName = settings.company_name ?? 'App';
 
     return (
         <PublicLayout
@@ -42,17 +70,14 @@ export default function Welcome({
             features={features}
             canRegister={canRegister}
         >
-            <Head title="Welcome">
-                <link rel="preconnect" href="https://fonts.bunny.net" />
-                <link
-                    href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600"
-                    rel="stylesheet"
-                />
-            </Head>
+            <SeoHead
+                title={seo?.title ?? 'Welcome'}
+                description={seo?.description}
+            />
             <article className="flex flex-col gap-12 py-8 sm:py-12 lg:gap-16 lg:py-16">
                 <section className="mx-auto w-full max-w-3xl text-center">
                     <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-                        Welcome to {companyName}
+                        {messages.heading ?? `Welcome to ${companyName}`}
                     </h1>
                     <p className="mt-4 text-lg text-muted-foreground sm:text-xl">
                         {tagline}
@@ -60,13 +85,15 @@ export default function Welcome({
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                         {canRegister && (
                             <Button size="lg" asChild>
-                                <Link href={register()}>Get started</Link>
+                                <Link href={`${prefix}${register.url()}`}>
+                                    {messages.cta_get_started ?? 'Get started'}
+                                </Link>
                             </Button>
                         )}
                         {showContact && (
                             <Button variant="outline" size="lg" asChild>
                                 <Link href={`${prefix}${contact.show.url()}`}>
-                                    Contact us
+                                    {messages.cta_contact_us ?? 'Contact us'}
                                 </Link>
                             </Button>
                         )}
@@ -75,7 +102,7 @@ export default function Welcome({
                 {(showPages || showBlog || showContact) && (
                     <section className="border-t border-border pt-12 lg:pt-16">
                         <h2 className="mb-6 text-center text-sm font-medium tracking-wider text-muted-foreground uppercase">
-                            Explore
+                            {messages.explore ?? 'Explore'}
                         </h2>
                         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                             {showPages && (
@@ -85,10 +112,13 @@ export default function Welcome({
                                 >
                                     <Card className="h-full">
                                         <CardHeader>
-                                            <CardTitle>About us</CardTitle>
+                                            <CardTitle>
+                                                {messages.about_us_title ??
+                                                    'About us'}
+                                            </CardTitle>
                                             <CardDescription>
-                                                Learn more about our company and
-                                                mission.
+                                                {messages.about_us_description ??
+                                                    'Learn more about our company and mission.'}
                                             </CardDescription>
                                         </CardHeader>
                                     </Card>
@@ -101,10 +131,12 @@ export default function Welcome({
                                 >
                                     <Card className="h-full">
                                         <CardHeader>
-                                            <CardTitle>Blog</CardTitle>
+                                            <CardTitle>
+                                                {messages.blog_title ?? 'Blog'}
+                                            </CardTitle>
                                             <CardDescription>
-                                                Read our latest articles and
-                                                updates.
+                                                {messages.blog_description ??
+                                                    'Read our latest articles and updates.'}
                                             </CardDescription>
                                         </CardHeader>
                                     </Card>
@@ -117,9 +149,13 @@ export default function Welcome({
                                 >
                                     <Card className="h-full">
                                         <CardHeader>
-                                            <CardTitle>Contact</CardTitle>
+                                            <CardTitle>
+                                                {messages.contact_title ??
+                                                    'Contact'}
+                                            </CardTitle>
                                             <CardDescription>
-                                                Get in touch with our team.
+                                                {messages.contact_description ??
+                                                    'Get in touch with our team.'}
                                             </CardDescription>
                                         </CardHeader>
                                     </Card>

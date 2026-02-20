@@ -1,0 +1,3 @@
+# For scripts/fonts-to-woff2.py (optional; Node script is default: npm run fonts:woff2)
+fonttools>=4.0.0
+brotli>=1.0.0

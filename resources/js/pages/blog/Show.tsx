@@ -1,4 +1,3 @@
-import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import Lightbox from 'yet-another-react-lightbox';
 import Captions from 'yet-another-react-lightbox/plugins/captions';
@@ -10,6 +9,7 @@ import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
 import 'yet-another-react-lightbox/plugins/thumbnails.css';
 import 'yet-another-react-lightbox/plugins/captions.css';
+import { SeoHead } from '@/components/common/SeoHead';
 import { Button } from '@/components/ui/button';
 import PublicLayout, {
     EMPTY_PUBLIC_FEATURES,
@@ -73,14 +73,32 @@ function buildSlides(gallery: GalleryItem[], videos: VideoItem[]): Slide[] {
     return [...imageSlides, ...videoSlides];
 }
 
+interface Seo {
+    title: string;
+    description?: string | null;
+    image?: string | null;
+    type?: 'website' | 'article';
+}
+
+interface BlogShowMessages {
+    media_gallery?: string;
+    documents?: string;
+}
+
+const EMPTY_BLOG_SHOW_MESSAGES: BlogShowMessages = {};
+
 export default function BlogShow({
     post,
     settings = EMPTY_PUBLIC_SETTINGS,
     features = EMPTY_PUBLIC_FEATURES,
+    seo,
+    messages = EMPTY_BLOG_SHOW_MESSAGES,
 }: {
     post: Post;
     settings?: PublicSettings;
     features?: PublicFeatures;
+    seo?: Seo;
+    messages?: BlogShowMessages;
 }) {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -90,14 +108,17 @@ export default function BlogShow({
     const documents = post.documents ?? [];
     const slides = buildSlides(gallery, videos);
     const hasMedia = slides.length > 0;
+    const mediaGalleryLabel = messages.media_gallery ?? 'Gallery';
+    const documentsLabel = messages.documents ?? 'Documents';
 
     return (
         <PublicLayout settings={settings} features={features}>
-            <Head title={post.title}>
-                {post.meta_description && (
-                    <meta name="description" content={post.meta_description} />
-                )}
-            </Head>
+            <SeoHead
+                title={seo?.title ?? post.title}
+                description={seo?.description ?? post.meta_description}
+                image={seo?.image}
+                type={seo?.type ?? 'article'}
+            />
             <article className="mx-auto max-w-3xl">
                 <h1 className="mb-2 text-2xl font-semibold text-foreground">
                     {post.title}
@@ -119,9 +140,9 @@ export default function BlogShow({
                 />
 
                 {hasMedia && (
-                    <section className="mt-8" aria-label="Media gallery">
+                    <section className="mt-8" aria-label={mediaGalleryLabel}>
                         <h2 className="mb-4 text-lg font-medium text-foreground">
-                            Gallery
+                            {mediaGalleryLabel}
                         </h2>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                             {gallery.map((item, index) => (
@@ -180,9 +201,9 @@ export default function BlogShow({
                 )}
 
                 {documents.length > 0 && (
-                    <section className="mt-8" aria-label="Documents">
+                    <section className="mt-8" aria-label={documentsLabel}>
                         <h2 className="mb-4 text-lg font-medium text-foreground">
-                            Documents
+                            {documentsLabel}
                         </h2>
                         <ul className="space-y-2">
                             {documents.map((item) => (
