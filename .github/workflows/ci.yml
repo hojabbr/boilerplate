@@ -114,6 +114,12 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          tools: composer:v2
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:

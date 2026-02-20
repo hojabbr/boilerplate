@@ -519,8 +519,8 @@ test:
 runs-on: ubuntu-latest
 strategy:
 matrix:
-php-version: [8.2, 8.3]
-node-version: [18.x]
+php-version: [8.5]
+node-version: [24.x]
 steps:
 - checkout
 - setup php & composer
