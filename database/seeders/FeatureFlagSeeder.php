@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\FeatureFlag;
+use App\Core\Models\FeatureFlag;
 use Illuminate\Database\Seeder;
 use Laravel\Pennant\Feature;
 

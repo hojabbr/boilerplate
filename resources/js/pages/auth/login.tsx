@@ -1,4 +1,5 @@
 import { Form, Head, usePage } from '@inertiajs/react';
+import { LabeledInputField } from '@/components/common/LabeledInputField';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -50,23 +51,19 @@ export default function Login({
                 {({ processing, errors }) => (
                     <>
                         <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">
-                                    {t['auth.email'] ?? 'Email address'}
-                                </Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    required
-                                    autoComplete="email"
-                                    placeholder={
-                                        t['auth.placeholder_email'] ??
-                                        'email@example.com'
-                                    }
-                                />
-                                <InputError message={errors.email} />
-                            </div>
+                            <LabeledInputField
+                                id="email"
+                                label={t['auth.email'] ?? 'Email address'}
+                                type="email"
+                                name="email"
+                                required
+                                autoComplete="email"
+                                placeholder={
+                                    t['auth.placeholder_email'] ??
+                                    'email@example.com'
+                                }
+                                error={errors.email}
+                            />
 
                             <div className="grid gap-2">
                                 <div className="flex items-center">

@@ -18,3 +18,4 @@ parameters:
     ignoreErrors:
         - '#PHPDoc tag#'
         - '#Call to an undefined method Spatie\\Image\\Drivers\\ImageDriver::nonQueued\(\)#'
+        - '#Method App\\Domains\\Blog\\Queries\\GetPublishedPosts::handle\(\) return type with generic class Illuminate\\Pagination\\LengthAwarePaginator does not specify its types#'

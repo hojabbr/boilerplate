@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\LandingSection;
-use App\Models\Page;
-use App\Models\Setting;
+use App\Core\Models\Setting;
+use App\Domains\Landing\Models\LandingSection;
+use App\Domains\Pages\Models\Page;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Pennant\Feature;
@@ -79,7 +79,7 @@ test('landing sections cache is invalidated when section is updated and next req
 });
 
 test('setting cache is used on read and invalidated on delete', function () {
-    $key = 'setting.site';
+    $key = Setting::siteCacheKey();
     Cache::forget($key);
 
     $this->get('/en');
@@ -101,8 +101,8 @@ test('page cache is invalidated on delete', function () {
     ]);
 
     $this->get('/en/page/cache-delete-test');
-    $this->assertNotNull(Cache::get('page.cache-delete-test'));
+    $this->assertNotNull(Cache::get(Page::slugCacheKey('cache-delete-test')));
 
     $page->delete();
-    $this->assertNull(Cache::get('page.cache-delete-test'));
+    $this->assertNull(Cache::get(Page::slugCacheKey('cache-delete-test')));
 });

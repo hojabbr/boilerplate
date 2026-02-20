@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\BlogPost;
-use App\Models\Language;
+use App\Core\Models\Language;
+use App\Domains\Blog\Models\BlogPost;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;

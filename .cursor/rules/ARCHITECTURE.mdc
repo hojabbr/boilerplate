@@ -28,33 +28,52 @@ This structure enables multiple teams to work in parallel while minimizing coupl
 ## 📁 **2. Backend Folder & Domain Structure**
 
 app/
-├── Actions/                    # Business logic operations (use cases)
-├── Data/DTOs/                  # Typed data transfer objects
+├── Core/                       # Cross-domain infrastructure
+│   ├── Contracts/              # Shared interfaces (e.g. PagePropsServiceInterface)
+│   ├── Exceptions/             # DomainException and shared exceptions
+│   ├── Middleware/             # Global HTTP middleware (HandleInertiaRequests, HandleAppearance, etc.)
+│   ├── Models/                 # Cross-cutting models (Language, Setting, FeatureFlag)
+│   ├── Observers/              # Observers for Core models (LanguageObserver, SettingObserver)
+│   ├── Policies/               # Policies for Core models (FeatureFlagPolicy)
+│   ├── Providers/              # AppServiceProvider, Fortify, Telescope, Horizon, Filament AdminPanel
+│   ├── Services/               # Shared services (e.g. PagePropsService for Inertia props)
+│   ├── Support/                # Helpers, base classes
+│   └── Traits/                 # Shared model/controller traits
+├── Domains/                    # Feature-based vertical slices; each owns its HTTP, Models, Observers, Policies, Jobs
+│   ├── Auth/                   # Models/User, Policies/UserPolicy, Actions (Fortify), Jobs/ (optional)
+│   ├── Blog/                   # Http/, Models/BlogPost, Queries, Search, Policies, Jobs/ (optional)
+│   ├── Contact/                # Http/, Models/ContactSubmission, Actions, Policies, Jobs/ (optional)
+│   ├── Dashboard/              # Http/Controllers, Jobs/ (optional)
+│   ├── Landing/                # Http/, Models/, DTOs, Services, Observers, Policies, Jobs/ (optional)
+│   ├── Pages/                  # Http/, Models/Page, Queries, Search, Observers, Policies, Jobs/ (optional)
+│   ├── Profile/                # Http/Controllers, Http/Requests (profile, password, 2FA), Jobs/ (optional)
+│   └── Search/                 # Http/Controllers (orchestrates Blog + Pages search), Jobs/ (optional)
+├── Features/                   # Pennant feature-flag definitions only (BlogFeature, ContactFormFeature, PagesFeature)
+├── Filament/                   # Admin UI only; resources reference Core/Domain models
 ├── Http/
-│   ├── Controllers/
-│   │   ├── Auth/              # Authentication & Fortify overrides
-│   │   ├── Web/               # Inertia controllers
-│   │   └── Api/               # API controllers (if needed)
-│   ├── Middleware/            # Locale detection, auth, role guards
-│   └── Requests/              # FormRequests (validation)
-├── Jobs/                      # Queued jobs (e.g., indexing, emails)
-├── Models/                    # Eloquent models + relations
-├── Policies/                  # Authorization policies
-├── Notifications/             # Notification definitions
-├── Providers/                 # Service providers (bindings, schedules)
-├── Queries/                   # Spatie Query Builder query objects
-├── Search/                    # Scout/Meilisearch indexing configuration
-├── Services/                  # Shared domain services (SearchSync, Pricing)
-└── Rules/                     # Custom validation rules
+│   └── Controllers/Controller.php   # Base controller only; domain controllers extend it
+└── Rules/                      # Optional: custom validation rules
+
+**Domain HTTP:** Controllers and Requests live inside each domain under `Domains/<Name>/Http/Controllers/` and `Domains/<Name>/Http/Requests/`. Routes point to these domain controllers (e.g. `App\Domains\Blog\Http\Controllers\BlogController`). There is no global `app/Http/Controllers/Web/` or `app/Http/Controllers/Settings/`. **Models** live in `Core/Models/` (Language, Setting, FeatureFlag) or in each domain under `Domains/<Name>/Models/`; there is no top-level `app/Models/`. **Middleware** live in `Core/Middleware/` (HandleInertiaRequests, HandleAppearance, SetLocalizedFortifyRedirects, EnsureUserHasAdminRole); `app/Http/` holds only the base Controller.
+
+**Domain structure per slice:** Each domain may contain **Models/**, **Observers/**, **Policies/**, **Http/**, **Queries/**, **Services/**, **Search/**, **Actions/**, **DTOs/**, **Jobs/** (queued jobs for that domain), and optionally **Providers/**. **Core** may contain **Jobs/** for cross-cutting queued work (e.g. search reindexing that spans domains). There is no global `app/Jobs/`; jobs live in `Domains/<Name>/Jobs/` or `Core/Jobs/`. **Core** holds cross-cutting **Models/** (Language, Setting, FeatureFlag), **Observers/**, **Policies/**, and **Providers/** (AppServiceProvider, Fortify, Telescope, Horizon, Filament). **PagePropsService** lives in `Core/Services/` and implements `Core/Contracts/PagePropsServiceInterface`; it builds the settings slice and feature-flags array for Inertia shared props. Policies are registered in `Core/Providers/AppServiceProvider::registerPolicies()`.
 
 ### 📌 Domain Concepts
 
-- **Controllers** act as adapters translating HTTP → Actions.  
-- **Actions** encapsulate single business flows, improving testability.  
-- **DTOs** unify inputs/outputs between controllers and services.  
-- **Policies** secure resource access.  
-- **Queries** centralize query logic (filtering, sorting, relations).  
-- **Services** manage cross‑cutting concerns (search syncing, jobs, reports).
+- **Controllers** live in `Domains/<Name>/Http/Controllers/`. They are thin: call domain Queries/Services/Actions, merge with PagePropsService when needed, return `Inertia::render(...)`. They extend `App\Http\Controllers\Controller`.
+- **Requests** (FormRequests) live in `Domains/<Name>/Http/Requests/` alongside their controllers.
+- **Domains** encapsulate all domain logic: Http (entry points), Queries, Services, Search, Actions, DTOs.
+- **Core** holds cross-cutting code only: Middleware, Models (Language, Setting, FeatureFlag), Observers, Policies, Providers, PagePropsService, contracts, exceptions, traits.
+- **Filament** is UI-only; resources use Domain Queries or model scopes, not inline business logic.
+- **Features/** (Pennant) = feature-flag definitions; do not confuse with frontend “features” or Domains.
+
+### Naming conventions (Backend)
+
+- **PHP files and classes:** PascalCase (e.g. `BlogController`, `PagePropsService`, `BlogPost`).
+- **Namespaces:** Match folder structure.
+- **Filament resources:** Plural resource name (e.g. `BlogPosts`, `Pages`); CRUD pages under `ResourceName/Pages/` (e.g. `ListBlogPosts`, `CreateBlogPost`, `EditBlogPost`).
+
+**IDE Helper (barryvdh/laravel-ide-helper):** Model discovery uses `config/ide-helper.php` → `model_locations`: `app/Core/Models` and each `app/Domains/<Name>/Models`. Run `php artisan ide-helper:models -M` (or `composer run post-autoload-dump`) to regenerate `_ide_helper_models.php` after adding or moving models.
 
 ### 🗑️ Soft Deletes and Cascading
 
@@ -157,9 +176,9 @@ Use **Laravel Pennant** for all feature flagging: gradual rollouts, A/B tests, a
 
 ## 🌐 **6. Real‑Time & Background Jobs**
 
-- **Laravel Reverb** for WebSockets and user notifications.  
-- Use Events + Listeners for domain events (e.g., user registered, order placed).  
-- **Jobs/Queues** handle async tasks (email, search reindexing, analytics).
+- **Laravel Reverb** for WebSockets and user notifications. 
+- Use Events + Listeners for domain events (e.g., user registered, order placed). 
+- **Jobs** live in **Domains/<Name>/Jobs/** or **Core/Jobs/** (no global `app/Jobs/`). Use `ShouldQueue` for async tasks (email, search reindexing, analytics).
 
 ---
 
@@ -261,17 +280,41 @@ This setup reflects common modern patterns for Laravel + React with **no separat
 resources/
 └── js/
 ├── app.tsx                     # Inertia entry and SSR integration
-├── pages/                      # Inertia page components (SSR)
-├── layouts/                    # Shared layout components
+├── ssr.tsx                     # SSR entry
+├── pages/                      # Inertia page components (SSR); names match backend (e.g. auth/login, blog/Index)
+├── layouts/                    # Shared layout components (auth, app, settings, public)
 ├── components/                 # Shared reusable components
 │   ├── ui/                     # Shadcn UI extensions/adapters
-│   ├── common/                 # Generic, shared UI parts
-│   └── feature/                # Feature‑scoped components
+│   └── common/                 # Generic, shared UI parts (LabeledInputField, motion-presets, PaginatorLinks, SeoHead)
+├── features/                   # Feature modules (vertical slices); see features/README.md
+│   ├── auth/                   # components/, hooks/, services/, types.ts, index.ts
+│   ├── blog/                   # components/, hooks/, services/, types.ts, index.ts
+│   ├── contact/                # components/, hooks/, services/, types.ts, index.ts
+│   ├── dashboard/              # components/, hooks/, services/, types.ts, index.ts
+│   ├── landing/                # components/, hooks/, services/, types.ts, index.ts
+│   ├── pages/                  # CMS page feature (components/, hooks/, services/, types.ts, index.ts)
+│   └── profile/                # profile & settings (components/, hooks/, services/, types.ts, index.ts)
+├── context/                    # Optional React contexts (ThemeContext, AuthContext)
+├── hooks/                      # Shared React hooks (use-appearance, use-mobile, use-initials, etc.)
 ├── i18n/                       # i18next configuration + translation files
+├── lib/                        # Shared helpers (e.g. lib/utils.ts for cn, decodeHtml)
+├── services/                   # Central config (e.g. inertiaConfig.ts for CSRF/headers)
 ├── store/                      # Zustand state modules
-├── utils/                      # Helpers (fetch, inertia helpers)
+├── themes/                     # Theme definitions (light.ts, dark.ts, sepia.ts, index.ts)
 ├── types/                      # Shared TS types (backend DTO mirrors)
-└── tests/                      # Frontend tests (Jest/Playwright)
+└── (wayfinder-generated: actions/, routes/, wayfinder/)
+
+**Path aliases:** `@/*` → `resources/js/*`; optional `@features/*` → `resources/js/features/*`. Inertia pages live in `resources/js/pages/` with the same names as backend `Inertia::render()` (e.g. `auth/login`, `blog/Index`, `welcome`).
+
+Frontend tests may live in `tests/` at repo root (e.g. Pest Browser/Playwright) or in `resources/js/__tests__/` when using Jest/RTL; align with project setup.
+
+### Naming conventions (Frontend)
+
+- **Page files:** kebab-case or PascalCase consistently (e.g. `login.tsx`, `Index.tsx`); auth/settings typically kebab-case.
+- **Layout files:** kebab-case (e.g. `public-layout.tsx`, `app-sidebar-layout.tsx`).
+- **Component files:** kebab-case (e.g. `appearance-toggle-tabs.tsx`, `text-link.tsx`); `common/` may use PascalCase for component files (e.g. `LabeledInputField.tsx`).
+- **React components and default exports:** PascalCase.
+- **Hooks:** file names kebab-case (`use-mobile.tsx`, `use-appearance.tsx`); hook names `use*` PascalCase (e.g. `useIsMobile`, `useAppearance`).
 
 ### 🍃 UI Principles
 
@@ -427,10 +470,10 @@ SSR strategy:
 📦 common/
 	•	Shared compositions that **use** ui primitives and are used across multiple pages or layouts: NavSearch, language switcher, theme switcher, SocialLinks, SeoHead, BackButton, PaginatorLinks. **Motion presets** (`motion-presets.ts`) live here as the single source of truth for page/section animation; use them instead of ad-hoc animation config (DRY). Shared UX patterns (e.g. link styling, appearance toggle) are implemented via components that consume ui primitives.
 
-📦 feature/
-	•	Feature-specific compositions built from ui (and optionally common) for a single feature area (e.g. product card, user profile widgets).
+📦 features/<name>/components/
+	•	Feature-specific compositions built from ui (and optionally common) for a single feature area (e.g. BlogPostCard, contact form). Each feature lives under `resources/js/features/<name>/` with components/, hooks/, services/, types.ts, index.ts.
 
-Design intent: components are isolated by scope and shared where appropriate; always prefer ui primitives over reinventing with raw HTML and Tailwind.
+Design intent: components are isolated by scope; feature-scoped UI in `resources/js/features/*/components/`, shared UI in `resources/js/components/`. Always prefer ui primitives over reinventing with raw HTML and Tailwind.
 
 Use shared components for repeated UX: **TextLink** for inline links (underline, transition-colors), **AppearanceToggleTab** / theme-switcher for theme, language-switcher for locale. Keeps link and theme behavior consistent and DRY.
 

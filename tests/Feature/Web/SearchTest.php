@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\BlogPost;
-use App\Models\Language;
-use App\Models\Page;
+use App\Core\Models\Language;
+use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Pages\Models\Page;
 
 beforeEach(function () {
     $this->locale = 'en';

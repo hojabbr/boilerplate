@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\LandingSections;
 
+use App\Domains\Landing\Models\LandingSection;
 use App\Filament\Resources\LandingSections\Pages\CreateLandingSection;
 use App\Filament\Resources\LandingSections\Pages\EditLandingSection;
 use App\Filament\Resources\LandingSections\Pages\ListLandingSections;
 use App\Filament\Resources\LandingSections\RelationManagers\ItemsRelationManager;
 use App\Filament\Resources\LandingSections\Schemas\LandingSectionForm;
 use App\Filament\Resources\LandingSections\Tables\LandingSectionsTable;
-use App\Models\LandingSection;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

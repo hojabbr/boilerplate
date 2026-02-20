@@ -2,14 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Language;
+use App\Core\Models\Language;
+use App\Domains\Blog\Models\BlogPost;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\BlogPost>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Domains\Blog\Models\BlogPost>
  */
 class BlogPostFactory extends Factory
 {
+    protected $model = BlogPost::class;
+
     /**
      * Define the model's default state.
      * BlogPost is row-per-locale: language_id + string columns (no Translatable).

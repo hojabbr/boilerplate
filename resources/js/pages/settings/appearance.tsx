@@ -1,5 +1,5 @@
 import { Head, usePage } from '@inertiajs/react';
-import AppearanceTabs from '@/components/appearance-tabs';
+import AppearanceToggleTabs from '@/components/appearance-toggle-tabs';
 import Heading from '@/components/heading';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
@@ -41,7 +41,7 @@ export default function Appearance() {
                             "Update your account's appearance settings"
                         }
                     />
-                    <AppearanceTabs />
+                    <AppearanceToggleTabs />
                 </div>
             </SettingsLayout>
         </AppLayout>

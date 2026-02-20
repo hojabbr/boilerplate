@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Web\BlogController;
-use App\Http\Controllers\Web\ContactController;
-use App\Http\Controllers\Web\LandingController;
-use App\Http\Controllers\Web\PageController;
-use App\Http\Controllers\Web\SearchController;
+use App\Domains\Blog\Http\Controllers\BlogController;
+use App\Domains\Contact\Http\Controllers\ContactController;
+use App\Domains\Dashboard\Http\Controllers\DashboardController;
+use App\Domains\Landing\Http\Controllers\LandingController;
+use App\Domains\Pages\Http\Controllers\PageController;
+use App\Domains\Search\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 // Root path: ensure web middleware (and thus LocaleCookieRedirect) runs so
@@ -24,13 +24,9 @@ Route::group(
 
         Route::get('/', LandingController::class)->name('home');
 
-        Route::get('dashboard', function () {
-            return Inertia::render('dashboard', [
-                'messages' => [
-                    'title' => __('common.dashboard'),
-                ],
-            ]);
-        })->middleware(['auth', 'verified'])->name('dashboard');
+        Route::get('dashboard', DashboardController::class)
+            ->middleware(['auth', 'verified'])
+            ->name('dashboard');
 
         Route::get('search', SearchController::class)->name('search');
         Route::get('page/{slug}', [PageController::class, 'show'])->name('page.show');

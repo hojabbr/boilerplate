@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\BlogPost;
-use App\Models\Language;
+use App\Core\Models\Language;
+use App\Domains\Blog\Models\BlogPost;
 use Illuminate\Database\Seeder;
 use Throwable;
 

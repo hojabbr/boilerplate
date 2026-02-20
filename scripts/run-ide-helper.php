@@ -3,6 +3,9 @@
 /**
  * Run Laravel IDE Helper commands only when the dev dependency is installed.
  * Allows "composer install --no-dev" (e.g. in CI release) to succeed without the package.
+ *
+ * Model locations (ide-helper:models) are set in config/ide-helper.php to
+ * app/Core/Models and each app/Domains/Name/Models (domain-centric layout).
  */
 $vendorDir = __DIR__.'/../vendor/barryvdh/laravel-ide-helper';
 if (! is_dir($vendorDir)) {

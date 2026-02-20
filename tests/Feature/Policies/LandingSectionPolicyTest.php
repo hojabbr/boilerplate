@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\LandingSection;
-use App\Models\User;
+use App\Domains\Auth\Models\User;
+use App\Domains\Landing\Models\LandingSection;
 use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {

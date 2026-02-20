@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\Settings\PasswordController;
-use App\Http\Controllers\Settings\ProfileController;
-use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
+use App\Core\Middleware\EnsureTwoFactorPasswordConfirm;
+use App\Domains\Profile\Http\Controllers\PasswordController;
+use App\Domains\Profile\Http\Controllers\ProfileController;
+use App\Domains\Profile\Http\Controllers\TwoFactorAuthenticationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,5 +28,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('appearance.edit');
 
     Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'show'])
+        ->middleware(EnsureTwoFactorPasswordConfirm::class)
         ->name('two-factor.show');
 });

@@ -18,6 +18,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- **Architecture:** Backend reorganized into `app/Core/` (contracts, exceptions, shared PagePropsService) and `app/Domains/` (Auth, Blog, Contact, Pages, Dashboard, Profile, Landing) with Actions, DTOs, Queries, Services. Controllers are thin and delegate to domain classes. Fortify actions moved to `App\Domains\Auth\Actions\`. Frontend reorganized under `resources/js/` with `features/` (auth, blog, contact, dashboard, landing, pages, profile), `context/`, `themes/`, `services/`. See ARCHITECTURE.mdc and README for full structure.
+
 ### Added
 
 - Initial release as open-source Laravel React boilerplate (Laravel 12, Inertia 2, React 19, Filament, localization, feature flags, Scout, Reverb).

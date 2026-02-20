@@ -14,7 +14,7 @@ Use `search-docs` for detailed Laravel Fortify patterns and documentation.
 ## Usage
 
 - **Routes**: Use `list-routes` with `only_vendor: true` and `action: "Fortify"` to see all registered endpoints
-- **Actions**: Check `app/Actions/Fortify/` for customizable business logic (user creation, password validation, etc.)
+- **Actions**: Check `app/Domains/Auth/Actions/` for customizable business logic (user creation, password validation, etc.)
 - **Config**: See `config/fortify.php` for all options including features, guards, rate limiters, and username field
 - **Contracts**: Look in `Laravel\Fortify\Contracts\` for overridable response classes (`LoginResponse`, `LogoutResponse`, etc.)
 - **Views**: All view callbacks are set in `FortifyServiceProvider::boot()` using `Fortify::loginView()`, `Fortify::registerView()`, etc.
@@ -91,7 +91,7 @@ Override authentication behavior using `Fortify::authenticateUsing()` for custom
 
 ### Registration Customization
 
-Modify `app/Actions/Fortify/CreateNewUser.php` to customize user creation logic, validation rules, and additional fields.
+Modify `app/Domains/Auth/Actions/CreateNewUser.php` to customize user creation logic, validation rules, and additional fields.
 
 ### Rate Limiting
 
@@ -100,7 +100,7 @@ Configure via `fortify.limiters.login` in config. Default configuration throttle
 ## Key Endpoints
 
 | Feature                | Method   | Endpoint                                    |
-|------------------------|----------|---------------------------------------------|
+| ---------------------- | -------- | ------------------------------------------- |
 | Login                  | POST     | `/login`                                    |
 | Logout                 | POST     | `/logout`                                   |
 | Register               | POST     | `/register`                                 |

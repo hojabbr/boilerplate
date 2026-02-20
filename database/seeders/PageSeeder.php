@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Page;
+use App\Domains\Pages\Models\Page;
 use Database\Factories\PageFactory;
 use Illuminate\Database\Seeder;
 use Throwable;

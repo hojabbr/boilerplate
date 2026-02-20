@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\ContactSubmissions;
 
+use App\Domains\Contact\Models\ContactSubmission;
 use App\Filament\Resources\ContactSubmissions\Pages\EditContactSubmission;
 use App\Filament\Resources\ContactSubmissions\Pages\ListContactSubmissions;
 use App\Filament\Resources\ContactSubmissions\Schemas\ContactSubmissionForm;
 use App\Filament\Resources\ContactSubmissions\Tables\ContactSubmissionsTable;
-use App\Models\ContactSubmission;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\LandingSection;
-use App\Models\LandingSectionItem;
+use App\Domains\Landing\Models\LandingSection;
+use App\Domains\Landing\Models\LandingSectionItem;
 use Illuminate\Database\Seeder;
 use Throwable;
 

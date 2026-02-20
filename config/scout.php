@@ -140,10 +140,10 @@ return [
         'host' => env('MEILISEARCH_HOST', 'http://localhost:7700'),
         'key' => env('MEILISEARCH_KEY'),
         'index-settings' => [
-            \App\Models\BlogPost::class => [
+            \App\Domains\Blog\Models\BlogPost::class => [
                 'filterableAttributes' => ['language_id'],
             ],
-            \App\Models\Page::class => [],
+            \App\Domains\Pages\Models\Page::class => [],
         ],
     ],
 

@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\Languages;
 
+use App\Core\Models\Language;
 use App\Filament\Resources\Languages\Pages\CreateLanguage;
 use App\Filament\Resources\Languages\Pages\EditLanguage;
 use App\Filament\Resources\Languages\Pages\ListLanguages;
 use App\Filament\Resources\Languages\Schemas\LanguageForm;
 use App\Filament\Resources\Languages\Tables\LanguagesTable;
-use App\Models\Language;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

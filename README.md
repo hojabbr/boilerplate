@@ -3,35 +3,104 @@
 [![CI](https://github.com/hojabbr/boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/hojabbr/boilerplate/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A starter kit for building localized Laravel 12 + Inertia 2 + React 19 applications. Use this as a template or clone to kickstart full-stack apps with auth, admin, feature flags, search, and real-time support.
+A production-ready starter for **Laravel 12**, **Inertia 2**, and **React 19** with localization, Filament admin, feature flags, full-text search, and real-time support. Use it as a template or clone to build full-stack apps without redoing auth, i18n, theme, or tooling.
 
 **Repository:** [github.com/hojabbr/boilerplate](https://github.com/hojabbr/boilerplate)
 
-## Features
+---
 
-- **Backend:** Laravel 12, Fortify (auth), Filament (admin), Scout + Meilisearch, Reverb (WebSockets), Pennant (feature flags), mcamara/laravel-localization
-- **Frontend:** Inertia 2, React 19, Tailwind CSS v4, Shadcn UI, i18next, Zustand
-- **Localization:** Route prefixes per locale, translatable content (Spatie), RTL support (e.g. Arabic, Farsi)
-- **Theme:** Light / dark / system with persistent preference
-- **Optional features:** Blog, static pages, contact form, 2FA, registration — toggled via feature flags
+## What’s included
+
+- **Full-stack app** — Laravel backend + Inertia SSR + React frontend, no separate API layer
+- **Auth** — Login, registration, password reset, email verification, optional 2FA (Laravel Fortify)
+- **Admin** — Filament 5 panel at `/admin` with users, roles, settings, blog, pages, contact submissions, feature flags
+- **Localization** — Route prefixes per locale (mcamara), translatable content (Spatie), RTL (e.g. Arabic, Farsi)
+- **Theme** — Light / dark / system with persistent preference (cookie + localStorage)
+- **Search** — Laravel Scout + Meilisearch for typo-tolerant, faceted search
+- **Real-time** — Laravel Reverb (WebSockets) + Laravel Echo for broadcasts
+- **Feature flags** — Laravel Pennant to toggle blog, static pages, contact form, registration, 2FA
+- **Code quality** — Pint, PHPStan, ESLint, Prettier, Husky + Commitlint, optional semantic-release
+
+---
+
+## Tech stack
+
+### Backend (PHP)
+
+| Area              | Packages                                                                |
+| ----------------- | ----------------------------------------------------------------------- |
+| **Framework**     | Laravel 12                                                              |
+| **Auth**          | Laravel Fortify (credentials, 2FA, profile)                             |
+| **Admin**         | Filament 5, Lara Zeus (Spatie Translatable in Filament)                 |
+| **Localization**  | mcamara/laravel-localization (route prefixes, locale detection)         |
+| **Content**       | Spatie Laravel Translatable, Spatie Media Library, Spatie Query Builder |
+| **Permissions**   | Spatie Laravel Permission (roles & permissions)                         |
+| **Search**        | Laravel Scout, Meilisearch (meilisearch-php)                            |
+| **Real-time**     | Laravel Reverb                                                          |
+| **Feature flags** | Laravel Pennant                                                         |
+| **Queue / dev**   | Laravel Horizon, Laravel Telescope, Laravel Pail                        |
+| **Routes → TS**   | Laravel Wayfinder (typed route helpers for frontend)                    |
+| **OAuth**         | Laravel Socialite                                                       |
+| **Media**         | pbmedia/laravel-ffmpeg (video/audio processing)                         |
+
+### Frontend (JavaScript / TypeScript)
+
+| Area          | Packages                                                               |
+| ------------- | ---------------------------------------------------------------------- |
+| **Stack**     | React 19, Inertia 2, Vite 7, TypeScript                                |
+| **Styling**   | Tailwind CSS v4, Tailwind Merge, class-variance-authority              |
+| **UI**        | Shadcn-style components (Radix UI, Headless UI, Base UI), Lucide icons |
+| **i18n**      | i18next, react-i18next, i18next-browser-languagedetector               |
+| **State**     | Zustand                                                                |
+| **Forms**     | React Hook Form, Zod, @hookform/resolvers                              |
+| **Motion**    | Motion (LazyMotion + domAnimation)                                     |
+| **Real-time** | Laravel Echo, Pusher JS                                                |
+
+### DevOps & quality
+
+- **CI:** GitHub Actions (lint, PHPStan, Pint, ESLint, Prettier, Pest, Playwright)
+- **PHP:** Laravel Pint, Larastan (PHPStan), Pest 4, Pest Browser (Playwright)
+- **JS/TS:** ESLint, Prettier (with Tailwind plugin), Husky, Commitlint (Conventional Commits)
+- **Releases:** Optional semantic-release (changelog, tags, GitHub releases)
+
+### Project structure
+
+- **Backend:** `app/Core/` (contracts, exceptions, middleware, models like Language/Setting/FeatureFlag, observers, policies, providers, shared services like PagePropsService), `app/Domains/` (Auth, Blog, Contact, Pages, Dashboard, Profile, Landing, Search — each with Http/Controllers, Http/Requests, Models, Actions, DTOs, Queries, Services, Observers, Policies). Controllers live in each domain and are thin. Filament is UI-only and uses domain or Core models. Models live in `app/Core/Models/` or `app/Domains/<Name>/Models/`, not `app/Models/`. Pennant feature-flag definitions live in `app/Features/`.
+- **Frontend:** `resources/js/` — `pages/` (Inertia route views), `features/` (auth, blog, contact, dashboard, landing, pages, profile — each with components/, hooks/, services/, types.ts), `components/` (ui, common), `layouts/`, `hooks/`, `context/`, `store/`, `themes/`, `services/`, `types/`. Use `@/` for `resources/js` and optionally `@features/*` for feature modules.
+
+---
+
+## Optional features (gated by Pennant)
+
+These can be turned on or off via **Filament → Settings → Feature flags** (or in code):
+
+- **Blog** — Translatable posts, WYSIWYG, media (gallery, videos, documents), public listing and show with lightbox
+- **Static pages** — Per-locale CMS pages (e.g. Privacy, Terms)
+- **Contact form** — Public form with Filament list/edit of submissions
+- **Registration** — Fortify registration
+- **Two-factor authentication** — TOTP-based 2FA for users
+
+---
 
 ## Requirements
 
-- PHP 8.5+
-- Node 24+
-- Composer, npm (or pnpm)
-- Optional: Docker & [Laravel Sail](https://laravel.com/docs/sail) for a consistent environment
+- **PHP** 8.5+
+- **Node** 24+
+- **Composer** and **npm** (or pnpm)
+- Optional: **Docker** and [Laravel Sail](https://laravel.com/docs/sail) for a consistent environment
+
+---
 
 ## Installation
 
-1. **Clone the repository** (or use [Use this template](https://github.com/hojabbr/boilerplate/generate)):
+1. **Clone** (or use [Use this template](https://github.com/hojabbr/boilerplate/generate)):
 
     ```bash
     git clone https://github.com/hojabbr/boilerplate.git
     cd boilerplate
     ```
 
-2. **Install dependencies and configure environment:**
+2. **Backend setup:**
 
     ```bash
     composer install
@@ -39,22 +108,22 @@ A starter kit for building localized Laravel 12 + Inertia 2 + React 19 applicati
     php artisan key:generate
     ```
 
-    Edit `.env` and set at least: `APP_NAME`, `APP_URL`, `DB_*`, and optionally `MEILISEARCH_*`, `REVERB_*`, etc. See [.env.example](.env.example) for all options.
+    Edit `.env`: set `APP_NAME`, `APP_URL`, `DB_*`. Optionally set `MEILISEARCH_*`, `REVERB_*`, etc. (see [.env.example](.env.example)).
 
-3. **Install frontend dependencies and build:**
+3. **Frontend setup:**
 
     ```bash
     npm install
     npm run build
     ```
 
-4. **Run migrations:**
+4. **Database:**
 
     ```bash
     php artisan migrate
     ```
 
-    Optionally seed: `php artisan db:seed`.
+    Optional: `php artisan db:seed`.
 
 ### With Sail (Docker)
 
@@ -68,11 +137,16 @@ cp .env.example .env
 ./vendor/bin/sail artisan migrate
 ```
 
+---
+
 ## Development
 
 - **Backend:** `php artisan serve` or `./vendor/bin/sail up`
-- **Frontend (Vite):** `npm run dev` — or use `composer run dev` for server, queue, logs, and Vite in one command (with Sail: run inside the container).
-- **Admin panel:** Filament at `/admin` (locale-independent).
+- **Frontend (Vite):** `npm run dev`
+- **All-in-one (server, queue, logs, Vite):** `composer run dev` (with Sail, run inside the container)
+- **Admin:** [http://localhost/admin](http://localhost/admin) (locale-independent)
+
+---
 
 ## Testing
 
@@ -86,18 +160,25 @@ With Sail:
 ./vendor/bin/sail artisan test
 ```
 
-Contributors should run tests before submitting changes; see [CONTRIBUTING.md](CONTRIBUTING.md).
+Run tests before submitting changes; see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
 
 ## Documentation
 
 - **[.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc)** — Backend and frontend architecture, localization, feature flags, theme, RTL, DevOps, and conventions. Useful for contributors and for AI-assisted development (e.g. Cursor).
-- **Feature flags:** Laravel Pennant gates optional features (registration, 2FA, blog, pages, contact). See ARCHITECTURE “Feature Flags — Laravel Pennant”.
-- **Theme:** Single source of truth (`useAppearance`) for light/dark/system; see ARCHITECTURE “Theme (light / dark / system)”.
-- **RTL:** RTL locales set `dir="rtl"`; use direction-aware icons and logical spacing; see ARCHITECTURE “RTL and direction‑aware UI”.
+- **Naming:** Backend uses PascalCase for PHP files and classes; frontend follows ARCHITECTURE (see “Directory Structure” and “Naming conventions” there): kebab-case for page/component/layout files, PascalCase for React component names and hooks.
+- **Feature flags** — Laravel Pennant; see ARCHITECTURE “Feature Flags — Laravel Pennant”.
+- **Theme** — Single source of truth (`useAppearance`) for light/dark/system; see ARCHITECTURE “Theme (light / dark / system)”.
+- **RTL** — RTL locales set `dir="rtl"`; use direction-aware icons and logical spacing; see ARCHITECTURE “RTL and direction‑aware UI”.
+
+---
 
 ## Contributing
 
 Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+---
 
 ## License
 

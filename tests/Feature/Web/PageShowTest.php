@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Page;
+use App\Domains\Pages\Models\Page;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('page show returns correct content for locale and slug', function () {

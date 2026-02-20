@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\FeatureFlags;
 
+use App\Core\Models\FeatureFlag;
 use App\Filament\Resources\FeatureFlags\Pages\EditFeatureFlag;
 use App\Filament\Resources\FeatureFlags\Pages\ListFeatureFlags;
 use App\Filament\Resources\FeatureFlags\Schemas\FeatureFlagForm;
 use App\Filament\Resources\FeatureFlags\Tables\FeatureFlagsTable;
-use App\Models\FeatureFlag;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

@@ -41,7 +41,7 @@ components/
 ├── feature/ # Feature‑scoped components
 └── data/ # UI logic wrappers and helpers
 
-🛑 **Never modify the base `components/ui/` folder manually.** These are shadcn primitives that can be updated via CLI, and modifications can be lost or conflict when regenerating components. Instead, _extend and compose_ them in your own folders (`common/`, `feature/`, etc.). ([turn0search5](https://claude-plugins.dev/skills/%40JewelsHovan/pain-plus-site/shadcn-ui-best-practices), [turn0search16](https://go.lightnode.com/tech/shadcn-ui))
+🛑 **Never modify the base `components/ui/` folder manually.** These are shadcn primitives that can be updated via CLI, and modifications can be lost or conflict when regenerating components. Instead, _extend and compose_ them in your own folders (`common/`, or `features/<name>/components/` for feature-scoped UI). ([turn0search5](https://claude-plugins.dev/skills/%40JewelsHovan/pain-plus-site/shadcn-ui-best-practices), [turn0search16](https://go.lightnode.com/tech/shadcn-ui))
 
 ---
 
@@ -70,7 +70,7 @@ return <Button className="bg-primary text-white" {...props} />;
 }
 
     2.	Compose new logic outside ui/
-    •	Put new behaviors in components/common/ or components/feature/
+    •	Put new behaviors in components/common/ or features/<name>/components/
     •	Keep ui/ as pristine primitives
 
 This ensures upgrade safety and reduces merge conflicts when regenerating or updating components. (turn0search5￼)
@@ -124,7 +124,7 @@ to place tooltips anywhere. (turn0search0￼)
 🧪 Testing Practices
 
 When testing UI components:
-• Test your composed components (components/common/, components/feature/) not base primitives.
+• Test your composed components (components/common/, features/\*/components/) not base primitives.
 • Render extended components with RTL/jest/Playwright to validate accessibility and signal behavior.
 • Avoid asserting internal implementation of primitives; assert visible outcomes.
 

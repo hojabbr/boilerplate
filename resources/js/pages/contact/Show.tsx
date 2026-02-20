@@ -2,13 +2,13 @@ import { useForm, usePage } from '@inertiajs/react';
 import { Mail, Phone } from 'lucide-react';
 import { m } from 'motion/react';
 import { BackButton } from '@/components/common/BackButton';
+import { LabeledInputField } from '@/components/common/LabeledInputField';
 import { pageEnter } from '@/components/common/motion-presets';
 import { SeoHead } from '@/components/common/SeoHead';
 import SocialLinks from '@/components/common/SocialLinks';
 import InputError from '@/components/input-error';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import PublicLayout, {
@@ -117,66 +117,41 @@ export default function ContactShow({
                     }}
                     className="space-y-4"
                 >
-                    <div className="grid gap-2">
-                        <Label htmlFor="name">
-                            {messages.form_name ?? 'Name'}
-                        </Label>
-                        <Input
-                            id="name"
-                            type="text"
-                            name="name"
-                            required
-                            autoComplete="name"
-                            value={form.data.name}
-                            onChange={(e) =>
-                                form.setData('name', e.target.value)
-                            }
-                        />
-                        <InputError
-                            message={form.errors.name}
-                            className="text-destructive"
-                        />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">
-                            {messages.form_email ?? 'Email'}
-                        </Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            name="email"
-                            required
-                            autoComplete="email"
-                            value={form.data.email}
-                            onChange={(e) =>
-                                form.setData('email', e.target.value)
-                            }
-                        />
-                        <InputError
-                            message={form.errors.email}
-                            className="text-destructive"
-                        />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="subject">
-                            {messages.form_subject ?? 'Subject'}
-                        </Label>
-                        <Input
-                            id="subject"
-                            type="text"
-                            name="subject"
-                            required
-                            autoComplete="off"
-                            value={form.data.subject}
-                            onChange={(e) =>
-                                form.setData('subject', e.target.value)
-                            }
-                        />
-                        <InputError
-                            message={form.errors.subject}
-                            className="text-destructive"
-                        />
-                    </div>
+                    <LabeledInputField
+                        id="name"
+                        label={messages.form_name ?? 'Name'}
+                        type="text"
+                        name="name"
+                        required
+                        autoComplete="name"
+                        value={form.data.name}
+                        onChange={(e) => form.setData('name', e.target.value)}
+                        error={form.errors.name}
+                    />
+                    <LabeledInputField
+                        id="email"
+                        label={messages.form_email ?? 'Email'}
+                        type="email"
+                        name="email"
+                        required
+                        autoComplete="email"
+                        value={form.data.email}
+                        onChange={(e) => form.setData('email', e.target.value)}
+                        error={form.errors.email}
+                    />
+                    <LabeledInputField
+                        id="subject"
+                        label={messages.form_subject ?? 'Subject'}
+                        type="text"
+                        name="subject"
+                        required
+                        autoComplete="off"
+                        value={form.data.subject}
+                        onChange={(e) =>
+                            form.setData('subject', e.target.value)
+                        }
+                        error={form.errors.subject}
+                    />
                     <div className="grid gap-2">
                         <Label htmlFor="message">
                             {messages.form_message ?? 'Message'}

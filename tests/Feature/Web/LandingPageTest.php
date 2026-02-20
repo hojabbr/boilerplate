@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\LandingSection;
-use App\Models\Page;
+use App\Domains\Landing\Models\LandingSection;
+use App\Domains\Pages\Models\Page;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('landing page returns 200 and Inertia props with locale and settings', function () {

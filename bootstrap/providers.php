@@ -1,9 +1,9 @@
 <?php
 
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\Filament\AdminPanelProvider::class,
-    App\Providers\FortifyServiceProvider::class,
-    App\Providers\HorizonServiceProvider::class,
-    App\Providers\TelescopeServiceProvider::class,
+    App\Core\Providers\AppServiceProvider::class,
+    App\Core\Providers\Filament\AdminPanelProvider::class,
+    App\Core\Providers\FortifyServiceProvider::class,
+    App\Core\Providers\HorizonServiceProvider::class,
+    App\Core\Providers\TelescopeServiceProvider::class,
 ];

@@ -62,7 +62,9 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 ## Application Structure & Architecture
 
-- Stick to existing directory structure; don't create new base folders without approval.
+- **Backend:** Use `app/Core/` for cross-domain infrastructure (Contracts, Exceptions, Middleware, Models like Language/Setting/FeatureFlag, Observers, Policies, Providers, Services like PagePropsService). Use `app/Domains/<Name>/` for vertical slices (Auth, Blog, Contact, Pages, Dashboard, Profile, Landing, Search) with Http/Controllers, Http/Requests, Models, Actions, DTOs, Queries, Services, Observers, Policies. There is no global `app/Http/Controllers/Web/` or `app/Models/`; controllers and models live inside Core or each domain. Pennant feature definitions in `app/Features/`.
+- **Frontend:** Inertia pages live in `resources/js/pages/` (names match backend, e.g. `auth/login`, `blog/Index`). Feature-scoped code in `resources/js/features/<name>/` (components/, hooks/, services/, types.ts, index.ts). Shared UI in `resources/js/components/` (ui/, common/). Use path alias `@/` for `resources/js` and optionally `@features/*` for feature modules.
+- Stick to this directory structure; don't create new base folders without approval.
 - Do not change the application's dependencies without approval.
 
 ## Frontend Bundling
