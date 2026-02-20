@@ -30,7 +30,7 @@ const ChartStyleLazy = React.lazy(() =>
 export type { ChartConfig } from "./chart-recharts"
 
 export function ChartContainer(
-  props: React.ComponentProps<ChartRecharts.ChartContainer>
+  props: React.ComponentProps<typeof ChartRecharts.ChartContainer>
 ) {
   return (
     <React.Suspense fallback={chartFallback}>
@@ -40,7 +40,7 @@ export function ChartContainer(
 }
 
 export function ChartTooltip(
-  props: React.ComponentProps<ChartRecharts.ChartTooltip>
+  props: React.ComponentProps<typeof ChartRecharts.ChartTooltip>
 ) {
   return (
     <React.Suspense fallback={null}>
@@ -50,7 +50,7 @@ export function ChartTooltip(
 }
 
 export function ChartTooltipContent(
-  props: React.ComponentProps<ChartRecharts.ChartTooltipContent>
+  props: React.ComponentProps<typeof ChartRecharts.ChartTooltipContent>
 ) {
   return (
     <React.Suspense fallback={null}>
@@ -60,7 +60,7 @@ export function ChartTooltipContent(
 }
 
 export function ChartLegend(
-  props: React.ComponentProps<ChartRecharts.ChartLegend>
+  props: React.ComponentPropsWithoutRef<typeof ChartRecharts.ChartLegend>
 ) {
   return (
     <React.Suspense fallback={null}>
@@ -70,7 +70,9 @@ export function ChartLegend(
 }
 
 export function ChartLegendContent(
-  props: React.ComponentProps<ChartRecharts.ChartLegendContent>
+  props: React.ComponentPropsWithoutRef<
+    typeof ChartRecharts.ChartLegendContent
+  >
 ) {
   return (
     <React.Suspense fallback={null}>
@@ -80,7 +82,7 @@ export function ChartLegendContent(
 }
 
 export function ChartStyle(
-  props: React.ComponentProps<ChartRecharts.ChartStyle>
+  props: React.ComponentProps<typeof ChartRecharts.ChartStyle>
 ) {
   return (
     <React.Suspense fallback={null}>

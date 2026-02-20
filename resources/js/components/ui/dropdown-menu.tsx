@@ -36,7 +36,9 @@ function DropdownMenuContent({
   className,
   sideOffset = 4,
   ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Content> & {
+  dir?: 'ltr' | 'rtl';
+}) {
   const dir = useDirection()
   return (
     <DropdownMenuPrimitive.Portal>
@@ -228,7 +230,9 @@ function DropdownMenuSubTrigger({
 function DropdownMenuSubContent({
   className,
   ...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>) {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent> & {
+  dir?: 'ltr' | 'rtl';
+}) {
   const dir = useDirection()
   return (
     <DropdownMenuPrimitive.SubContent

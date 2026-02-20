@@ -22,8 +22,8 @@ export interface PaginatorLinksProps {
     links: PaginatorLinkItem[];
     currentPage: number;
     lastPage: number;
-    /** Optional "Page X of Y" label; set to false to hide */
-    pageLabel?: string | false;
+    /** Optional "Page X of Y" label; true = default label, string = custom, false = hide */
+    pageLabel?: string | boolean;
     /** Previous button label (for RTL/i18n). Default "Previous". */
     previousText?: string;
     /** Next button label (for RTL/i18n). Default "Next". */

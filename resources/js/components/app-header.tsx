@@ -32,7 +32,7 @@ import { useCurrentUrl } from '@/hooks/use-current-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
-import type { BreadcrumbItem, NavItem } from '@/types';
+import type { BreadcrumbItem, NavItem, User } from '@/types';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
@@ -60,7 +60,7 @@ const EMPTY_BREADCRUMBS: Props['breadcrumbs'] = [];
 export function AppHeader({ breadcrumbs = EMPTY_BREADCRUMBS }: Props) {
     const page = usePage();
     const { auth, locale } = page.props as {
-        auth: { user: { name: string; avatar?: string } };
+        auth: { user: User };
         locale?: string;
     };
     const prefix = locale ? `/${locale}` : '';
@@ -247,7 +247,7 @@ export function AppHeader({ breadcrumbs = EMPTY_BREADCRUMBS }: Props) {
                     </div>
                 </div>
             </div>
-            {breadcrumbs.length > 1 && (
+            {breadcrumbs && breadcrumbs.length > 1 && (
                 <div className="flex w-full border-b border-sidebar-border/70">
                     <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-muted-foreground md:max-w-7xl">
                         <Breadcrumbs breadcrumbs={breadcrumbs} />

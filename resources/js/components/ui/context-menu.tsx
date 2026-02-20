@@ -81,7 +81,9 @@ function ContextMenuSubTrigger({
 function ContextMenuSubContent({
   className,
   ...props
-}: React.ComponentProps<typeof ContextMenuPrimitive.SubContent>) {
+}: React.ComponentProps<typeof ContextMenuPrimitive.SubContent> & {
+  dir?: 'ltr' | 'rtl';
+}) {
   const dir = useDirection()
   return (
     <ContextMenuPrimitive.SubContent
@@ -99,7 +101,9 @@ function ContextMenuSubContent({
 function ContextMenuContent({
   className,
   ...props
-}: React.ComponentProps<typeof ContextMenuPrimitive.Content>) {
+}: React.ComponentProps<typeof ContextMenuPrimitive.Content> & {
+  dir?: 'ltr' | 'rtl';
+}) {
   const dir = useDirection()
   return (
     <ContextMenuPrimitive.Portal>

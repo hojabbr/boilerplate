@@ -71,7 +71,9 @@ function MenubarContent({
   alignOffset = -4,
   sideOffset = 8,
   ...props
-}: React.ComponentProps<typeof MenubarPrimitive.Content>) {
+}: React.ComponentProps<typeof MenubarPrimitive.Content> & {
+  dir?: 'ltr' | 'rtl';
+}) {
   const dir = useDirection()
   return (
     <MenubarPortal>
@@ -246,7 +248,9 @@ function MenubarSubTrigger({
 function MenubarSubContent({
   className,
   ...props
-}: React.ComponentProps<typeof MenubarPrimitive.SubContent>) {
+}: React.ComponentProps<typeof MenubarPrimitive.SubContent> & {
+  dir?: 'ltr' | 'rtl';
+}) {
   const dir = useDirection()
   return (
     <MenubarPrimitive.SubContent

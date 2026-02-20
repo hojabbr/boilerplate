@@ -53,6 +53,12 @@ jobs:
       - name: Lint frontend
         run: npm run lint
 
+      - name: Generate Wayfinder routes and actions (for type check)
+        run: |
+          cp .env.example .env
+          php artisan key:generate --no-interaction
+          php artisan wayfinder:generate --with-form --no-interaction
+
       - name: Type check
         run: npm run types
 
