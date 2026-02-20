@@ -97,15 +97,20 @@ export function PaginatorLinks({
                     </PaginationItem>
                     {pageLinks.map((link, index) => {
                         if (link.label === '...') {
+                            const prevUrl =
+                                pageLinks[index - 1]?.url ?? 'start';
+                            const nextUrl = pageLinks[index + 1]?.url ?? 'end';
                             return (
-                                <PaginationItem key={`ellipsis-${index}`}>
+                                <PaginationItem
+                                    key={`ellipsis-${prevUrl}-${nextUrl}`}
+                                >
                                     <PaginationEllipsis />
                                 </PaginationItem>
                             );
                         }
                         const pageNum = link.label;
                         return (
-                            <PaginationItem key={link.url ?? `page-${index}`}>
+                            <PaginationItem key={link.url ?? `page-${pageNum}`}>
                                 {link.url ? (
                                     <PaginationLink
                                         isActive={link.active}

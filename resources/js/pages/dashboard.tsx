@@ -27,9 +27,15 @@ export default function Dashboard() {
             <Head title={title} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    {[0, 1, 2].map((i) => (
+                    {(
+                        [
+                            'dashboard-card-1',
+                            'dashboard-card-2',
+                            'dashboard-card-3',
+                        ] as const
+                    ).map((cardKey, i) => (
                         <m.div
-                            key={i}
+                            key={cardKey}
                             className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
                             {...fadeInUpView}
                             transition={{
