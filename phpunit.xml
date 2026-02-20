@@ -29,6 +29,7 @@
         <env name="SESSION_DRIVER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="ROUTING_LOCALE" value="en"/>
+        <env name="SCOUT_DRIVER" value="collection"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
     </php>

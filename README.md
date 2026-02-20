@@ -17,8 +17,8 @@ A starter kit for building localized Laravel 12 + Inertia 2 + React 19 applicati
 
 ## Requirements
 
-- PHP 8.2+
-- Node 18+
+- PHP 8.5+
+- Node 24+
 - Composer, npm (or pnpm)
 - Optional: Docker & [Laravel Sail](https://laravel.com/docs/sail) for a consistent environment
 
