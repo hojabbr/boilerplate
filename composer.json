@@ -103,16 +103,12 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
             "@php artisan filament:upgrade",
-            "@php artisan ide-helper:generate --ansi",
-            "@php artisan ide-helper:models -M --ansi",
-            "@php artisan ide-helper:meta --ansi"
+            "@php scripts/run-ide-helper.php"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
             "@php artisan boost:update --ansi",
-            "@php artisan ide-helper:generate --ansi",
-            "@php artisan ide-helper:models -M --ansi",
-            "@php artisan ide-helper:meta --ansi"
+            "@php scripts/run-ide-helper.php"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
