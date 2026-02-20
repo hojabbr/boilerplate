@@ -25,6 +25,8 @@ export default function ForgotPassword({ status }: { status?: string }) {
                 t['auth.forgot_description'] ??
                 'Enter your email to receive a password reset link'
             }
+            backHref={`${prefix}${login.url()}`}
+            backLabel={t['auth.login'] ?? 'Back to login'}
         >
             <Head title={t['auth.forgot_title'] ?? 'Forgot password'} />
 
@@ -76,7 +78,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     )}
                 </Form>
 
-                <div className="space-x-1 text-center text-sm text-muted-foreground">
+                <div className="inline-flex flex-wrap items-center justify-center gap-1 text-center text-sm text-muted-foreground">
                     <span>{t['auth.return_to_login'] ?? 'Or, return to'}</span>{' '}
                     <TextLink href={`${prefix}${login.url()}`}>
                         {t['auth.login'] ?? 'log in'}

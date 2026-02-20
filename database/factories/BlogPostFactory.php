@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Language;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -11,6 +12,7 @@ class BlogPostFactory extends Factory
 {
     /**
      * Define the model's default state.
+     * BlogPost is row-per-locale: language_id + string columns (no Translatable).
      *
      * @return array<string, mixed>
      */
@@ -19,11 +21,12 @@ class BlogPostFactory extends Factory
         $title = fake()->sentence(4);
 
         return [
+            'language_id' => Language::factory(),
             'slug' => str()->slug($title).'-'.fake()->unique()->numberBetween(1, 99999),
-            'title' => ['en' => $title],
-            'excerpt' => ['en' => fake()->paragraph()],
-            'body' => ['en' => '<p>'.fake()->paragraphs(3, true).'</p>'],
-            'meta_description' => ['en' => fake()->sentence()],
+            'title' => $title,
+            'excerpt' => fake()->paragraph(),
+            'body' => '<p>'.fake()->paragraphs(3, true).'</p>',
+            'meta_description' => fake()->sentence(),
             'published_at' => now(),
         ];
     }

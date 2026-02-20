@@ -1,6 +1,10 @@
 import { Link, usePage } from '@inertiajs/react';
 import { Menu } from 'lucide-react';
+import { m } from 'motion/react';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { pageEnter } from '@/components/common/motion-presets';
 import NavSearch from '@/components/common/NavSearch';
+import SocialLinks from '@/components/common/SocialLinks';
 import LanguageSwitcher from '@/components/language-switcher';
 import ThemeSwitcher from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
@@ -9,12 +13,15 @@ import { dashboard, home, login, register } from '@/routes';
 import blog from '@/routes/blog';
 import contact from '@/routes/contact';
 import page from '@/routes/page';
+import type { BreadcrumbItem } from '@/types';
 
 export interface PublicSettings {
     company_name?: string;
     tagline?: string;
     email?: string;
     phone?: string;
+    /** Key-value map of social network key (e.g. twitter, linkedin) to URL */
+    social_links?: Record<string, string>;
 }
 
 export interface PublicFeatures {
@@ -29,6 +36,7 @@ export const EMPTY_PUBLIC_FEATURES: PublicFeatures = {};
 
 interface PublicLayoutProps {
     children: React.ReactNode;
+    breadcrumbs?: BreadcrumbItem[];
     settings?: PublicSettings;
     features?: PublicFeatures;
     canRegister?: boolean;
@@ -43,14 +51,23 @@ type NavItem = {
 
 export default function PublicLayout({
     children,
+    breadcrumbs,
     settings = EMPTY_PUBLIC_SETTINGS,
     features = EMPTY_PUBLIC_FEATURES,
     canRegister = true,
 }: PublicLayoutProps) {
-    const { auth, locale, translations } = usePage().props as {
+    const {
+        auth,
+        locale,
+        translations,
+        nav_pages = [],
+        footer_pages = [],
+    } = usePage().props as {
         auth: { user: unknown };
         locale: string;
         translations?: Record<string, string>;
+        nav_pages?: Array<{ slug: string; title: string }>;
+        footer_pages?: Array<{ slug: string; title: string }>;
     };
     const t = translations ?? {};
     const prefix = locale ? `/${locale}` : '';
@@ -66,18 +83,15 @@ export default function PublicLayout({
             href: prefix ? prefix : home.url(),
             show: true,
         },
-        {
-            label: t['nav.about'] ?? 'About',
-            href: `${prefix}${page.show.url({ slug: 'about-us' })}`,
-            show: showPages,
-            desktopClass: 'hidden sm:inline-flex',
-        },
-        {
-            label: t['nav.privacy'] ?? 'Privacy',
-            href: `${prefix}${page.show.url({ slug: 'privacy-policy' })}`,
-            show: showPages,
-            desktopClass: 'hidden md:inline-flex',
-        },
+        ...(showPages
+            ? (nav_pages as Array<{ slug: string; title: string }>).map(
+                  (p) => ({
+                      label: p.title,
+                      href: `${prefix}${page.show.url({ slug: p.slug })}`,
+                      show: true,
+                  }),
+              )
+            : []),
         {
             label: t['nav.blog'] ?? 'Blog',
             href: `${prefix}${blog.index.url()}`,
@@ -110,7 +124,7 @@ export default function PublicLayout({
                             (item) =>
                                 item.show && (
                                     <Button
-                                        key={item.label}
+                                        key={item.href}
                                         variant="ghost"
                                         size="sm"
                                         className={
@@ -198,7 +212,7 @@ export default function PublicLayout({
                                         (item) =>
                                             item.show && (
                                                 <Button
-                                                    key={item.label}
+                                                    key={item.href}
                                                     variant="ghost"
                                                     size="sm"
                                                     className="w-full justify-start"
@@ -262,7 +276,14 @@ export default function PublicLayout({
                 </div>
             </header>
             <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-                <div className="mx-auto max-w-6xl">{children}</div>
+                <m.div className="mx-auto max-w-6xl" {...pageEnter}>
+                    {breadcrumbs && breadcrumbs.length > 0 && (
+                        <div className="mb-4">
+                            <Breadcrumbs breadcrumbs={breadcrumbs} />
+                        </div>
+                    )}
+                    {children}
+                </m.div>
             </main>
             <footer className="border-t border-border py-6">
                 <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -270,28 +291,20 @@ export default function PublicLayout({
                         className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm text-muted-foreground"
                         aria-label="Footer"
                     >
-                        {showPages && (
-                            <>
-                                <Link
-                                    href={`${prefix}${page.show.url({ slug: 'privacy-policy' })}`}
-                                    className="hover:text-foreground"
-                                >
-                                    {t['nav.privacy'] ?? 'Privacy'}
-                                </Link>
-                                <Link
-                                    href={`${prefix}${page.show.url({ slug: 'terms-of-use' })}`}
-                                    className="hover:text-foreground"
-                                >
-                                    {t['nav.terms'] ?? 'Terms'}
-                                </Link>
-                                <Link
-                                    href={`${prefix}${page.show.url({ slug: 'about-us' })}`}
-                                    className="hover:text-foreground"
-                                >
-                                    {t['nav.about'] ?? 'About'}
-                                </Link>
-                            </>
-                        )}
+                        {(
+                            footer_pages as Array<{
+                                slug: string;
+                                title: string;
+                            }>
+                        ).map((p) => (
+                            <Link
+                                key={p.slug}
+                                href={`${prefix}${page.show.url({ slug: p.slug })}`}
+                                className="hover:text-foreground"
+                            >
+                                {p.title}
+                            </Link>
+                        ))}
                         {showBlog && (
                             <Link
                                 href={`${prefix}${blog.index.url()}`}
@@ -309,6 +322,14 @@ export default function PublicLayout({
                             </Link>
                         )}
                     </nav>
+                    {settings.social_links &&
+                        Object.keys(settings.social_links).length > 0 && (
+                            <SocialLinks
+                                social_links={settings.social_links}
+                                variant="footer"
+                                className="mt-4"
+                            />
+                        )}
                     <p className="mt-4 text-center text-sm text-muted-foreground">
                         © {new Date().getFullYear()} {siteName}. All rights
                         reserved.

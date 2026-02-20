@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
+import { login } from '@/routes';
 import { update } from '@/routes/password';
 
 type Props = {
@@ -27,6 +28,8 @@ export default function ResetPassword({ token, email }: Props) {
                 t['auth.reset_description'] ??
                 'Please enter your new password below'
             }
+            backHref={`${prefix}${login.url()}`}
+            backLabel={t['auth.login'] ?? 'Back to login'}
         >
             <Head title={t['auth.reset_title'] ?? 'Reset password'} />
 

@@ -52,3 +52,11 @@ test('localized dashboard route returns locale in shared props', function () {
         ->where('locale', 'en')
     );
 });
+
+test('root redirects to locale from cookie when user previously chose a language', function () {
+    // Simulate user having chosen fa: request / with locale cookie set (call() passes cookies to request).
+    // Should redirect to /fa, not /en.
+    $response = $this->call('GET', '/', [], ['locale' => 'fa']);
+    $response->assertRedirect();
+    expect($response->headers->get('Location'))->toContain('/fa');
+});

@@ -21,9 +21,16 @@ export function UserMenuContent({ user }: Props) {
     const prefix = locale ? `/${locale}` : '';
     const cleanup = useMobileNavigation();
 
-    const handleLogout = () => {
+    const handleLogout = (e: React.MouseEvent) => {
+        e.preventDefault();
         cleanup();
-        router.flushAll();
+        router.post(
+            `${prefix}${logout().url}`,
+            {},
+            {
+                onFinish: () => router.flushAll(),
+            },
+        );
     };
 
     return (
@@ -42,23 +49,22 @@ export function UserMenuContent({ user }: Props) {
                         prefetch
                         onClick={cleanup}
                     >
-                        <Settings className="mr-2" />
+                        <Settings className="me-2" />
                         Settings
                     </Link>
                 </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-                <Link
-                    className="block w-full cursor-pointer"
-                    href={`${prefix}${logout().url}`}
-                    as="button"
+                <button
+                    type="button"
+                    className="flex w-full cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     onClick={handleLogout}
                     data-test="logout-button"
                 >
-                    <LogOut className="mr-2" />
+                    <LogOut className="me-2 size-4" />
                     Log out
-                </Link>
+                </button>
             </DropdownMenuItem>
         </>
     );

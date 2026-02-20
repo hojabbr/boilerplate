@@ -1,9 +1,9 @@
 ---
 name: laravel-localization
-description: "Enables easy multilingual route and URL localization using the mcamara/laravel-localization package. Activates when adding localized routes, language switching, generating localized URLs, handling locale redirects, defining supported locales, or when the user mentions i18n, locale, multilanguage, translated routes, language selector, or SEO for languages."
+description: 'Enables easy multilingual route and URL localization using the mcamara/laravel-localization package. Activates when adding localized routes, language switching, generating localized URLs, handling locale redirects, defining supported locales, or when the user mentions i18n, locale, multilanguage, translated routes, language selector, or SEO for languages.'
 license: MIT
 metadata:
-  author: mcamara
+    author: mcamara
 ---
 
 # mcamara/laravel-localization for Laravel
@@ -22,9 +22,9 @@ Activate this skill when:
 
 ## Documentation
 
-Use `search-docs` to open the package repository and official README.  
+Use `search-docs` to open the package repository and official README.
 
-This package offers localized routing, automatic language detection, smart redirects, localized helpers, and translatable routes.  [oai_citation:1‡GitHub](https://github.com/mcamara/laravel-localization?utm_source=chatgpt.com)
+This package offers localized routing, automatic language detection, smart redirects, localized helpers, and translatable routes. [oai_citation:1‡GitHub](https://github.com/mcamara/laravel-localization)
 
 ## Installation
 
@@ -34,7 +34,7 @@ This package offers localized routing, automatic language detection, smart redir
 composer require mcamara/laravel-localization
 ```
 
-This installs the package into your Laravel project.  ￼
+This installs the package into your Laravel project. ￼
 
 ⸻
 
@@ -47,12 +47,12 @@ Publish the config file so you can customize settings:
 php artisan vendor:publish --provider="Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider"
 
 This creates the config/laravellocalization.php file where you can configure:
-	•	supportedLocales: languages your app supports
-	•	useAcceptLanguageHeader: auto detect language via browser
-	•	hideDefaultLocaleInURL: hide default locale prefix
-	•	localesOrder: custom order for languages
-	•	localesMapping: map locale codes to custom segments
-	•	urlsIgnored: exclude specific URLs from localization  ￼
+• supportedLocales: languages your app supports
+• useAcceptLanguageHeader: auto detect language via browser
+• hideDefaultLocaleInURL: hide default locale prefix
+• localesOrder: custom order for languages
+• localesMapping: map locale codes to custom segments
+• urlsIgnored: exclude specific URLs from localization ￼
 
 ⸻
 
@@ -63,17 +63,17 @@ Middleware
 Add the localization middleware in app/Http/Kernel.php:
 
 protected $middlewareGroups = [
-    'web' => [
-        \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
-        \Mcamara\LaravelLocalization\Middleware\LocalizationRedirect::class,
-        \Mcamara\LaravelLocalization\Middleware\LocaleViewPath::class,
-    ],
+'web' => [
+\Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
+\Mcamara\LaravelLocalization\Middleware\LocalizationRedirect::class,
+\Mcamara\LaravelLocalization\Middleware\LocaleViewPath::class,
+],
 ];
 
 Using this middleware enables:
-	•	Session/cookie storage of chosen locale
-	•	Redirects when locale is missing
-	•	View path switching based on locale  ￼
+• Session/cookie storage of chosen locale
+• Redirects when locale is missing
+• View path switching based on locale ￼
 
 ⸻
 
@@ -86,19 +86,19 @@ Wrap your routes so they respect locale prefixes:
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 Route::group([
-    'prefix' => LaravelLocalization::setLocale(),
-    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+'prefix' => LaravelLocalization::setLocale(),
+'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
 ], function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
+Route::get('/', function () {
+return view('welcome');
+});
 });
 
 This will produce URLs like:
-	•	/en
-	•	/es
-	•	/fr
-(and so on for each supported locale)  ￼
+• /en
+• /es
+• /fr
+(and so on for each supported locale) ￼
 
 ⸻
 
@@ -111,7 +111,7 @@ Return the URL adapted to a locale:
 
 {{ LaravelLocalization::getLocalizedURL('es') }}
 
-Generates a URL that includes the locale prefix.  ￼
+Generates a URL that includes the locale prefix. ￼
 
 ⸻
 
@@ -119,7 +119,7 @@ Get Supported Locales
 
 {{ LaravelLocalization::getSupportedLocales() }}
 
-Returns an array of all configured locales (code, name, native name).  ￼
+Returns an array of all configured locales (code, name, native name). ￼
 
 ⸻
 
@@ -127,7 +127,7 @@ Get Current Locale
 
 {{ LaravelLocalization::getCurrentLocale() }}
 
-Returns the active locale key.  ￼
+Returns the active locale key. ￼
 
 ⸻
 
@@ -147,7 +147,7 @@ Add a language selector in your Blade view:
 @endforeach
 </ul>
 
-This lets users switch languages easily.  ￼
+This lets users switch languages easily. ￼
 
 ⸻
 
@@ -159,23 +159,23 @@ To have different URLs per language, define translations in resources/lang/{loca
 
 // resources/lang/en/routes.php
 return [
-    'about' => 'about',
+'about' => 'about',
 ];
 
 // resources/lang/es/routes.php
 return [
-    'about' => 'acerca',
+'about' => 'acerca',
 ];
 
 Register them in routes:
 
 Route::get(LaravelLocalization::transRoute('routes.about'), function () {
-    return view('about');
+return view('about');
 });
 
 Localized routing now produces:
-	•	/en/about
-	•	/es/acerca  ￼
+• /en/about
+• /es/acerca ￼
 
 ⸻
 
@@ -192,23 +192,23 @@ List localized routes with:
 
 php artisan route:trans:list en
 
-(optional depending on version)  ￼
+(optional depending on version) ￼
 
 ⸻
 
 Common Pitfalls
-	•	Forgetting to wrap all localizable routes in the group
-	•	Missing middleware for locale redirection
-	•	Not using localized URLs in forms (may cause redirect loops)  ￼
+• Forgetting to wrap all localizable routes in the group
+• Missing middleware for locale redirection
+• Not using localized URLs in forms (may cause redirect loops) ￼
 
 ⸻
 
 Summary
 
-Feature	Purpose
-Localization package	Adds multilingual routing & helpers
-Localized routes	Prefix routes by locale
-Locale detection	Detect via browser/session/cookie
-Helpers	Generate localized URLs, route names
-Language selector	Easy user language switch
-Translated routes	Different URL per locale
+Feature Purpose
+Localization package Adds multilingual routing & helpers
+Localized routes Prefix routes by locale
+Locale detection Detect via browser/session/cookie
+Helpers Generate localized URLs, route names
+Language selector Easy user language switch
+Translated routes Different URL per locale

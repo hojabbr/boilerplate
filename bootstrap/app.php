@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+        $middleware->encryptCookies(except: ['appearance', 'locale', 'sidebar_state']);
 
         $middleware->alias([
             'localize' => LaravelLocalizationRoutes::class,
@@ -33,7 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->web(prepend: [
-            LocaleSessionRedirect::class,
+            LocaleCookieRedirect::class,
         ]);
         $middleware->web(append: [
             HandleAppearance::class,

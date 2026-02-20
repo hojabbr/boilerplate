@@ -13,11 +13,11 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
- * @mixin IdeHelperBlogPost
- *
  * @property \Carbon\CarbonImmutable|null $published_at
  *
  * @extends Model<BlogPost>
+ *
+ * @mixin IdeHelperBlogPost
  */
 class BlogPost extends Model implements HasMedia
 {

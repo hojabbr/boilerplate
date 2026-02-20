@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
+import { home } from '@/routes';
 import { store } from '@/routes/password/confirm';
 
 export default function ConfirmPassword() {
@@ -22,6 +23,8 @@ export default function ConfirmPassword() {
                 t['auth.confirm_description'] ??
                 'This is a secure area of the application. Please confirm your password before continuing.'
             }
+            backHref={prefix ? prefix : home.url()}
+            backLabel={t['nav.home'] ?? 'Back to Home'}
         >
             <Head title={t['auth.confirm_title'] ?? 'Confirm password'} />
 

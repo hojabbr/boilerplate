@@ -1,10 +1,9 @@
 // Components
-import { Form, Head, usePage } from '@inertiajs/react';
-import TextLink from '@/components/text-link';
+import { Form, Head, router, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
-import { logout } from '@/routes';
+import { login, logout } from '@/routes';
 import { send } from '@/routes/verification';
 
 export default function VerifyEmail({ status }: { status?: string }) {
@@ -22,6 +21,8 @@ export default function VerifyEmail({ status }: { status?: string }) {
                 t['auth.verify_description'] ??
                 'Please verify your email address by clicking on the link we just emailed to you.'
             }
+            backHref={`${prefix}${login.url()}`}
+            backLabel={t['auth.login'] ?? 'Back to login'}
         >
             <Head title={t['auth.verify_title'] ?? 'Email verification'} />
 
@@ -45,12 +46,16 @@ export default function VerifyEmail({ status }: { status?: string }) {
                                 'Resend verification email'}
                         </Button>
 
-                        <TextLink
-                            href={`${prefix}${logout().url}`}
-                            className="mx-auto block text-sm"
+                        <Button
+                            type="button"
+                            variant="link"
+                            className="mx-auto text-sm"
+                            onClick={() =>
+                                router.post(`${prefix}${logout().url}`)
+                            }
                         >
                             {t['auth.log_out'] ?? 'Log out'}
-                        </TextLink>
+                        </Button>
                     </>
                 )}
             </Form>

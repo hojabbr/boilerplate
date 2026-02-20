@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 use Laravel\Pennant\Feature;
@@ -19,13 +20,17 @@ class PageController extends Controller
             abort(404);
         }
 
-        $page = Page::query()->where('slug', $slug)->first();
+        $ttl = config('cache.content_ttl', 86400);
+        $page = Cache::remember("page.{$slug}", $ttl, fn (): ?Page => Page::query()->active()->where('slug', $slug)->first());
 
         if (! $page) {
             abort(404);
         }
 
         $setting = Setting::site();
+        $socialLinksRaw = $setting->getAttribute('social_links');
+        /** @var array<string, mixed> $socialLinks */
+        $socialLinks = is_array($socialLinksRaw) ? array_filter($socialLinksRaw) : [];
 
         $gallery = $page->getMedia('gallery')->map(fn ($media) => [
             'id' => $media->id,
@@ -45,8 +50,8 @@ class PageController extends Controller
                 'gallery' => $gallery,
             ],
             'seo' => [
-                'title' => $page->meta_title ?: $page->title,
-                'description' => $page->meta_description,
+                'title' => ($page->meta_title ?: $page->title).' - '.($setting->company_name ?: config('app.name')),
+                'description' => $page->meta_description ?: ($setting->tagline ?: config('app.description')),
                 'image' => $firstImage?->getUrl('full'),
             ],
             'settings' => [
@@ -54,6 +59,7 @@ class PageController extends Controller
                 'tagline' => $setting->tagline,
                 'email' => $setting->email,
                 'phone' => $setting->phone,
+                'social_links' => $socialLinks,
             ],
             'features' => [
                 'pages' => Feature::active('pages'),

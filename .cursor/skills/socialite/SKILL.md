@@ -1,9 +1,9 @@
 ---
 name: laravel-socialite
-description: "Enables OAuth social authentication via third-party providers (Google, GitHub, Facebook, LinkedIn, X, Slack, GitLab, Bitbucket). Activates when adding social login, configuring OAuth routes, handling provider callbacks, storing user tokens, invoking scopes, or when the user mentions social, OAuth, login with Google, Facebook, LinkedIn, Slack, GitHub, or SSO."
+description: 'Enables OAuth social authentication via third-party providers (Google, GitHub, Facebook, LinkedIn, X, Slack, GitLab, Bitbucket). Activates when adding social login, configuring OAuth routes, handling provider callbacks, storing user tokens, invoking scopes, or when the user mentions social, OAuth, login with Google, Facebook, LinkedIn, Slack, GitHub, or SSO.'
 license: MIT
 metadata:
-  author: laravel
+    author: laravel
 ---
 
 # Laravel Socialite (OAuth Social Login)
@@ -22,20 +22,20 @@ Activate this skill when:
 
 ## Documentation
 
-Use `search-docs` to open the Socialite section of the **Laravel 12.x** documentation.  [oai_citation:1‡Laravel](https://laravel.com/docs/12.x/socialite?utm_source=chatgpt.com)
+Use `search-docs` to open the Socialite section of the **Laravel 12.x** documentation. [oai_citation:1‡Laravel](https://laravel.com/docs/12.x/socialite)
 
 ## Introduction
 
 Laravel Socialite provides a simple, expressive way to authenticate users with OAuth providers such as:
 
-- Facebook  
-- X (formerly Twitter)  
-- LinkedIn  
-- Google  
-- GitHub  
-- GitLab  
-- Bitbucket  
-- Slack  [oai_citation:2‡Laravel](https://laravel.com/docs/12.x/socialite?utm_source=chatgpt.com)
+- Facebook
+- X (formerly Twitter)
+- LinkedIn
+- Google
+- GitHub
+- GitLab
+- Bitbucket
+- Slack [oai_citation:2‡Laravel](https://laravel.com/docs/12.x/socialite)
 
 Adapters for additional services are available via the **Socialite Providers** community package.
 
@@ -45,7 +45,7 @@ Adapters for additional services are available via the **Socialite Providers** c
 
 Add Socialite to your Laravel project:
 
-```bash
+````bash
 composer require laravel/socialite
 
 This installs the package required to support social OAuth flows.  ￼
@@ -183,13 +183,13 @@ Stateless API Authentication
 Disable session state if your app doesn’t use cookies:
 
 return Socialite::driver('google')->stateless()->user();
-```  [oai_citation:11‡Laravel](https://laravel.com/docs/12.x/socialite?utm_source=chatgpt.com)
+```  [oai_citation:11‡Laravel](https://laravel.com/docs/12.x/socialite)
 
 ---
 
 ## Testing Socialite
 
-Laravel Socialite offers tools to **fake OAuth providers** for testing flows without actual external requests.  [oai_citation:12‡Laravel](https://laravel.com/docs/12.x/socialite?utm_source=chatgpt.com)
+Laravel Socialite offers tools to **fake OAuth providers** for testing flows without actual external requests.  [oai_citation:12‡Laravel](https://laravel.com/docs/12.x/socialite)
 
 ---
 
@@ -213,3 +213,4 @@ Laravel Socialite offers tools to **fake OAuth providers** for testing flows wit
 | Scopes | Add OAuth scopes for extra permissions |
 | Optional Params | Use `with()` to include extra OAuth parameters |
 | Statelsss | Use `stateless()` for API-only apps |
+````

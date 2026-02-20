@@ -5,8 +5,16 @@ namespace App\Providers;
 use App\Features\BlogFeature;
 use App\Features\ContactFormFeature;
 use App\Features\PagesFeature;
+use App\Models\LandingSection;
+use App\Models\LandingSectionItem;
 use App\Models\Language;
+use App\Models\Page;
+use App\Models\Setting;
+use App\Observers\LandingSectionItemObserver;
+use App\Observers\LandingSectionObserver;
 use App\Observers\LanguageObserver;
+use App\Observers\PageObserver;
+use App\Observers\SettingObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +40,13 @@ class AppServiceProvider extends ServiceProvider
         Feature::define('blog', BlogFeature::class);
         Feature::define('pages', PagesFeature::class);
         Feature::define('contact-form', ContactFormFeature::class);
+
+        // Observers run for all CRUD (create/update/delete/restore/force delete) from Filament, API, tinker, etc.
         Language::observe(LanguageObserver::class);
+        Setting::observe(SettingObserver::class);
+        Page::observe(PageObserver::class);
+        LandingSection::observe(LandingSectionObserver::class);
+        LandingSectionItem::observe(LandingSectionItemObserver::class);
         $this->configureDefaults();
     }
 

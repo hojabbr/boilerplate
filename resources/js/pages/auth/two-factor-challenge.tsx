@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/input-otp';
 import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
 import AuthLayout from '@/layouts/auth-layout';
+import { login } from '@/routes';
 import { store } from '@/routes/two-factor/login';
 
 const OTP_SLOT_KEYS = Array.from(
@@ -23,7 +24,7 @@ export default function TwoFactorChallenge() {
         translations?: Record<string, string>;
         locale?: string;
     };
-    const t = translations ?? {};
+    const t = useMemo(() => translations ?? {}, [translations]);
     const prefix = locale ? `/${locale}` : '';
     const [showRecoveryInput, setShowRecoveryInput] = useState<boolean>(false);
     const [code, setCode] = useState<string>('');
@@ -65,6 +66,8 @@ export default function TwoFactorChallenge() {
         <AuthLayout
             title={authConfigContent.title}
             description={authConfigContent.description}
+            backHref={`${prefix}${login.url()}`}
+            backLabel={t['auth.login'] ?? 'Back to login'}
         >
             <Head
                 title={

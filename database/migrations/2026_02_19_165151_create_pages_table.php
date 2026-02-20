@@ -17,6 +17,10 @@ return new class extends Migration
             $table->json('title')->nullable();
             $table->longText('body')->nullable();
             $table->string('type'); // privacy, terms, about, custom
+            $table->boolean('is_active')->default(true);
+            $table->boolean('show_in_navigation')->default(false);
+            $table->boolean('show_in_footer')->default(false);
+            $table->unsignedInteger('order')->default(0);
             $table->json('meta_title')->nullable();
             $table->json('meta_description')->nullable();
             $table->timestamps();

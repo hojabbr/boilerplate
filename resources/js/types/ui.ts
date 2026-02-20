@@ -11,4 +11,6 @@ export type AuthLayoutProps = {
     name?: string;
     title?: string;
     description?: string;
+    backHref?: string;
+    backLabel?: string;
 };

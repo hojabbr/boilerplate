@@ -2,7 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Page;
+use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\View;
 use Inertia\Middleware;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -71,6 +75,48 @@ class HandleInertiaRequests extends Middleware
         }
 
         return $urls;
+    }
+
+    /**
+     * Nav and footer page links per locale (slug + translated title). Cached and invalidated by PageObserver.
+     *
+     * @return array{nav: array<string, array<int, array{slug: string, title: string}>>, footer: array<string, array<int, array{slug: string, title: string}>>}
+     */
+    private function menuPages(): array
+    {
+        return Cache::remember('menu_pages', 3600, function () {
+            $supported = config('laravellocalization.supportedLocales', []);
+            $locales = array_keys($supported);
+            $navByLocale = [];
+            $footerByLocale = [];
+            foreach ($locales as $localeKey) {
+                $locale = (string) $localeKey;
+                $navByLocale[$locale] = Page::query()
+                    ->active()
+                    ->where('show_in_navigation', true)
+                    ->orderBy('order')
+                    ->get()
+                    ->map(fn (Page $p) => [
+                        'slug' => $p->slug,
+                        'title' => (string) ($p->getTranslation('title', $locale) ?: $p->slug),
+                    ])
+                    ->values()
+                    ->all();
+                $footerByLocale[$locale] = Page::query()
+                    ->active()
+                    ->where('show_in_footer', true)
+                    ->orderBy('order')
+                    ->get()
+                    ->map(fn (Page $p) => [
+                        'slug' => $p->slug,
+                        'title' => (string) ($p->getTranslation('title', $locale) ?: $p->slug),
+                    ])
+                    ->values()
+                    ->all();
+            }
+
+            return ['nav' => $navByLocale, 'footer' => $footerByLocale];
+        });
     }
 
     /**
@@ -205,10 +251,16 @@ class HandleInertiaRequests extends Middleware
     {
         $locale = app()->getLocale();
         $rtlLocales = ['ar', 'fa'];
+        $setting = Setting::site();
+        $siteName = $setting->company_name ?: config('app.name');
+        $siteTagline = $setting->tagline ?: config('app.description');
+        View::share('siteName', $siteName);
+        View::share('siteTagline', $siteTagline);
 
         return [
             ...parent::share($request),
-            'name' => config('app.name'),
+            'name' => $siteName,
+            'site_tagline' => $siteTagline,
             'auth' => [
                 'user' => $request->user(),
             ],
@@ -221,6 +273,8 @@ class HandleInertiaRequests extends Middleware
             'hreflang_urls' => $this->hreflangUrls(),
             'default_locale' => config('app.locale'),
             'translations' => $this->sharedTranslations(),
+            'nav_pages' => ($menu = $this->menuPages())['nav'][$locale] ?? [],
+            'footer_pages' => $menu['footer'][$locale] ?? [],
         ];
     }
 }

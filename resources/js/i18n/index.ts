@@ -2,19 +2,22 @@ import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
-import enCore from './locales/en/core.json';
-import esCore from './locales/es/core.json';
-
+/**
+ * Frontend i18n is used only to sync language with the backend (e.g. changeLanguage(locale)).
+ * All UI strings come from Laravel lang/*.json via Inertia shared props (translations/messages).
+ */
 const supportedLngs = [
     'en',
-    'it',
     'de',
     'es',
     'fr',
+    'it',
     'ru',
-    'zh',
-    'fa',
     'ar',
+    'fa',
+    'ja',
+    'zh',
+    'ko',
 ] as const;
 
 void i18n
@@ -29,11 +32,6 @@ void i18n
         interpolation: {
             escapeValue: false,
         },
-        resources: {
-            en: { core: enCore },
-            es: { core: esCore },
-        },
-        defaultNS: 'core',
     });
 
 export default i18n;

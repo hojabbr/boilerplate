@@ -19,13 +19,13 @@ class BlogController extends Controller
             abort(404);
         }
 
-        /** @var array<int, array{slug: string, title: string, excerpt: string, published_at: string|null, thumbnail_url: string|null}> $posts */
+        $perPage = config('blog.posts_per_page', 12);
         $posts = BlogPost::query()
             ->byLocale(app()->getLocale())
             ->published()
             ->orderByDesc('published_at')
-            ->get()
-            ->map(function (BlogPost $post): array {
+            ->paginate($perPage)
+            ->through(function (BlogPost $post): array {
                 $firstImage = $post->getFirstMedia('gallery');
                 $publishedAt = $post->published_at;
 
@@ -36,11 +36,12 @@ class BlogController extends Controller
                     'published_at' => $publishedAt instanceof \DateTimeInterface ? $publishedAt->format('c') : null,
                     'thumbnail_url' => $firstImage?->getUrl('thumb'),
                 ];
-            })
-            ->values()
-            ->all();
+            });
 
         $setting = Setting::site();
+        $socialLinksRaw = $setting->getAttribute('social_links');
+        /** @var array<string, mixed> $socialLinks */
+        $socialLinks = is_array($socialLinksRaw) ? array_filter($socialLinksRaw) : [];
 
         return Inertia::render('blog/Index', [
             'posts' => $posts,
@@ -49,6 +50,7 @@ class BlogController extends Controller
                 'tagline' => $setting->tagline,
                 'email' => $setting->email,
                 'phone' => $setting->phone,
+                'social_links' => $socialLinks,
             ],
             'features' => [
                 'pages' => Feature::active('pages'),
@@ -56,8 +58,8 @@ class BlogController extends Controller
                 'contactForm' => Feature::active('contact-form'),
             ],
             'seo' => [
-                'title' => __('Blog'),
-                'description' => __('Our latest news and articles.'),
+                'title' => __('Blog').' - '.($setting->company_name ?: config('app.name')),
+                'description' => $setting->tagline ?: config('app.description') ?: __('Our latest news and articles.'),
             ],
             'messages' => [
                 'title' => __('blog.title'),
@@ -79,6 +81,9 @@ class BlogController extends Controller
             ->firstOrFail();
 
         $setting = Setting::site();
+        $socialLinksRaw = $setting->getAttribute('social_links');
+        /** @var array<string, mixed> $socialLinks */
+        $socialLinks = is_array($socialLinksRaw) ? array_filter($socialLinksRaw) : [];
 
         $gallery = $post->getMedia('gallery')->map(fn ($media) => [
             'id' => $media->id,
@@ -119,7 +124,7 @@ class BlogController extends Controller
                 'documents' => $documents,
             ],
             'seo' => [
-                'title' => $post->title,
+                'title' => $post->title.' - '.($setting->company_name ?: config('app.name')),
                 'description' => $post->meta_description ?: $post->excerpt,
                 'image' => $ogImage,
                 'type' => 'article',
@@ -133,6 +138,7 @@ class BlogController extends Controller
                 'tagline' => $setting->tagline,
                 'email' => $setting->email,
                 'phone' => $setting->phone,
+                'social_links' => $socialLinks,
             ],
             'features' => [
                 'pages' => Feature::active('pages'),

@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
-import { register } from '@/routes';
+import { home, register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 
@@ -36,6 +36,8 @@ export default function Login({
                 t['auth.login_description'] ??
                 'Enter your email and password below to log in'
             }
+            backHref={prefix ? prefix : home.url()}
+            backLabel={t['nav.home'] ?? 'Back to Home'}
         >
             <Head title={t['auth.login'] ?? 'Log in'} />
 
@@ -74,7 +76,7 @@ export default function Login({
                                     {canResetPassword && (
                                         <TextLink
                                             href={`${prefix}${request().url}`}
-                                            className="ml-auto text-sm"
+                                            className="ms-auto text-sm"
                                         >
                                             {t['auth.forgot_password'] ??
                                                 'Forgot password?'}
@@ -95,7 +97,7 @@ export default function Login({
                                 <InputError message={errors.password} />
                             </div>
 
-                            <div className="flex items-center space-x-3">
+                            <div className="flex items-center gap-3">
                                 <Checkbox id="remember" name="remember" />
                                 <Label htmlFor="remember">
                                     {t['auth.remember_me'] ?? 'Remember me'}

@@ -52,10 +52,7 @@ export default function ThemeSwitcher({
                     <DropdownMenuItem
                         key={value}
                         onClick={() => updateAppearance(value)}
-                        className={cn(
-                            appearance === value &&
-                                'bg-neutral-100 dark:bg-neutral-800',
-                        )}
+                        className={cn(appearance === value && 'bg-muted')}
                     >
                         <Icon className="size-4" />
                         <span>{label}</span>

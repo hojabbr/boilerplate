@@ -19,6 +19,7 @@ class RoleAndPermissionSeeder extends Seeder
             'manage pages',
             'manage blog',
             'manage settings',
+            'manage landing sections',
             'view contact submissions',
             'delete contact submissions',
             'manage users',

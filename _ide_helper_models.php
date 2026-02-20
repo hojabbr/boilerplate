@@ -112,6 +112,94 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $type
+ * @property int $sort_order
+ * @property array<array-key, mixed>|null $title
+ * @property array<array-key, mixed>|null $subtitle
+ * @property array<array-key, mixed>|null $body
+ * @property array<array-key, mixed>|null $cta_text
+ * @property array<array-key, mixed>|null $cta_url
+ * @property bool $is_active
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property \Carbon\CarbonImmutable|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\LandingSectionItem> $items
+ * @property-read int|null $items_count
+ * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
+ * @property-read int|null $media_count
+ * @property-read mixed $translations
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection ordered()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereCtaText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereCtaUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereJsonContainsLocale(string $column, string $locale, ?mixed $value, string $operand = '=')
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereJsonContainsLocales(string $column, array $locales, ?mixed $value, string $operand = '=')
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereLocale(string $column, string $locale)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereLocales(string $column, array $locales)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereSubtitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSection withoutTrashed()
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperLandingSection {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property int $landing_section_id
+ * @property int $sort_order
+ * @property array<array-key, mixed>|null $title
+ * @property array<array-key, mixed>|null $description
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property \Carbon\CarbonImmutable|null $deleted_at
+ * @property-read \App\Models\LandingSection $landingSection
+ * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
+ * @property-read int|null $media_count
+ * @property-read mixed $translations
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereJsonContainsLocale(string $column, string $locale, ?mixed $value, string $operand = '=')
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereJsonContainsLocales(string $column, array $locales, ?mixed $value, string $operand = '=')
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereLandingSectionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereLocale(string $column, string $locale)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereLocales(string $column, array $locales)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|LandingSectionItem withoutTrashed()
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperLandingSectionItem {}
+}
+
+namespace App\Models{
+/**
+ * @extends Model<Language>
+ * @property int $id
  * @property string $code
  * @property string $name
  * @property string|null $script
@@ -123,6 +211,8 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\BlogPost> $blogPosts
  * @property-read int|null $blog_posts_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Page> $pages
+ * @property-read int|null $pages_count
  * @method static \Database\Factories\LanguageFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language newQuery()
@@ -153,6 +243,10 @@ namespace App\Models{
  * @property array<array-key, mixed>|null $title
  * @property array<array-key, mixed>|null $body
  * @property string $type
+ * @property bool $is_active
+ * @property bool $show_in_navigation
+ * @property bool $show_in_footer
+ * @property int $order
  * @property array<array-key, mixed>|null $meta_title
  * @property array<array-key, mixed>|null $meta_description
  * @property \Carbon\CarbonImmutable|null $created_at
@@ -161,6 +255,7 @@ namespace App\Models{
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
  * @property-read int|null $media_count
  * @property-read mixed $translations
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page onlyTrashed()
@@ -169,12 +264,16 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereJsonContainsLocale(string $column, string $locale, ?mixed $value, string $operand = '=')
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereJsonContainsLocales(string $column, array $locales, ?mixed $value, string $operand = '=')
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereLocale(string $column, string $locale)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereLocales(string $column, array $locales)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereMetaDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereMetaTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereShowInFooter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereShowInNavigation($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereType($value)

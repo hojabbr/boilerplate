@@ -26,7 +26,7 @@ test('shared props include canonical_url and hreflang_urls for SEO', function ()
     }
 });
 
-test('welcome page has seo prop with title and description', function () {
+test('welcome page has seo prop with title and description from settings', function () {
     refreshApplicationWithLocale('en');
 
     $response = $this->get(route('home'));
@@ -35,12 +35,13 @@ test('welcome page has seo prop with title and description', function () {
     $response->assertInertia(fn (Assert $page) => $page
         ->component('welcome')
         ->has('seo')
-        ->where('seo.title', 'Welcome')
         ->has('seo.description')
     );
+    $title = $response->inertiaProps('seo')['title'] ?? '';
+    expect($title)->toContain('Welcome');
 });
 
-test('contact page has seo prop', function () {
+test('contact page has seo prop with title and description', function () {
     refreshApplicationWithLocale('en');
 
     \Laravel\Pennant\Feature::activate('contact-form');
@@ -51,12 +52,13 @@ test('contact page has seo prop', function () {
     $response->assertInertia(fn (Assert $page) => $page
         ->component('contact/Show')
         ->has('seo')
-        ->where('seo.title', 'Contact')
         ->has('seo.description')
     );
+    $title = $response->inertiaProps('seo')['title'] ?? '';
+    expect($title)->toContain('Contact');
 });
 
-test('blog index has seo prop', function () {
+test('blog index has seo prop with title and description', function () {
     refreshApplicationWithLocale('en');
 
     \Laravel\Pennant\Feature::activate('blog');
@@ -67,7 +69,8 @@ test('blog index has seo prop', function () {
     $response->assertInertia(fn (Assert $page) => $page
         ->component('blog/Index')
         ->has('seo')
-        ->where('seo.title', 'Blog')
         ->has('seo.description')
     );
+    $title = $response->inertiaProps('seo')['title'] ?? '';
+    expect($title)->toContain('Blog');
 });

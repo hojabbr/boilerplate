@@ -132,7 +132,7 @@ export default function Profile({
                                                 <Link
                                                     href={`${prefix}${send().url}`}
                                                     as="button"
-                                                    className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                                                    className="text-foreground underline decoration-border underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current!"
                                                 >
                                                     {t[
                                                         'settings.send_verification'
@@ -168,7 +168,7 @@ export default function Profile({
                                         leave="transition ease-in-out"
                                         leaveTo="opacity-0"
                                     >
-                                        <p className="text-sm text-neutral-600">
+                                        <p className="text-sm text-muted-foreground">
                                             {t['settings.saved'] ?? 'Saved'}
                                         </p>
                                     </Transition>

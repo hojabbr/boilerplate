@@ -4,10 +4,15 @@ namespace App\Observers;
 
 use App\Models\Language;
 
+/**
+ * Cascades soft delete/restore to related pages when a language is soft-deleted or restored.
+ * BlogPosts are cascade-deleted by DB FK when a language is force-deleted.
+ * Fires for all CRUD paths (Filament, API, tinker, etc.).
+ */
 class LanguageObserver
 {
     /**
-     * Handle the Language "deleted" event (soft delete): cascade soft delete to pages.
+     * Soft delete: cascade soft delete to pages that belong to this language.
      */
     public function deleted(Language $language): void
     {
@@ -18,7 +23,7 @@ class LanguageObserver
     }
 
     /**
-     * Handle the Language "restored" event: restore soft-deleted pages.
+     * Restore: restore soft-deleted pages that belong to this language.
      */
     public function restored(Language $language): void
     {

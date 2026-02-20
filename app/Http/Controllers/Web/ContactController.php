@@ -22,6 +22,9 @@ class ContactController extends Controller
         }
 
         $setting = Setting::site();
+        $socialLinksRaw = $setting->getAttribute('social_links');
+        /** @var array<string, mixed> $socialLinks */
+        $socialLinks = is_array($socialLinksRaw) ? array_filter($socialLinksRaw) : [];
 
         return Inertia::render('contact/Show', [
             'settings' => [
@@ -29,6 +32,7 @@ class ContactController extends Controller
                 'tagline' => $setting->tagline,
                 'email' => $setting->email,
                 'phone' => $setting->phone,
+                'social_links' => $socialLinks,
             ],
             'features' => [
                 'pages' => Feature::active('pages'),
@@ -38,8 +42,8 @@ class ContactController extends Controller
             'contactStoreUrl' => route('contact.store'),
             'success' => session('success'),
             'seo' => [
-                'title' => __('Contact'),
-                'description' => __('Get in touch with us.'),
+                'title' => __('Contact').' - '.($setting->company_name ?: config('app.name')),
+                'description' => $setting->tagline ?: config('app.description') ?: __('Get in touch with us.'),
             ],
             'messages' => [
                 'heading' => __('contact.heading'),
@@ -50,6 +54,7 @@ class ContactController extends Controller
                 'form_send' => __('contact.form.send'),
                 'label_email' => __('contact.label_email'),
                 'label_phone' => __('contact.label_phone'),
+                'label_social' => __('contact.label_social'),
             ],
         ]);
     }

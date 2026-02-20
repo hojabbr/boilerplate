@@ -9,10 +9,16 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
+// Root path: ensure web middleware (and thus LocaleCookieRedirect) runs so
+// a visit to / redirects to the user's chosen locale from cookie/session.
+Route::get('/', function () {
+    return redirect()->to(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale()));
+})->middleware('web');
+
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),
-        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'setLocalizedFortifyRedirects'],
+        'middleware' => ['localeCookieRedirect', 'localizationRedirect', 'localeViewPath', 'setLocalizedFortifyRedirects'],
     ], function () {
         require base_path('vendor/laravel/fortify/routes/routes.php');
 

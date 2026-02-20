@@ -35,9 +35,34 @@ class Page extends Model implements HasMedia
         'title',
         'body',
         'type',
+        'is_active',
+        'show_in_navigation',
+        'show_in_footer',
+        'order',
         'meta_title',
         'meta_description',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'show_in_navigation' => 'boolean',
+            'show_in_footer' => 'boolean',
+        ];
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder<Page>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<Page>
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 
     public function registerMediaCollections(): void
     {

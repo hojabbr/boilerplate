@@ -1,5 +1,7 @@
 import { Link } from '@inertiajs/react';
+import { m } from 'motion/react';
 import type { PropsWithChildren } from 'react';
+import { pageEnter } from '@/components/common/motion-presets';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -49,12 +51,9 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                 description="Manage your profile and account settings"
             />
 
-            <div className="flex flex-col lg:flex-row lg:space-x-12">
+            <div className="flex flex-col lg:flex-row lg:gap-12">
                 <aside className="w-full max-w-xl lg:w-48">
-                    <nav
-                        className="flex flex-col space-y-1 space-x-0"
-                        aria-label="Settings"
-                    >
+                    <nav className="flex flex-col gap-1" aria-label="Settings">
                         {sidebarNavItems.map((item) => (
                             <Button
                                 key={toUrl(item.href)}
@@ -79,9 +78,11 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                 <Separator className="my-6 lg:hidden" />
 
                 <div className="flex-1 md:max-w-2xl">
-                    <section className="max-w-xl space-y-12">
-                        {children}
-                    </section>
+                    <m.div {...pageEnter}>
+                        <section className="max-w-xl space-y-12">
+                            {children}
+                        </section>
+                    </m.div>
                 </div>
             </div>
         </div>

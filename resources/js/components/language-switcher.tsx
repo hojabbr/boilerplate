@@ -59,10 +59,7 @@ export default function LanguageSwitcher({
                     <DropdownMenuItem key={code} asChild>
                         <a
                             href={url}
-                            className={cn(
-                                locale === code &&
-                                    'bg-neutral-100 dark:bg-neutral-800',
-                            )}
+                            className={cn(locale === code && 'bg-muted')}
                             aria-current={locale === code ? 'true' : undefined}
                         >
                             {nativeName || name || code}

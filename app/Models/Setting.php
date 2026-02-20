@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Translatable\HasTranslations;
 
 /**
@@ -45,15 +46,19 @@ class Setting extends Model
     }
 
     /**
-     * Get the singleton site settings instance.
+     * Get the singleton site settings instance (cached).
      */
     public static function site(): self
     {
-        $setting = static::where('key', 'site')->first();
-        if ($setting === null) {
-            $setting = static::create(['key' => 'site']);
-        }
+        $ttl = config('cache.content_ttl', 86400);
 
-        return $setting;
+        return Cache::remember('setting.site', $ttl, function (): self {
+            $setting = static::where('key', 'site')->first();
+            if ($setting === null) {
+                $setting = static::create(['key' => 'site']);
+            }
+
+            return $setting;
+        });
     }
 }

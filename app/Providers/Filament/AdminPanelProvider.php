@@ -26,6 +26,13 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         $locales = array_keys(config('laravellocalization.supportedLocales', []));
+        $fallback = config('app.fallback_locale', 'en');
+        // Put fallback locale first so Filament default (e.g. English) is used on load/refresh
+        if (($key = array_search($fallback, $locales, true)) !== false) {
+            unset($locales[$key]);
+            array_unshift($locales, $fallback);
+            $locales = array_values($locales);
+        }
 
         return $panel
             ->default()

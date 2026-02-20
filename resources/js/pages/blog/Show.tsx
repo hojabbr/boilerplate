@@ -1,3 +1,5 @@
+import { usePage } from '@inertiajs/react';
+import { m } from 'motion/react';
 import { useState } from 'react';
 import Lightbox from 'yet-another-react-lightbox';
 import Captions from 'yet-another-react-lightbox/plugins/captions';
@@ -9,14 +11,26 @@ import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
 import 'yet-another-react-lightbox/plugins/thumbnails.css';
 import 'yet-another-react-lightbox/plugins/captions.css';
+import { BackButton } from '@/components/common/BackButton';
+import { fadeInUpView } from '@/components/common/motion-presets';
 import { SeoHead } from '@/components/common/SeoHead';
 import { Button } from '@/components/ui/button';
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from '@/components/ui/carousel';
 import PublicLayout, {
     EMPTY_PUBLIC_FEATURES,
     EMPTY_PUBLIC_SETTINGS,
     type PublicFeatures,
     type PublicSettings,
 } from '@/layouts/public-layout';
+import { decodeHtml } from '@/lib/utils';
+import { home } from '@/routes';
+import blog from '@/routes/blog';
 
 interface GalleryItem {
     id: number;
@@ -100,6 +114,21 @@ export default function BlogShow({
     seo?: Seo;
     messages?: BlogShowMessages;
 }) {
+    const { locale, translations } = usePage().props as {
+        locale: string;
+        translations?: Record<string, string>;
+    };
+    const t = translations ?? {};
+    const prefix = locale ? `/${locale}` : '';
+    const breadcrumbs = [
+        { title: t['nav.home'] ?? 'Home', href: prefix ? prefix : home.url() },
+        {
+            title: t['nav.blog'] ?? 'Blog',
+            href: `${prefix}${blog.index.url()}`,
+        },
+        { title: post.title, href: '#' },
+    ];
+
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(0);
 
@@ -108,101 +137,147 @@ export default function BlogShow({
     const documents = post.documents ?? [];
     const slides = buildSlides(gallery, videos);
     const hasMedia = slides.length > 0;
+    const showGallery = slides.length > 1;
     const mediaGalleryLabel = messages.media_gallery ?? 'Gallery';
     const documentsLabel = messages.documents ?? 'Documents';
+    const heroImage = gallery[0];
 
     return (
-        <PublicLayout settings={settings} features={features}>
+        <PublicLayout
+            breadcrumbs={breadcrumbs}
+            settings={settings}
+            features={features}
+        >
             <SeoHead
                 title={seo?.title ?? post.title}
                 description={seo?.description ?? post.meta_description}
                 image={seo?.image}
                 type={seo?.type ?? 'article'}
             />
-            <article className="mx-auto max-w-3xl">
-                <h1 className="mb-2 text-2xl font-semibold text-foreground">
-                    {post.title}
-                </h1>
-                {post.published_at && (
-                    <p className="mb-4 text-sm text-muted-foreground">
-                        {new Date(post.published_at).toLocaleDateString()}
-                    </p>
-                )}
-                {post.excerpt && (
-                    <div
-                        className="prose prose-sm dark:prose-invert mb-6"
-                        dangerouslySetInnerHTML={{ __html: post.excerpt }}
-                    />
-                )}
-                <div
-                    className="prose dark:prose-invert"
-                    dangerouslySetInnerHTML={{ __html: post.body }}
+            <div className="mb-4">
+                <BackButton
+                    href={`${prefix}${blog.index.url()}`}
+                    label={
+                        t['nav.blog']
+                            ? `Back to ${t['nav.blog']}`
+                            : 'Back to Blog'
+                    }
                 />
+            </div>
+            <article className="mx-auto max-w-3xl">
+                <m.div {...fadeInUpView}>
+                    {heroImage && (
+                        <div className="-mx-4 mb-6 overflow-hidden sm:mx-0 sm:rounded-xl">
+                            <img
+                                src={heroImage.full_url || heroImage.url}
+                                alt=""
+                                className="h-56 w-full object-cover sm:h-72"
+                            />
+                        </div>
+                    )}
+                    <h1 className="mb-2 text-2xl font-semibold text-foreground">
+                        {post.title}
+                    </h1>
+                    {post.published_at && (
+                        <p className="mb-4 text-sm text-muted-foreground">
+                            {new Date(post.published_at).toLocaleDateString()}
+                        </p>
+                    )}
+                    {post.excerpt && (
+                        <div
+                            className="prose prose-sm mb-6 max-w-none prose-neutral dark:prose-invert"
+                            dangerouslySetInnerHTML={{
+                                __html: decodeHtml(post.excerpt),
+                            }}
+                        />
+                    )}
+                    {post.body != null && post.body !== '' && (
+                        <div
+                            className="prose max-w-none prose-neutral dark:prose-invert"
+                            dangerouslySetInnerHTML={{
+                                __html: decodeHtml(post.body),
+                            }}
+                        />
+                    )}
+                </m.div>
 
-                {hasMedia && (
-                    <section className="mt-8" aria-label={mediaGalleryLabel}>
-                        <h2 className="mb-4 text-lg font-medium text-foreground">
+                {showGallery && (
+                    <m.div className="mt-10" {...fadeInUpView}>
+                        <h2 className="mb-4 text-lg font-semibold text-foreground">
                             {mediaGalleryLabel}
                         </h2>
-                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-                            {gallery.map((item, index) => (
-                                <Button
-                                    key={item.id}
-                                    type="button"
-                                    variant="ghost"
-                                    className="h-auto p-0"
-                                    onClick={() => {
-                                        setLightboxIndex(index);
-                                        setLightboxOpen(true);
-                                    }}
-                                >
-                                    <img
-                                        src={item.thumb_url || item.url}
-                                        alt={item.alt ?? item.title ?? ''}
-                                        className="aspect-square w-full rounded-lg object-cover"
-                                    />
-                                </Button>
-                            ))}
-                            {videos.map((item, index) => (
-                                <Button
-                                    key={item.id}
-                                    type="button"
-                                    variant="ghost"
-                                    className="h-auto p-0"
-                                    onClick={() => {
-                                        setLightboxIndex(
-                                            gallery.length + index,
-                                        );
-                                        setLightboxOpen(true);
-                                    }}
-                                >
-                                    <video
-                                        src={item.url}
-                                        className="aspect-square w-full rounded-lg object-cover"
-                                        muted
-                                        playsInline
-                                        preload="metadata"
-                                    />
-                                </Button>
-                            ))}
-                        </div>
-                        <Button
-                            type="button"
-                            variant="link"
-                            className="mt-3"
-                            onClick={() => {
-                                setLightboxIndex(0);
-                                setLightboxOpen(true);
+                        <Carousel
+                            opts={{
+                                align: 'start',
+                                loop: true,
                             }}
+                            className="w-full"
                         >
-                            View all ({slides.length})
-                        </Button>
-                    </section>
+                            <CarouselContent className="-ms-2">
+                                {gallery.map((item, index) => (
+                                    <CarouselItem
+                                        key={item.id}
+                                        className="basis-full sm:basis-1/2 md:basis-1/3"
+                                    >
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            className="h-auto w-full p-0"
+                                            onClick={() => {
+                                                setLightboxIndex(index);
+                                                setLightboxOpen(true);
+                                            }}
+                                        >
+                                            <img
+                                                src={item.thumb_url || item.url}
+                                                alt={
+                                                    item.alt ?? item.title ?? ''
+                                                }
+                                                className="aspect-video w-full rounded-lg object-cover"
+                                            />
+                                        </Button>
+                                    </CarouselItem>
+                                ))}
+                                {videos.map((item, index) => (
+                                    <CarouselItem
+                                        key={item.id}
+                                        className="basis-full sm:basis-1/2 md:basis-1/3"
+                                    >
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            className="h-auto w-full p-0"
+                                            onClick={() => {
+                                                setLightboxIndex(
+                                                    gallery.length + index,
+                                                );
+                                                setLightboxOpen(true);
+                                            }}
+                                        >
+                                            <video
+                                                src={item.url}
+                                                className="aspect-video w-full rounded-lg object-cover"
+                                                muted
+                                                playsInline
+                                                preload="metadata"
+                                            />
+                                        </Button>
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                            <CarouselPrevious className="start-2" />
+                            <CarouselNext className="end-2" />
+                        </Carousel>
+                    </m.div>
                 )}
 
                 {documents.length > 0 && (
-                    <section className="mt-8" aria-label={documentsLabel}>
-                        <h2 className="mb-4 text-lg font-medium text-foreground">
+                    <m.section
+                        className="mt-10"
+                        aria-label={documentsLabel}
+                        {...fadeInUpView}
+                    >
+                        <h2 className="mb-4 text-lg font-semibold text-foreground">
                             {documentsLabel}
                         </h2>
                         <ul className="space-y-2">
@@ -224,7 +299,7 @@ export default function BlogShow({
                                 </li>
                             ))}
                         </ul>
-                    </section>
+                    </m.section>
                 )}
             </article>
 

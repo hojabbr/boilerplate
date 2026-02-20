@@ -17,6 +17,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Description / Tagline
+    |--------------------------------------------------------------------------
+    |
+    | This value is used as the default tagline or short description when the
+    | site Setting has no tagline set. Can be overridden in .env as APP_DESCRIPTION.
+    |
+    */
+
+    'description' => env('APP_DESCRIPTION', 'Build something great.'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

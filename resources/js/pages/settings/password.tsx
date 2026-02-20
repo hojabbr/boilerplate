@@ -163,7 +163,7 @@ export default function Password() {
                                         leave="transition ease-in-out"
                                         leaveTo="opacity-0"
                                     >
-                                        <p className="text-sm text-neutral-600">
+                                        <p className="text-sm text-muted-foreground">
                                             {t['settings.saved'] ?? 'Saved'}
                                         </p>
                                     </Transition>

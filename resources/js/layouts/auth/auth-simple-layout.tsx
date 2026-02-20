@@ -1,5 +1,8 @@
 import { Link, usePage } from '@inertiajs/react';
+import { m } from 'motion/react';
 import AppLogoIcon from '@/components/app-logo-icon';
+import { BackButton } from '@/components/common/BackButton';
+import { pageEnter } from '@/components/common/motion-presets';
 import { home } from '@/routes';
 import type { AuthLayoutProps } from '@/types';
 
@@ -7,6 +10,8 @@ export default function AuthSimpleLayout({
     children,
     title,
     description,
+    backHref,
+    backLabel,
 }: AuthLayoutProps) {
     const { locale } = usePage().props as { locale?: string };
     const prefix = locale ? `/${locale}` : '';
@@ -21,7 +26,7 @@ export default function AuthSimpleLayout({
                             className="flex flex-col items-center gap-2 font-medium"
                         >
                             <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
+                                <AppLogoIcon className="size-9 fill-current text-foreground" />
                             </div>
                             <span className="sr-only">{title}</span>
                         </Link>
@@ -33,7 +38,15 @@ export default function AuthSimpleLayout({
                             </p>
                         </div>
                     </div>
-                    {children}
+                    <m.div {...pageEnter}>{children}</m.div>
+                    {backHref && (
+                        <div className="flex justify-center pt-2">
+                            <BackButton
+                                href={backHref}
+                                label={backLabel ?? 'Back'}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -58,6 +58,10 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    env:
+      # Use SQLite in-memory so CI runs without a database service (works in forks).
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
     steps:
       - uses: actions/checkout@v6
 
@@ -66,6 +70,7 @@ jobs:
         with:
           php-version: ${{ env.PHP_VERSION }}
           tools: composer:v2
+          extensions: pdo_sqlite
 
       - name: Setup Node
         uses: actions/setup-node@v4

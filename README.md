@@ -1,63 +1,104 @@
-# Laravel React Starter Kit
+# Laravel React Boilerplate
 
-Laravel 12 application with Inertia.js 2, React 19, Tailwind CSS, and Shadcn UI. Supports localization (mcamara), Fortify auth under locale prefixes, feature flags (Laravel Pennant), light/dark/system theme, and RTL locales.
+[![CI](https://github.com/hojabbr/boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/hojabbr/boilerplate/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-## Stack
+A starter kit for building localized Laravel 12 + Inertia 2 + React 19 applications. Use this as a template or clone to kickstart full-stack apps with auth, admin, feature flags, search, and real-time support.
 
-- **Backend:** Laravel 12, Fortify, Filament, Scout (Meilisearch), Reverb, Pennant, mcamara/laravel-localization
+**Repository:** [github.com/hojabbr/boilerplate](https://github.com/hojabbr/boilerplate)
+
+## Features
+
+- **Backend:** Laravel 12, Fortify (auth), Filament (admin), Scout + Meilisearch, Reverb (WebSockets), Pennant (feature flags), mcamara/laravel-localization
 - **Frontend:** Inertia 2, React 19, Tailwind CSS v4, Shadcn UI, i18next, Zustand
+- **Localization:** Route prefixes per locale, translatable content (Spatie), RTL support (e.g. Arabic, Farsi)
+- **Theme:** Light / dark / system with persistent preference
+- **Optional features:** Blog, static pages, contact form, 2FA, registration — toggled via feature flags
 
 ## Requirements
 
 - PHP 8.2+
 - Node 18+
-- Composer, npm/pnpm
-- (Optional) Docker & Sail for a consistent environment
+- Composer, npm (or pnpm)
+- Optional: Docker & [Laravel Sail](https://laravel.com/docs/sail) for a consistent environment
 
-## Setup
+## Installation
 
-```bash
-composer install
-cp .env.example .env
-php artisan key:generate
-# Configure .env: APP_*, DB_*, MEILISEARCH_*, VITE_*, etc.
-npm install
-npm run build
-php artisan migrate
-```
+1. **Clone the repository** (or use [Use this template](https://github.com/hojabbr/boilerplate/generate)):
 
-With Sail:
+    ```bash
+    git clone https://github.com/hojabbr/boilerplate.git
+    cd boilerplate
+    ```
+
+2. **Install dependencies and configure environment:**
+
+    ```bash
+    composer install
+    cp .env.example .env
+    php artisan key:generate
+    ```
+
+    Edit `.env` and set at least: `APP_NAME`, `APP_URL`, `DB_*`, and optionally `MEILISEARCH_*`, `REVERB_*`, etc. See [.env.example](.env.example) for all options.
+
+3. **Install frontend dependencies and build:**
+
+    ```bash
+    npm install
+    npm run build
+    ```
+
+4. **Run migrations:**
+
+    ```bash
+    php artisan migrate
+    ```
+
+    Optionally seed: `php artisan db:seed`.
+
+### With Sail (Docker)
 
 ```bash
 ./vendor/bin/sail up -d
 ./vendor/bin/sail composer install
+cp .env.example .env
 ./vendor/bin/sail artisan key:generate
-# Configure .env
+# Edit .env as needed
 ./vendor/bin/sail npm install && ./vendor/bin/sail npm run build
 ./vendor/bin/sail artisan migrate
 ```
 
 ## Development
 
-- Backend: `php artisan serve` or `./vendor/bin/sail up`
-- Frontend: `npm run dev` (Vite); run with `composer run dev` if using Sail for a single command.
-- Admin: Filament at `/admin` (locale-independent).
+- **Backend:** `php artisan serve` or `./vendor/bin/sail up`
+- **Frontend (Vite):** `npm run dev` — or use `composer run dev` for server, queue, logs, and Vite in one command (with Sail: run inside the container).
+- **Admin panel:** Filament at `/admin` (locale-independent).
 
 ## Testing
 
 ```bash
 php artisan test
-# Or with Sail:
+```
+
+With Sail:
+
+```bash
 ./vendor/bin/sail artisan test
 ```
 
-## Architecture and conventions
+Contributors should run tests before submitting changes; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-- **[.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc)** — Backend structure, localization (middleware, locale route group, Fortify under `/{locale}/...`), Scout, Filament, frontend (Shadcn, i18n, theme, RTL), and DevOps/CI.
-- **Feature flags:** Laravel Pennant is used for optional features (e.g. registration, 2FA). New features that should be toggled per environment or audience should use Pennant; see ARCHITECTURE “Feature Flags — Laravel Pennant”.
-- **Theme:** The UI always uses light / dark / system (e.g. `useAppearance`), applied at the document root; see ARCHITECTURE “Theme (light / dark / system)”.
-- **RTL:** RTL locales (e.g. `ar`, `fa`) set `dir="rtl"`; use direction-aware icons and logical spacing (Tailwind start/end, ps/pe) so layouts work in both LTR and RTL; see ARCHITECTURE “RTL and direction‑aware UI”.
+## Documentation
+
+- **[.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc)** — Backend and frontend architecture, localization, feature flags, theme, RTL, DevOps, and conventions. Useful for contributors and for AI-assisted development (e.g. Cursor).
+- **Feature flags:** Laravel Pennant gates optional features (registration, 2FA, blog, pages, contact). See ARCHITECTURE “Feature Flags — Laravel Pennant”.
+- **Theme:** Single source of truth (`useAppearance`) for light/dark/system; see ARCHITECTURE “Theme (light / dark / system)”.
+- **RTL:** RTL locales set `dir="rtl"`; use direction-aware icons and logical spacing; see ARCHITECTURE “RTL and direction‑aware UI”.
+
+## Contributing
+
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
-MIT.
+This project is open-sourced under the [MIT License](LICENSE).

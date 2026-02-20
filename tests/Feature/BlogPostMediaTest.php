@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\BlogPost;
+use App\Models\Language;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -13,7 +14,13 @@ beforeEach(function () {
 test('blog show returns post with gallery videos and documents', function () {
     refreshApplicationWithLocale('en');
 
+    $en = Language::firstOrCreate(
+        ['code' => 'en'],
+        ['name' => 'English', 'script' => 'Latn', 'is_default' => true, 'sort_order' => 0]
+    );
+
     $post = BlogPost::factory()->create([
+        'language_id' => $en->id,
         'slug' => 'test-post-media',
         'published_at' => now(),
     ]);

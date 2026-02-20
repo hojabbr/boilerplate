@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             FeatureFlagSeeder::class,
             PageSeeder::class,
             SettingSeeder::class,
+            LandingSectionSeeder::class,
             BlogPostSeeder::class,
         ]);
     }

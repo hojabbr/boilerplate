@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Pages\Pages;
 
 use App\Filament\Resources\Pages\PageResource;
-use App\Filament\Resources\Pages\Pages\Concerns\AttachesPageMedia;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
@@ -13,7 +12,6 @@ use LaraZeus\SpatieTranslatable\Resources\Pages\EditRecord\Concerns\Translatable
 
 class EditPage extends EditRecord
 {
-    use AttachesPageMedia;
     use Translatable;
 
     protected static string $resource = PageResource::class;
@@ -26,10 +24,5 @@ class EditPage extends EditRecord
             ForceDeleteAction::make(),
             RestoreAction::make(),
         ];
-    }
-
-    protected function afterSave(): void
-    {
-        $this->attachMediaFromFormData($this->getRecord(), $this->data);
     }
 }

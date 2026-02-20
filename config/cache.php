@@ -114,4 +114,16 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-cache-'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Content cache TTL (seconds)
+    |--------------------------------------------------------------------------
+    |
+    | Default TTL for Setting, Page, and landing section caches. Invalidated
+    | on model create/update/delete; this is a fallback if invalidation is missed.
+    |
+    */
+
+    'content_ttl' => (int) env('CACHE_CONTENT_TTL', 86400),
+
 ];

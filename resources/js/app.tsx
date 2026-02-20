@@ -1,6 +1,7 @@
 import { createInertiaApp } from '@inertiajs/react';
 import { configureEcho } from '@laravel/echo-react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { LazyMotion, domAnimation } from 'motion/react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { DirectionProvider } from '@/components/ui/direction';
@@ -17,7 +18,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 const rtlLocales = new Set(['ar', 'fa']);
 
 createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
+    title: (title) => title || appName,
     resolve: (name) =>
         resolvePageComponent(
             `./pages/${name}.tsx`,
@@ -40,9 +41,11 @@ createInertiaApp({
 
         root.render(
             <StrictMode>
-                <DirectionProvider dir={resolvedDir}>
-                    <App {...props} />
-                </DirectionProvider>
+                <LazyMotion features={domAnimation} strict>
+                    <DirectionProvider dir={resolvedDir}>
+                        <App {...props} />
+                    </DirectionProvider>
+                </LazyMotion>
             </StrictMode>,
         );
     },

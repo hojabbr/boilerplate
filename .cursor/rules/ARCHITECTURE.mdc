@@ -63,7 +63,7 @@ All CMS and future domain models use `SoftDeletes`.
 - **Cascaded soft deletes:** When a parent is soft-deleted, child models are soft-deleted (e.g. via model events, observers, or explicit `delete()` in `boot()`). Prefer a trait or base observer when the pattern repeats.
 - **Cascaded hard deletes:** When a parent is force-deleted, related rows are force-deleted: use DB foreign key `cascadeOnDelete()` where applicable, plus application-level force-delete in observers for soft-deletable children so they are force-deleted when the parent is force-deleted.
 
-**Parent/child relationships:** `Language` is parent of `Page` (pages cascade when a language is force-deleted). **BlogPost** is parent of Media (polymorphic, via Spatie Media Library): when a BlogPost is force-deleted, all associated media (gallery, videos, documents) are deleted (files and DB rows) by the media library trait. `Setting` and `ContactSubmission` have no child entities; document any new cascade rules in this section when adding relations.
+**Parent/child relationships:** `Language` is parent of `Page` (pages cascade when a language is force-deleted). **BlogPost** is parent of Media (polymorphic, via Spatie Media Library): when a BlogPost is force-deleted, all associated media (gallery, videos, documents) are deleted (files and DB rows) by the media library trait. **LandingSection** is parent of `LandingSectionItem` (FK `cascadeOnDelete`) and of media (Spatie Media Library `image` collection): when a LandingSection is force-deleted, section items are force-deleted by the foreign key, and media are removed by the media library trait. `Setting` and `ContactSubmission` have no child entities; document any new cascade rules in this section when adding relations.
 
 **User model:** `User` also uses `SoftDeletes`; the Filament User resource supports trashed filter, restore, and force-delete actions. **Setting** has no soft deletes by design (singleton site settings).
 
@@ -87,7 +87,7 @@ Use **mcamara/laravel‑localization** to prefix all routes with locale identifi
 ### 📚 Multi‑Locale Content
 
 - Leverage Laravel’s translation system for static strings (JSON or PHP).  
-- For dynamic content (titles/descriptions stored in DB), use JSON columns or translation tables (row‑per‑language pattern).  [oai_citation:1‡Reddit](https://www.reddit.com/r/laravel/comments/1j3613p?utm_source=chatgpt.com)
+- For dynamic content (titles/descriptions stored in DB), use JSON columns or translation tables (row‑per‑language pattern).  [oai_citation:1‡Reddit](https://www.reddit.com/r/laravel/comments/1j3613p)
 
 ### 📄 Localized CMS (multi‑locale content)
 
@@ -95,18 +95,19 @@ Use **mcamara/laravel‑localization** to prefix all routes with locale identifi
 - **Settings:** Single global site settings. Translatable fields (company name, tagline, address, etc.) via **Spatie Laravel Translatable** (JSON columns). No `language_id`; locale chosen at runtime.
 - **Blog:** `BlogPost` uses Spatie Translatable for `title`, `excerpt`, `body`, `meta_description`. Rely on Translatable and app locale. Blog posts support rich content (WYSIWYG in Filament), media (images in `gallery`, videos in `videos`, files in `documents` via Spatie Media Library). The public show page uses Yet Another React Lightbox (YARL) for gallery and video with plugins: Captions, Fullscreen, Slideshow, Thumbnails, Video, Zoom.
 - **Contact form:** `ContactSubmission` stores submissions (name, email, subject, message). No translation; optionally store `locale` for analytics.
+- **Landing page sections:** `LandingSection` (types: hero, features, testimonials, cta) and `LandingSectionItem` (for features/testimonials) use Spatie Translatable for titles, body, CTAs, and Spatie Media Library for section images and item icons. The public welcome page renders sections from the DB; when no hero section exists, fallback uses `Setting` and `lang` messages.
 - **Language model:** `languages` table keyed by code (e.g. `en`, `de`). Seed from `config('laravellocalization.supportedLocales')`. Used by `Page` (`language_id`) and anywhere an FK to a locale is needed.
 
 ### 🪝 Best Practices
 
-- Use PHP arrays for structured groups; use JSON for UI labels/shared strings.  [oai_citation:2‡Reddit](https://www.reddit.com/r/laravel/comments/1q09zk6/which_translation_style_do_you_use/?utm_source=chatgpt.com)  
-- Combine with Carbon locale settings for date, number, currency formatting.  [oai_citation:3‡Phrase](https://phrase.com/blog/posts/laravel-i18n-frontend-best-practices/?utm_source=chatgpt.com)
+- Use PHP arrays for structured groups; use JSON for UI labels/shared strings.  [oai_citation:2‡Reddit](https://www.reddit.com/r/laravel/comments/1q09zk6/which_translation_style_do_you_use/)  
+- Combine with Carbon locale settings for date, number, currency formatting.  [oai_citation:3‡Phrase](https://phrase.com/blog/posts/laravel-i18n-frontend-best-practices/)
 
 ---
 
 ## 🔍 **4. Full Search — Scout + Meilisearch**
 
-Use **Laravel Scout** configured to use **Meilisearch** for full‑text, faceted, typo‑tolerant search.  [oai_citation:4‡Laravel](https://laravel.com/docs/12.x/scout?utm_source=chatgpt.com)
+Use **Laravel Scout** configured to use **Meilisearch** for full‑text, faceted, typo‑tolerant search.  [oai_citation:4‡Laravel](https://laravel.com/docs/12.x/scout)
 
 ### 🚀 Setup
 
@@ -125,7 +126,7 @@ MEILISEARCH_KEY=masterKey
 
 ### 📌 Tips
 
-- Always flush and sync after changing searchable fields to avoid stale index states.  [oai_citation:5‡Reddit](https://www.reddit.com/r/laravel/comments/1b0271f?utm_source=chatgpt.com)  
+- Always flush and sync after changing searchable fields to avoid stale index states.  [oai_citation:5‡Reddit](https://www.reddit.com/r/laravel/comments/1b0271f)  
 - For large datasets, incremental indexing jobs are recommended.
 
 ---
@@ -249,6 +250,7 @@ Frontend is built with:
 - **i18next** + **i18next‑browser‑languagedetector** for UI i18n  
 - **Zustand** for UI and client state not provided by backend  
 - **Vite** as build tool with SSR capabilities
+- **Motion** (motion/react) with LazyMotion for page/section animation; Tailwind enter/exit utilities for Shadcn components.
 
 This setup reflects common modern patterns for Laravel + React with **no separate API** layer, reducing complexity and keeping routing / SSR tightly integrated. ([turn0search7])
 
@@ -355,6 +357,19 @@ Support RTL (e.g. `ar`, `fa`) consistently:
 
 ---
 
+🎬 Motion & animation (UI/UX)
+
+- **Stack:** Motion (motion/react) v12 with `LazyMotion` + `domAnimation` in `app.tsx` to keep bundle size down. Tailwind-based enter/exit (e.g. tw-animate-style utilities) for Shadcn/Radix components (tooltips, sheets, popovers, dropdowns, navigation menus, etc.).
+- **Single source of truth:** Page and section animation config lives in `components/common/motion-presets.ts`:
+  - **pageEnter** — layout/page wrapper on mount (opacity + y, 0.3s).
+  - **fadeInUp** — hero/above-fold on mount (0.35s).
+  - **fadeInUpView** — scroll-in content (viewport, once, margin), 0.4s.
+- **Usage:** Use `m` from `motion/react` with these presets for page wrappers and content sections. For new “page enter” or “scroll-in” patterns, add a named preset instead of ad-hoc `initial`/`animate`/`transition` in pages (DRY). Allowing inline `transition` overrides only when extending a preset (e.g. stagger delay, or short duration for hover/tap) is acceptable; document that preference.
+- **UI primitives:** Use Tailwind `animate-in`/`animate-out` and `transition-*` only for Shadcn/Radix overlays and micro-interactions, not for page-level motion.
+- **Accessibility:** Consider `prefers-reduced-motion` for future motion work or global overrides.
+
+---
+
 🧠 Global State (Zustand)
 
 Use Zustand for frontend state not derived from backend domain data:
@@ -410,12 +425,14 @@ SSR strategy:
 	•	**First choice for all UI.** Use these before adding custom markup.
 
 📦 common/
-	•	Shared compositions that **use** ui primitives and are used across multiple pages (e.g. NavSearch, language switcher, theme switcher). Not a replacement for ui; common components should be built from ui.
+	•	Shared compositions that **use** ui primitives and are used across multiple pages or layouts: NavSearch, language switcher, theme switcher, SocialLinks, SeoHead, BackButton, PaginatorLinks. **Motion presets** (`motion-presets.ts`) live here as the single source of truth for page/section animation; use them instead of ad-hoc animation config (DRY). Shared UX patterns (e.g. link styling, appearance toggle) are implemented via components that consume ui primitives.
 
 📦 feature/
 	•	Feature-specific compositions built from ui (and optionally common) for a single feature area (e.g. product card, user profile widgets).
 
 Design intent: components are isolated by scope and shared where appropriate; always prefer ui primitives over reinventing with raw HTML and Tailwind.
+
+Use shared components for repeated UX: **TextLink** for inline links (underline, transition-colors), **AppearanceToggleTab** / theme-switcher for theme, language-switcher for locale. Keeps link and theme behavior consistent and DRY.
 
 ---
 
@@ -424,6 +441,7 @@ Design intent: components are isolated by scope and shared where appropriate; al
 	•	Use SSR + caching for meta/critical resources.
 	•	Vite prefetch bundles, route prefetching, and code splitting.
 	•	Use optimized image handling and dynamic imports.
+	•	Use **LazyMotion** (domAnimation) for Motion so animation is lazy-loaded and bundle size stays minimal.
 
 ---
 
@@ -455,6 +473,7 @@ UI Library	Shadcn + Radix + Tailwind
 Theme	Light / dark / system via useAppearance; document root class + color-scheme; theme + language switchers in public and app layouts
 Locales	i18next + Inertia shared props; language switcher uses shared locale_switch_urls (mcamara)
 RTL	Dynamic dir; direction-aware icons and logical spacing (start/end, ps/pe)
+Motion / UX	Motion (LazyMotion + domAnimation) + motion-presets for page/section animation; Tailwind enter/exit for Shadcn; prefer presets, extend presets for new variants (DRY)
 Global State	Zustand
 SEO/SSR	Inertia SSR + Inertia Head metadata
 Performance	Prefetch + lazy load
@@ -524,7 +543,7 @@ GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 - Run lint and formatting checks before tests to stop invalid pushes early.  
 - Matrix tests allow multi‑environment validation.  
-- Semantic release triggers only when all tests pass validating merges adhere to commit conventions. (CI/CD best practices)  [oai_citation:0‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/?utm_source=chatgpt.com)
+- Semantic release triggers only when all tests pass validating merges adhere to commit conventions. (CI/CD best practices)  [oai_citation:0‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/)
 
 ---
 
@@ -541,7 +560,7 @@ eslint‑config‑prettier
 - ESLint enforces JS/TS best practices.
 - Prettier ensures uniform formatting.
 - Prettier plugins optimize Tailwind utilities and import ordering.
-- Configured to run via **Husky pre‑commit hooks** to guarantee consistency on staging branches.  [oai_citation:1‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/?utm_source=chatgpt.com)
+- Configured to run via **Husky pre‑commit hooks** to guarantee consistency on staging branches.  [oai_citation:1‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/)
 
 ---
 
@@ -560,7 +579,7 @@ Commit message standardization:
 
 @commitlint/config-conventional
 
-Commitlint ensures messages follow Conventional Commits spec, enabling automated semantic versioning and release changelog generation.  [oai_citation:2‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/?utm_source=chatgpt.com)
+Commitlint ensures messages follow Conventional Commits spec, enabling automated semantic versioning and release changelog generation.  [oai_citation:2‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/)
 
 ---
 
@@ -579,7 +598,7 @@ feat: minor bump
 fix: patch bump
 BREAKING CHANGE: major bump
 
-Semantic release eliminates manual version updates and standardizes release artifacts.  [oai_citation:3‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/?utm_source=chatgpt.com)
+Semantic release eliminates manual version updates and standardizes release artifacts.  [oai_citation:3‡CodeWithGillis](https://codewithgillis.com/building-enterprise-grade-frontend-applications-a-complete-guide-to-advanced-project-structure/)
 
 ---
 
@@ -602,7 +621,7 @@ test(‘localized homepage returns correct props’, function () {
 $this->get(’/en’)->assertInertia(fn($page) => $page->where(‘locale’,‘en’));
 });
 
-Pest improves readable tests and integrates with Laravel seamlessly.  [oai_citation:4‡Reddit](https://www.reddit.com/r/laravel/comments/1b73mv3?utm_source=chatgpt.com)
+Pest improves readable tests and integrates with Laravel seamlessly.  [oai_citation:4‡Reddit](https://www.reddit.com/r/laravel/comments/1b73mv3)
 
 ---
 
@@ -635,7 +654,7 @@ Browser tests simulate real user flows including:
 - Authentication flows
 - SSR hydration behavior
 
-Use **pest‑plugin‑browser** to run E2E tests via PHP test suite for consistency. Tests can verify full stack flows in a CI environment.  [oai_citation:5‡Reddit](https://www.reddit.com/r/laravel/comments/1j052ij?utm_source=chatgpt.com)
+Use **pest‑plugin‑browser** to run E2E tests via PHP test suite for consistency. Tests can verify full stack flows in a CI environment.  [oai_citation:5‡Reddit](https://www.reddit.com/r/laravel/comments/1j052ij)
 
 ---
 

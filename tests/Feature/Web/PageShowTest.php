@@ -1,15 +1,15 @@
 <?php
 
-use App\Models\Language;
+use App\Models\Page;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('page show returns correct content for locale and slug', function () {
-    $language = Language::factory()->create(['code' => 'en', 'name' => 'English']);
+    refreshApplicationWithLocale('en');
 
-    $language->pages()->create([
+    Page::create([
         'slug' => 'test-page',
-        'title' => 'Test Page Title',
-        'body' => '<p>Test body</p>',
+        'title' => ['en' => 'Test Page Title'],
+        'body' => ['en' => '<p>Test body</p>'],
         'type' => 'custom',
     ]);
 

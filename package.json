@@ -2,20 +2,21 @@
     "$schema": "https://www.schemastore.org/package.json",
     "private": true,
     "type": "module",
+    "repository": "github:hojabbr/boilerplate",
     "scripts": {
         "build": "vite build",
         "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
-        "lint": "eslint . --fix",
+        "lint": "eslint . --fix --no-warn-ignored",
         "types": "tsc --noEmit",
         "prepare": "husky",
         "fonts:woff2": "node scripts/fonts-to-woff2.mjs"
     },
     "lint-staged": {
         "*.{ts,tsx,js,jsx}": [
-            "eslint --fix",
+            "eslint --fix --no-warn-ignored",
             "prettier --write"
         ],
         "*.{json,md,css}": [
@@ -35,6 +36,7 @@
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/git": "^10.0.1",
         "@semantic-release/github": "^12.0.6",
+        "@tailwindcss/typography": "^0.5.19",
         "@tailwindcss/vite": "^4.2.0",
         "@types/node": "^22.13.5",
         "@types/react": "^19.2.14",
@@ -91,6 +93,7 @@
         "input-otp": "^1.4.2",
         "laravel-vite-plugin": "^2.0",
         "lucide-react": "^0.475.0",
+        "motion": "^12.34.3",
         "next-themes": "^0.4.6",
         "radix-ui": "^1.4.3",
         "react": "^19.2.0",

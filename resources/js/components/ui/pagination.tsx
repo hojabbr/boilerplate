@@ -3,6 +3,7 @@ import {
   ChevronRightIcon,
   MoreHorizontalIcon,
 } from "lucide-react"
+import { Slot } from "radix-ui"
 import * as React from "react"
 
 import { buttonVariants, type Button } from "@/components/ui/button"
@@ -38,6 +39,7 @@ function PaginationItem({ ...props }: React.ComponentProps<"li">) {
 
 type PaginationLinkProps = {
   isActive?: boolean
+  asChild?: boolean
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
   React.ComponentProps<"a">
 
@@ -45,10 +47,12 @@ function PaginationLink({
   className,
   isActive,
   size = "icon",
+  asChild = false,
   ...props
 }: PaginationLinkProps) {
+  const Comp = asChild ? Slot.Root : "a"
   return (
-    <a
+    <Comp
       aria-current={isActive ? "page" : undefined}
       data-slot="pagination-link"
       data-active={isActive}
@@ -66,34 +70,54 @@ function PaginationLink({
 
 function PaginationPrevious({
   className,
+  text = "Previous",
+  asChild,
+  children,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) {
+}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
   return (
     <PaginationLink
       aria-label="Go to previous page"
       size="default"
       className={cn("gap-1 px-2.5 sm:ps-2.5", className)}
+      asChild={asChild}
       {...props}
     >
-      <ChevronLeftIcon className="rtl:rotate-180" />
-      <span className="hidden sm:block">Previous</span>
+      {asChild ? (
+        children
+      ) : (
+        <>
+          <ChevronLeftIcon className="rtl:rotate-180 size-4" />
+          <span className="hidden sm:block">{text}</span>
+        </>
+      )}
     </PaginationLink>
   )
 }
 
 function PaginationNext({
   className,
+  text = "Next",
+  asChild,
+  children,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) {
+}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
   return (
     <PaginationLink
       aria-label="Go to next page"
       size="default"
       className={cn("gap-1 px-2.5 sm:pe-2.5", className)}
+      asChild={asChild}
       {...props}
     >
-      <span className="hidden sm:block">Next</span>
-      <ChevronRightIcon className="rtl:rotate-180" />
+      {asChild ? (
+        children
+      ) : (
+        <>
+          <span className="hidden sm:block">{text}</span>
+          <ChevronRightIcon className="rtl:rotate-180 size-4" />
+        </>
+      )}
     </PaginationLink>
   )
 }

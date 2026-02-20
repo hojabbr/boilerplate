@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\BlogPosts\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -52,25 +52,23 @@ class BlogPostForm
                 DateTimePicker::make('published_at'),
                 Section::make('Media')
                     ->schema([
-                        FileUpload::make('gallery')
+                        SpatieMediaLibraryFileUpload::make('gallery')
                             ->label('Gallery images')
                             ->image()
+                            ->collection('gallery')
                             ->multiple()
-                            ->directory('blog-gallery')
                             ->reorderable()
-                            ->dehydrated(false),
-                        FileUpload::make('videos')
+                            ->conversion('thumb'),
+                        SpatieMediaLibraryFileUpload::make('videos')
                             ->label('Videos')
+                            ->collection('videos')
                             ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
-                            ->multiple()
-                            ->directory('blog-videos')
-                            ->dehydrated(false),
-                        FileUpload::make('documents')
+                            ->multiple(),
+                        SpatieMediaLibraryFileUpload::make('documents')
                             ->label('Documents')
+                            ->collection('documents')
                             ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
-                            ->multiple()
-                            ->directory('blog-documents')
-                            ->dehydrated(false),
+                            ->multiple(),
                     ])
                     ->collapsible(),
             ]);

@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @mixin IdeHelperLanguage
- *
  * @extends Model<Language>
+ *
+ * @mixin IdeHelperLanguage
  */
 class Language extends Model
 {
