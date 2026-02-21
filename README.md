@@ -5,7 +5,7 @@
 
 A production-ready starter for **Laravel 12**, **Inertia 2**, and **React 19** with localization, Filament admin, feature flags, full-text search, and real-time support. Use it as a template or clone to build full-stack apps without redoing auth, i18n, theme, or tooling.
 
-**Repository:** [github.com/hojabbr/boilerplate](https://github.com/hojabbr/boilerplate)
+**DOCUMENTATION:** [hojabbr.github.io/boilerplate/](https://hojabbr.github.io/boilerplate/)
 
 ---
 

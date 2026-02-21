@@ -2,7 +2,7 @@
 title: Development
 layout: default
 nav_order: 4
-description: 'Extending the project, scaffolding commands, and testing.'
+description: 'Extending the boilerplate, scaffolding commands, and testing.'
 ---
 
 # Development

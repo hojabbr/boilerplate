@@ -8,7 +8,7 @@ description: 'Environment variables and optional services for the Laravel React 
 
 # Configuration
 
-Configure the application via `.env` (copy from `.env.example`).
+Configure your clone via `.env` (copy from `.env.example`).
 
 ## Required
 

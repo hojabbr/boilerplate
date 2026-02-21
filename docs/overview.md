@@ -8,7 +8,7 @@ description: 'High-level architecture and directory structure.'
 
 # Overview
 
-Backend is organized around **Core** (cross-cutting) and **Domains** (vertical slices). Frontend is organized around **features** with Inertia pages and shared components.
+The boilerplate backend is organized around **Core** (cross-cutting) and **Domains** (vertical slices). The frontend is organized around **features** with Inertia pages and shared components.
 
 ## Directory structure
 

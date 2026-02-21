@@ -8,7 +8,7 @@ description: 'List of all documentation files and their purpose. For discovery a
 
 # Documentation index
 
-All documentation files in this site and a one-line description of each. Use this for discovery and context.
+All documentation files for the [Laravel React Boilerplate](https://github.com/hojabbr/boilerplate) and a one-line description of each. Use this for discovery and context.
 
 | File                   | Description                                                                          |
 | ---------------------- | ------------------------------------------------------------------------------------ |

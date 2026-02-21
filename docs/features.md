@@ -7,7 +7,7 @@ description: 'Localization, feature flags, search, and the Filament admin panel.
 
 # Features
 
-Optional and built-in capabilities of the boilerplate:
+What the boilerplate gives you out of the box:
 
 - **[Localization](localization.md)** — Route prefixes (mcamara), translatable content, RTL, i18next sync.
 - **[Feature flags](feature-flags.md)** — Laravel Pennant; toggleable in Filament (blog, page, contact-form); registration and 2FA via Fortify.

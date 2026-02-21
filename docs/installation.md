@@ -8,6 +8,8 @@ description: 'Step-by-step installation for the Laravel React Boilerplate.'
 
 # Installation
 
+Clone the [repository](https://github.com/hojabbr/boilerplate) and set up the stack.
+
 ## Clone and backend setup
 
 ```bash
@@ -49,5 +51,5 @@ cp .env.example .env
 
 ## Next steps
 
-- [Configuration](configuration.md) — Environment variables and optional services.
-- [Architecture](architecture.md) — Project structure and conventions.
+- [Configuration](configuration.md) — Environment variables and optional services (Meilisearch, Reverb, etc.).
+- [Architecture](architecture.md) — Boilerplate structure and conventions.
