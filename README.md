@@ -65,8 +65,8 @@ A production-ready starter for **Laravel 12**, **Inertia 2**, and **React 19** w
 
 ### Project structure
 
-- **Backend:** `app/Core/` (contracts, exceptions, middleware, models like Language/Setting/FeatureFlag, observers, policies, providers, shared services like PagePropsService), `app/Domains/` (Auth, Blog, Contact, Pages, Dashboard, Profile, Landing, Search — each with Http/Controllers, Http/Requests, Models, Actions, DTOs, Queries, Services, Observers, Policies). Controllers live in each domain and are thin. Filament is UI-only and uses domain or Core models. Models live in `app/Core/Models/` or `app/Domains/<Name>/Models/`, not `app/Models/`. Pennant feature-flag definitions live in `app/Features/`.
-- **Frontend:** `resources/js/` — `pages/` (Inertia route views), `features/` (auth, blog, contact, dashboard, landing, pages, profile — each with components/, hooks/, services/, types.ts), `components/` (ui, common), `layouts/`, `hooks/`, `context/`, `store/`, `themes/`, `services/`, `types/`. Use `@/` for `resources/js` and optionally `@features/*` for feature modules.
+- **Backend:** `app/Core/` (contracts, exceptions, middleware, models like Language/Setting/FeatureFlag, observers, policies, providers, shared services like PagePropsService), `app/Domains/` (Auth, Blog, Contact, Pages, Dashboard, Profile, Landing, Search — each with Http/Controllers, Http/Requests, Models, Actions, DTOs, Queries, Services, Observers, Policies). Controllers live in each domain and are thin. Filament is UI-only and uses domain or Core models. Models live in `app/Core/Models/` or `app/Domains/<Name>/Models/`, not `app/Models/`. Jobs live in `Domains/<Name>/Jobs/` or `Core/Jobs/` (create the folder when adding the first job). Pennant feature-flag definitions live in `app/Features/`.
+- **Frontend:** `resources/js/` — Inertia pages live in `resources/js/features/<name>/pages/` (see ARCHITECTURE and EXTENDING.md). Feature modules (auth, blog, contact, dashboard, landing, pages, profile, settings) each have `pages/`, `components/`, `hooks/`, `services/`, `types.ts`, `index.ts` as needed; shared UI in `components/` (ui, common), plus `layouts/`, `hooks/`, `store/`, `themes/`, `services/`, `types/`. Use `@/` for `resources/js` and optionally `@features/*` for feature modules.
 
 ---
 
@@ -167,6 +167,7 @@ Run tests before submitting changes; see [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Documentation
 
 - **[.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc)** — Backend and frontend architecture, localization, feature flags, theme, RTL, DevOps, and conventions. Useful for contributors and for AI-assisted development (e.g. Cursor).
+- **[EXTENDING.md](EXTENDING.md)** — How to add or extend features, domains, models, migrations, observers, policies, jobs, feature flags, cache, locales, search, Filament resources, Inertia pages, UI components, themes, and tests; Laravel vs project conventions and when to check official docs (Laravel, Inertia, Filament, mcamara, Pennant, Scout, Wayfinder, React, Shadcn).
 - **Naming:** Backend uses PascalCase for PHP files and classes; frontend follows ARCHITECTURE (see “Directory Structure” and “Naming conventions” there): kebab-case for page/component/layout files, PascalCase for React component names and hooks.
 - **Feature flags** — Laravel Pennant; see ARCHITECTURE “Feature Flags — Laravel Pennant”.
 - **Theme** — Single source of truth (`useAppearance`) for light/dark/system; see ARCHITECTURE “Theme (light / dark / system)”.

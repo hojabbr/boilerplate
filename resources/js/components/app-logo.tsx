@@ -1,6 +1,14 @@
+import { usePage } from '@inertiajs/react';
 import AppLogoIcon from './app-logo-icon';
 
 export default function AppLogo() {
+    const { name, translations } = usePage().props as {
+        name?: string;
+        translations?: Record<string, string>;
+    };
+    const t = translations ?? {};
+    const siteName = name ?? t['common.app_fallback'] ?? 'App';
+
     return (
         <>
             <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
@@ -8,7 +16,7 @@ export default function AppLogo() {
             </div>
             <div className="ms-1 grid flex-1 text-start text-sm">
                 <span className="mb-0.5 truncate leading-tight font-semibold">
-                    Laravel Starter Kit
+                    {siteName}
                 </span>
             </div>
         </>

@@ -1,4 +1,4 @@
-import { Form } from '@inertiajs/react';
+import { Form, usePage } from '@inertiajs/react';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,10 @@ export default function TwoFactorRecoveryCodes({
     fetchRecoveryCodes,
     errors,
 }: Props) {
+    const { translations } = usePage().props as {
+        translations?: Record<string, string>;
+    };
+    const t = translations ?? {};
     const [codesAreVisible, setCodesAreVisible] = useState<boolean>(false);
     const codesSectionRef = useRef<HTMLDivElement | null>(null);
     const canRegenerateCodes = recoveryCodesList.length > 0 && codesAreVisible;
@@ -62,11 +66,11 @@ export default function TwoFactorRecoveryCodes({
             <CardHeader>
                 <CardTitle className="flex gap-3">
                     <LockKeyhole className="size-4" aria-hidden="true" />
-                    2FA Recovery Codes
+                    {t['settings.recovery_codes_title'] ?? '2FA Recovery Codes'}
                 </CardTitle>
                 <CardDescription>
-                    Recovery codes let you regain access if you lose your 2FA
-                    device. Store them in a secure password manager.
+                    {t['settings.recovery_codes_description'] ??
+                        'Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.'}
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -81,7 +85,11 @@ export default function TwoFactorRecoveryCodes({
                             className="size-4"
                             aria-hidden="true"
                         />
-                        {codesAreVisible ? 'Hide' : 'View'} Recovery Codes
+                        {codesAreVisible
+                            ? (t['settings.hide_recovery_codes'] ??
+                              'Hide Recovery Codes')
+                            : (t['settings.view_recovery_codes'] ??
+                              'View Recovery Codes')}
                     </Button>
 
                     {canRegenerateCodes && (
@@ -97,7 +105,9 @@ export default function TwoFactorRecoveryCodes({
                                     disabled={processing}
                                     aria-describedby="regenerate-warning"
                                 >
-                                    <RefreshCw /> Regenerate Codes
+                                    <RefreshCw />{' '}
+                                    {t['settings.regenerate_codes'] ??
+                                        'Regenerate Codes'}
                                 </Button>
                             )}
                         </Form>
@@ -149,13 +159,8 @@ export default function TwoFactorRecoveryCodes({
 
                                 <div className="text-xs text-muted-foreground select-none">
                                     <p id="regenerate-warning">
-                                        Each recovery code can be used once to
-                                        access your account and will be removed
-                                        after use. If you need more, click{' '}
-                                        <span className="font-bold">
-                                            Regenerate Codes
-                                        </span>{' '}
-                                        above.
+                                        {t['settings.recovery_codes_warning'] ??
+                                            'Each recovery code can be used once to access your account and will be removed after use. If you need more, click Regenerate Codes above.'}
                                     </p>
                                 </div>
                             </>

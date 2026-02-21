@@ -107,17 +107,17 @@ export default function PublicLayout({
     return (
         <div className="flex min-h-screen flex-col bg-background text-foreground">
             <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
-                <div className="mx-auto flex h-14 max-w-6xl flex-wrap items-center justify-between gap-4 px-4 sm:h-16 sm:px-6 lg:px-8">
+                <div className="mx-auto flex h-14 max-w-6xl flex-shrink-0 flex-nowrap items-center justify-between gap-2 px-4 sm:gap-4 lg:px-0">
                     <Link
                         href={prefix ? prefix : home.url()}
-                        className="text-lg font-semibold text-foreground"
+                        className="min-w-0 shrink-0 truncate text-lg font-semibold text-foreground"
                     >
                         {siteName}
                     </Link>
 
-                    {/* Desktop nav: visible from md up */}
+                    {/* Desktop nav: visible from lg (1024px) up so hamburger is used for sm/md */}
                     <nav
-                        className="hidden flex-1 items-center justify-end gap-1 sm:gap-2 md:flex"
+                        className="hidden flex-1 items-center justify-end gap-1 sm:gap-2 lg:flex"
                         aria-label="Main"
                     >
                         {mainNavItems.map(
@@ -177,8 +177,8 @@ export default function PublicLayout({
                         )}
                     </nav>
 
-                    {/* Mobile: hamburger + sheet */}
-                    <div className="flex items-center gap-1 md:hidden">
+                    {/* Mobile: hamburger + sheet (visible below lg) */}
+                    <div className="flex shrink-0 items-center gap-1 lg:hidden">
                         <NavSearch />
                         <ThemeSwitcher
                             variant="ghost"
@@ -285,7 +285,7 @@ export default function PublicLayout({
                     {children}
                 </m.div>
             </main>
-            <footer className="border-t border-border py-6">
+            <footer className="py-6">
                 <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                     <nav
                         className="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm text-muted-foreground"

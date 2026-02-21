@@ -114,7 +114,7 @@ function WelcomeHero({
         <section
             className={
                 heroSection?.image_url
-                    ? 'relative mx-auto w-full max-w-5xl overflow-hidden rounded-xl bg-muted/50'
+                    ? 'relative mx-auto w-full overflow-hidden rounded-xl bg-muted/50'
                     : 'mx-auto w-full max-w-3xl text-center'
             }
         >
@@ -176,7 +176,7 @@ function WelcomeHero({
 
 function WelcomeFeaturesSection({ section }: { section: Section }) {
     return (
-        <section className="border-t border-border pt-12 lg:pt-16">
+        <section className="pt-12 lg:pt-16">
             {section.title && (
                 <h2 className="mb-2 text-center text-2xl font-semibold text-foreground">
                     {section.title}
@@ -187,7 +187,7 @@ function WelcomeFeaturesSection({ section }: { section: Section }) {
                     {section.subtitle}
                 </p>
             )}
-            <div className="mx-auto grid max-w-5xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                 {(section.items ?? []).map((item, j) => (
                     <m.div
                         key={item.title ?? item.icon_url ?? `feature-item-${j}`}
@@ -226,13 +226,13 @@ function WelcomeFeaturesSection({ section }: { section: Section }) {
 
 function WelcomeTestimonialsSection({ section }: { section: Section }) {
     return (
-        <section className="border-t border-border pt-12 lg:pt-16">
+        <section className="pt-12 lg:pt-16">
             {section.title && (
                 <h2 className="mb-8 text-center text-2xl font-semibold text-foreground">
                     {section.title}
                 </h2>
             )}
-            <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
+            <div className="mx-auto grid gap-6 sm:grid-cols-2">
                 {(section.items ?? []).map((item, j) => (
                     <blockquote
                         key={
@@ -271,7 +271,7 @@ function WelcomeLatestPostsSection({
     prefix: string;
 }) {
     return (
-        <section className="border-t border-border pt-12 lg:pt-16">
+        <section className="pt-12 lg:pt-16">
             {section.title && (
                 <h2 className="mb-2 text-center text-2xl font-semibold text-foreground">
                     {section.title}
@@ -283,7 +283,7 @@ function WelcomeLatestPostsSection({
                 </p>
             )}
             {latest_posts.length > 0 && (
-                <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {latest_posts.map((post) => (
                         <Link
                             key={post.slug}
@@ -341,11 +341,11 @@ function WelcomeCtaSection({
     prefix: string;
 }) {
     return (
-        <section className="border-t border-border pt-12 lg:pt-16">
+        <section className="pt-12 lg:pt-16">
             <div
                 className={
                     section.image_url
-                        ? 'relative mx-auto flex max-w-4xl flex-col overflow-hidden rounded-xl bg-muted/50 sm:flex-row'
+                        ? 'relative mx-auto flex flex-col overflow-hidden rounded-xl bg-muted/50 sm:flex-row'
                         : 'mx-auto max-w-2xl rounded-xl border border-border bg-muted/30 px-6 py-10 text-center'
                 }
             >
@@ -415,18 +415,22 @@ function WelcomeExploreSection({
         return null;
     }
     return (
-        <section className="border-t border-border pt-12 lg:pt-16">
+        <section className="pt-12 lg:pt-16">
             <h2 className="mb-6 text-center text-sm font-medium tracking-wider text-muted-foreground uppercase">
                 {messages.explore ?? 'Explore'}
             </h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {nav_pages.map((p) => (
-                    <m.div key={p.slug} {...fadeInUpView}>
+                    <m.div
+                        key={p.slug}
+                        {...fadeInUpView}
+                        className="flex h-full flex-col"
+                    >
                         <Link
                             href={`${prefix}${page.show.url({ slug: p.slug })}`}
-                            className="block transition hover:opacity-90"
+                            className="flex h-full flex-col transition hover:opacity-90"
                         >
-                            <Card className="h-full">
+                            <Card className="flex h-full flex-col">
                                 <CardHeader>
                                     <CardTitle>{p.title}</CardTitle>
                                     <CardDescription>
@@ -439,12 +443,12 @@ function WelcomeExploreSection({
                     </m.div>
                 ))}
                 {showBlog && (
-                    <m.div {...fadeInUpView}>
+                    <m.div {...fadeInUpView} className="flex h-full flex-col">
                         <Link
                             href={`${prefix}${blog.index.url()}`}
-                            className="block transition hover:opacity-90"
+                            className="flex h-full flex-col transition hover:opacity-90"
                         >
-                            <Card className="h-full">
+                            <Card className="flex h-full flex-col">
                                 <CardHeader>
                                     <CardTitle>
                                         {messages.blog_title ?? 'Blog'}
@@ -459,12 +463,12 @@ function WelcomeExploreSection({
                     </m.div>
                 )}
                 {showContact && (
-                    <m.div {...fadeInUpView}>
+                    <m.div {...fadeInUpView} className="flex h-full flex-col">
                         <Link
                             href={`${prefix}${contact.show.url()}`}
-                            className="block transition hover:opacity-90"
+                            className="flex h-full flex-col transition hover:opacity-90"
                         >
-                            <Card className="h-full">
+                            <Card className="flex h-full flex-col">
                                 <CardHeader>
                                     <CardTitle>
                                         {messages.contact_title ?? 'Contact'}

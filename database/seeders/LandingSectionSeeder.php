@@ -67,6 +67,7 @@ class LandingSectionSeeder extends Seeder
             'ja' => ['title' => 'ブログの最新記事', 'subtitle' => '最近の記事とお知らせ。'],
             'zh' => ['title' => '博客最新', 'subtitle' => '近期文章与动态。'],
             'ko' => ['title' => '블로그 최신 글', 'subtitle' => '최근 글과 소식.'],
+            'hi' => ['title' => 'ब्लॉग से नवीनतम', 'subtitle' => 'हाल के लेख और अपडेट।'],
         ];
 
         $section = LandingSection::updateOrCreate(
@@ -101,6 +102,7 @@ class LandingSectionSeeder extends Seeder
             'ja' => ['title' => "{$appName}へようこそ", 'subtitle' => '自信を持って構築、リリース、スケール。', 'cta_text' => '始める', 'cta_url' => '/register'],
             'zh' => ['title' => "欢迎使用 {$appName}", 'subtitle' => '自信地构建、发布与扩展。', 'cta_text' => '开始', 'cta_url' => '/register'],
             'ko' => ['title' => "{$appName}에 오신 것을 환영합니다", 'subtitle' => '자신 있게 구축하고, 출시하고, 확장하세요.', 'cta_text' => '시작하기', 'cta_url' => '/register'],
+            'hi' => ['title' => "{$appName} में आपका स्वागत है", 'subtitle' => 'विश्वास के साथ निर्माण करें, लॉन्च करें और बढ़ाएं।', 'cta_text' => 'शुरू करें', 'cta_url' => '/register'],
         ];
 
         $section = LandingSection::updateOrCreate(
@@ -142,6 +144,7 @@ class LandingSectionSeeder extends Seeder
             'ja' => ['title' => '選ばれる理由', 'subtitle' => 'ビジネス成長に必要なすべて。'],
             'zh' => ['title' => '为什么选择我们', 'subtitle' => '助力业务增长所需的一切。'],
             'ko' => ['title' => '왜 우리를 선택해야 할까요', 'subtitle' => '비즈니스 성장에 필요한 모든 것.'],
+            'hi' => ['title' => 'हमें क्यों चुनें', 'subtitle' => 'अपने व्यवसाय को बढ़ाने के लिए जो कुछ चाहिए।'],
         ];
 
         $section = LandingSection::updateOrCreate(
@@ -171,6 +174,7 @@ class LandingSectionSeeder extends Seeder
                     'ja' => ['title' => 'セキュアで信頼性の高い', 'description' => 'エンタープライズ級のセキュリティと99.9%の稼働率。'],
                     'zh' => ['title' => '安全可靠', 'description' => '企业级安全与 99.9% 可用性。'],
                     'ko' => ['title' => '안전하고 신뢰할 수 있는', 'description' => '엔터프라이즈급 보안과 99.9% 가동 시간.'],
+                    'hi' => ['title' => 'सुरक्षित और विश्वसनीय', 'description' => 'एंटरप्राइज़-ग्रेड सुरक्षा और 99.9% अपटाइम।'],
                 ],
             ],
             [
@@ -187,6 +191,7 @@ class LandingSectionSeeder extends Seeder
                     'ja' => ['title' => '使いやすい', 'description' => '直感的なインターフェースと分かりやすいドキュメント。数分で開始。'],
                     'zh' => ['title' => '易于使用', 'description' => '直观界面与清晰文档，几分钟即可上手。'],
                     'ko' => ['title' => '사용하기 쉬운', 'description' => '직관적인 인터페이스와 명확한 문서. 몇 분 만에 시작하세요.'],
+                    'hi' => ['title' => 'उपयोग में आसान', 'description' => 'सहज इंटरफ़ेस और स्पष्ट दस्तावेज़ीकरण। मिनटों में शुरू करें।'],
                 ],
             ],
             [
@@ -203,6 +208,7 @@ class LandingSectionSeeder extends Seeder
                     'ja' => ['title' => 'スケーラブル', 'description' => 'スタートアップからエンタープライズまで。'],
                     'zh' => ['title' => '可扩展', 'description' => '从创业公司到企业，与我们一起成长。'],
                     'ko' => ['title' => '확장 가능', 'description' => '스타트업부터 엔터프라이즈까지. 우리와 함께 성장하세요.'],
+                    'hi' => ['title' => 'मापनीय', 'description' => 'स्टार्टअप से एंटरप्राइज़ तक। हमारे साथ बढ़ें।'],
                 ],
             ],
         ];
@@ -250,6 +256,7 @@ class LandingSectionSeeder extends Seeder
             'ja' => ['title' => 'お客様の声'],
             'zh' => ['title' => '客户评价'],
             'ko' => ['title' => '고객 후기'],
+            'hi' => ['title' => 'हमारे ग्राहक क्या कहते हैं'],
         ];
 
         $section = LandingSection::updateOrCreate(
@@ -279,6 +286,7 @@ class LandingSectionSeeder extends Seeder
                     'ja' => ['title' => 'Jane Doe、TechCo CTO', 'description' => "{$appName}でより速く、スムーズにリリースできるようになりました。"],
                     'zh' => ['title' => 'Jane Doe，TechCo 技术总监', 'description' => "{$appName} 帮助我们更快、更顺畅地交付产品。"],
                     'ko' => ['title' => 'Jane Doe, TechCo CTO', 'description' => "{$appName}로 더 빠르고 원활하게 출시할 수 있었어요."],
+                    'hi' => ['title' => 'Jane Doe, TechCo में CTO', 'description' => "{$appName} ने हमें तेज़ और आसानी से लॉन्च करने में मदद की।"],
                 ],
             ],
             [
@@ -295,6 +303,7 @@ class LandingSectionSeeder extends Seeder
                     'ja' => ['title' => 'John Smith、StartupXYZ創業者', 'description' => "昨年{$appName}に乗り換えました。最高の決断でした。サポートも抜群です。"],
                     'zh' => ['title' => 'John Smith，StartupXYZ 创始人', 'description' => "去年我们换成了 {$appName}。这是我们做过最好的决定，支持也很棒。"],
                     'ko' => ['title' => 'John Smith, StartupXYZ 설립자', 'description' => "작년에 {$appName}로 전환했어요. 최고의 결정이었고, 지원도 훌륭해요."],
+                    'hi' => ['title' => 'John Smith, StartupXYZ के संस्थापक', 'description' => "पिछले साल हमने {$appName} अपनाया। सबसे अच्छा फैसला। समर्थन शानदार है।"],
                 ],
             ],
         ];
@@ -334,6 +343,7 @@ class LandingSectionSeeder extends Seeder
             'ja' => ['title' => '始める準備はできましたか？', 'subtitle' => "すでに{$appName}で構築している何千ものチームに参加しましょう。", 'cta_text' => '無料トライアルを開始', 'cta_url' => '/register'],
             'zh' => ['title' => '准备好开始了吗？', 'subtitle' => "加入数千个已在用 {$appName} 构建的团队。", 'cta_text' => '免费试用', 'cta_url' => '/register'],
             'ko' => ['title' => '시작할 준비가 되셨나요?', 'subtitle' => "이미 {$appName}로 구축 중인 수천 개 팀에 합류하세요.", 'cta_text' => '무료 체험 시작', 'cta_url' => '/register'],
+            'hi' => ['title' => 'शुरू करने के लिए तैयार हैं?', 'subtitle' => "हजारों टीमें पहले से {$appName} के साथ बना रही हैं। जुड़ें।", 'cta_text' => 'मुफ्त ट्रायल शुरू करें', 'cta_url' => '/register'],
         ];
 
         $section = LandingSection::updateOrCreate(

@@ -11,6 +11,6 @@ return [
     |
     */
 
-    'posts_per_page' => (int) env('BLOG_POSTS_PER_PAGE', 4),
+    'posts_per_page' => (int) env('BLOG_POSTS_PER_PAGE', 10),
 
 ];

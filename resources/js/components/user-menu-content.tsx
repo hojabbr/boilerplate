@@ -1,5 +1,7 @@
 import { Link, router, usePage } from '@inertiajs/react';
 import { LogOut, Settings } from 'lucide-react';
+
+type PageProps = { translations?: Record<string, string> };
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -17,7 +19,10 @@ type Props = {
 };
 
 export function UserMenuContent({ user }: Props) {
-    const { locale } = usePage().props as { locale?: string };
+    const { locale, translations } = usePage().props as {
+        locale?: string;
+    } & PageProps;
+    const t = translations ?? {};
     const prefix = locale ? `/${locale}` : '';
     const cleanup = useMobileNavigation();
 
@@ -50,7 +55,7 @@ export function UserMenuContent({ user }: Props) {
                         onClick={cleanup}
                     >
                         <Settings className="me-2" />
-                        Settings
+                        {t['nav.settings'] ?? 'Settings'}
                     </Link>
                 </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -63,7 +68,7 @@ export function UserMenuContent({ user }: Props) {
                     data-test="logout-button"
                 >
                     <LogOut className="me-2 size-4" />
-                    Log out
+                    {t['auth.log_out'] ?? 'Log out'}
                 </button>
             </DropdownMenuItem>
         </>

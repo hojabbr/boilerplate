@@ -45,6 +45,7 @@ class PageSeeder extends Seeder
                 'ja' => ['title' => 'プライバシーポリシー', 'meta_title' => 'プライバシーポリシー', 'meta_description' => '当社のプライバシーポリシー。'],
                 'zh' => ['title' => '隐私政策', 'meta_title' => '隐私政策', 'meta_description' => '我们的隐私政策。'],
                 'ko' => ['title' => '개인정보 처리방침', 'meta_title' => '개인정보 처리방침', 'meta_description' => '당사의 개인정보 처리방침.'],
+                'hi' => ['title' => 'गोपनीयता नीति', 'meta_title' => 'गोपनीयता नीति', 'meta_description' => 'हमारी गोपनीयता नीति।'],
             ],
         ],
         [
@@ -65,6 +66,7 @@ class PageSeeder extends Seeder
                 'ja' => ['title' => '利用規約', 'meta_title' => '利用規約', 'meta_description' => '当サイトの利用規約。'],
                 'zh' => ['title' => '使用条款', 'meta_title' => '使用条款', 'meta_description' => '本网站的使用条款。'],
                 'ko' => ['title' => '이용약관', 'meta_title' => '이용약관', 'meta_description' => '본 사이트 이용약관.'],
+                'hi' => ['title' => 'उपयोग की शर्तें', 'meta_title' => 'उपयोग की शर्तें', 'meta_description' => 'इस साइट की उपयोग की शर्तें।'],
             ],
         ],
         [
@@ -85,6 +87,7 @@ class PageSeeder extends Seeder
                 'ja' => ['title' => '私たちについて', 'meta_title' => '私たちについて', 'meta_description' => '私たちについてもっと知る。'],
                 'zh' => ['title' => '关于我们', 'meta_title' => '关于我们', 'meta_description' => '了解更多关于我们。'],
                 'ko' => ['title' => '회사 소개', 'meta_title' => '회사 소개', 'meta_description' => '회사에 대해 자세히 알아보세요.'],
+                'hi' => ['title' => 'हमारे बारे में', 'meta_title' => 'हमारे बारे में', 'meta_description' => 'हमारे बारे में और जानें।'],
             ],
         ],
     ];

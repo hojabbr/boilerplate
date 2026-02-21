@@ -3,7 +3,7 @@ import { configureEcho } from '@laravel/echo-react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { LazyMotion, domAnimation, MotionConfig } from 'motion/react';
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import { hydrateRoot } from 'react-dom/client';
 import { DirectionProvider } from '@/components/ui/direction';
 import '../css/app.css';
 import { initializeTheme } from './hooks/use-appearance';
@@ -17,13 +17,23 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 const rtlLocales = new Set(['ar', 'fa']);
 
+const pageGlob = {
+    ...import.meta.glob('./pages/**/*.tsx'),
+    ...import.meta.glob('./features/*/pages/**/*.tsx'),
+};
+
+function pagePath(name: string): string {
+    if (name === 'welcome') return './features/landing/pages/welcome.tsx';
+    const parts = name.split('/');
+    const feature = parts[0];
+    const pageFile = parts.length > 1 ? parts.slice(1).join('/') : name;
+    const featurePath = `./features/${feature}/pages/${pageFile}.tsx`;
+    return featurePath in pageGlob ? featurePath : `./pages/${name}.tsx`;
+}
+
 createInertiaApp({
     title: (title) => title || appName,
-    resolve: (name) =>
-        resolvePageComponent(
-            `./pages/${name}.tsx`,
-            import.meta.glob('./pages/**/*.tsx'),
-        ),
+    resolve: (name) => resolvePageComponent(pagePath(name), pageGlob),
     setup({ el, App, props }) {
         const { locale, dir } = props.initialPage.props as {
             locale?: string;
@@ -37,9 +47,8 @@ createInertiaApp({
             dir ?? (locale && rtlLocales.has(locale) ? 'rtl' : 'ltr');
         document.documentElement.setAttribute('dir', resolvedDir);
 
-        const root = createRoot(el);
-
-        root.render(
+        hydrateRoot(
+            el,
             <StrictMode>
                 <LazyMotion features={domAnimation} strict>
                     <MotionConfig reducedMotion="user">

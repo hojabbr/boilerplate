@@ -22,6 +22,15 @@ Thank you for your interest in contributing. This document explains how to get s
 2. **Configure `.env`**  
    Set at least `APP_NAME`, `APP_URL`, and database (`DB_*`). For tests, the project’s CI uses SQLite in-memory; locally you can use any supported driver.
 
+## Conventions and where to put new code
+
+- **New backend domain** — `app/Domains/<Name>/` (Http, Models, etc.); register routes and policy.
+- **New model** — `app/Core/Models/` (cross-cutting) or `app/Domains/<Name>/Models/`.
+- **New Inertia page** — `resources/js/features/<name>/pages/`; backend must render that component name.
+- **New feature flag** — Define in `app/Features/`, add to `config/features.php`, run `FeatureFlagSeeder`.
+
+For full rules and step-by-step instructions, see [.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc) and [EXTENDING.md](EXTENDING.md).
+
 ## Code quality (run before submitting)
 
 Please run these before opening a pull request:

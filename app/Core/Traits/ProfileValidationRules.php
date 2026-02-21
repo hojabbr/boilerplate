@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Concerns;
+namespace App\Core\Traits;
 
 use App\Domains\Auth\Models\User;
 use Illuminate\Validation\Rule;

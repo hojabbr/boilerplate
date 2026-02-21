@@ -3,6 +3,7 @@
 namespace App\Core\Providers;
 
 use App\Core\Contracts\PagePropsServiceInterface;
+use App\Core\Inertia\TestingViewFinder;
 use App\Core\Models\Language;
 use App\Core\Models\Setting;
 use App\Core\Observers\LanguageObserver;
@@ -33,6 +34,13 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(PagePropsServiceInterface::class, CorePagePropsService::class);
+
+        $this->app->bind('inertia.testing.view-finder', function ($app) {
+            return new TestingViewFinder(
+                $app['files'],
+                $app['config']->get('inertia.testing.page_extensions', ['tsx', 'ts', 'jsx', 'js']),
+            );
+        });
     }
 
     /**

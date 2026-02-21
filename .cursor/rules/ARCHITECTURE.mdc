@@ -75,6 +75,12 @@ app/
 
 **IDE Helper (barryvdh/laravel-ide-helper):** Model discovery uses `config/ide-helper.php` → `model_locations`: `app/Core/Models` and each `app/Domains/<Name>/Models`. Run `php artisan ide-helper:models -M` (or `composer run post-autoload-dump`) to regenerate `_ide_helper_models.php` after adding or moving models.
 
+**Optional backend folders:** The tree lists optional directories (e.g. **Core/Jobs/**, **Core/Support/**, **Core/Traits/**, **Domains/&lt;Name&gt;/Jobs/**, **Rules/**). These are not created by default and no `.gitkeep` is used. **Create the directory when you add the first file** in that category (e.g. create `app/Domains/Blog/Jobs/` when adding the first queued job for Blog). This keeps the repo free of empty placeholder folders.
+
+**To add a new domain:** Create `app/Domains/<Name>/` with Http, Models, etc.; register routes and policy in AppServiceProvider; add the model path to `config/ide-helper.php` if the domain has models.
+
+**How to extend (backend and frontend):** For step-by-step instructions to add or change domains, models, migrations, observers, policies, jobs, feature flags, cache, locales, search, Filament, Inertia pages, UI, themes, and tests, see [EXTENDING.md](EXTENDING.md). The table there indicates what follows Laravel/Inertia/Filament/etc. conventions and when to consult official documentation.
+
 ### 🗑️ Soft Deletes and Cascading
 
 All CMS and future domain models use `SoftDeletes`.
@@ -148,6 +154,8 @@ MEILISEARCH_KEY=masterKey
 - Always flush and sync after changing searchable fields to avoid stale index states.  [oai_citation:5‡Reddit](https://www.reddit.com/r/laravel/comments/1b0271f)  
 - For large datasets, incremental indexing jobs are recommended.
 
+**To add a searchable model:** Add an entry to `config/scout.php` under `meilisearch.index-settings` (key = full model class name); implement `toSearchableArray()` on the model; run `scout:import` (or flush/sync) after schema changes.
+
 ---
 
 ## 👤 **5. Authentication & Authorization**
@@ -171,6 +179,8 @@ Use **Laravel Pennant** for all feature flagging: gradual rollouts, A/B tests, a
 - **Current usage:** Gate registration, two-factor auth, blog, pages, contact form, and other Fortify/application features so they can be toggled per environment or audience.
 - **Future features:** Any new optional or experimental feature must get a Pennant flag, be added to `config/features.php` if admin-toggleable, and be documented in ARCHITECTURE or README.
 - **Testing:** Use Pennant’s in-memory driver or `Feature::activate()` / `Feature::deactivate()` in tests to assert both on/off states.
+
+**To add a new toggleable feature:** (1) Create feature class in `app/Features/`, (2) Register with `Feature::define()` in AppServiceProvider, (3) Add key and label to `config/features.php`, (4) Run FeatureFlagSeeder, (5) Gate controllers/Filament with `Feature::active()`.
 
 ---
 
@@ -206,6 +216,8 @@ app/
 - **Resources:** `php artisan make:filament-resource ModelName --generate --soft-deletes` when the model uses soft deletes. Use `--simple` for no dedicated List/Create/Edit/View when appropriate.
 - **Widgets:** `php artisan make:filament-widget WidgetName`; add `--stats-overview` or `--chart` as needed.
 - Resources, pages, and widgets are discovered from `app/Filament/Resources`, `app/Filament/Pages`, `app/Filament/Widgets`. See [Filament 5 Navigation](https://filamentphp.com/docs/5.x/navigation/overview) for navigation groups, labels, and icons: use `$navigationGroup`, `$navigationLabel`, `$navigationSort`, `$navigationIcon` on resources and pages.
+
+**To add a Filament resource:** Use `php artisan make:filament-resource ModelName --generate --soft-deletes` (if the model uses soft deletes); place under `app/Filament/Resources/`; add permission in RoleAndPermissionSeeder and assign to admin.
 
 ### Translatable resources (Lara Zeus)
 
@@ -281,19 +293,20 @@ resources/
 └── js/
 ├── app.tsx                     # Inertia entry and SSR integration
 ├── ssr.tsx                     # SSR entry
-├── pages/                      # Inertia page components (SSR); names match backend (e.g. auth/login, blog/Index)
+├── pages/                      # Optional fallback for Inertia pages; prefer features/<name>/pages/
 ├── layouts/                    # Shared layout components (auth, app, settings, public)
 ├── components/                 # Shared reusable components
 │   ├── ui/                     # Shadcn UI extensions/adapters
 │   └── common/                 # Generic, shared UI parts (LabeledInputField, motion-presets, PaginatorLinks, SeoHead)
 ├── features/                   # Feature modules (vertical slices); see features/README.md
-│   ├── auth/                   # components/, hooks/, services/, types.ts, index.ts
-│   ├── blog/                   # components/, hooks/, services/, types.ts, index.ts
-│   ├── contact/                # components/, hooks/, services/, types.ts, index.ts
-│   ├── dashboard/              # components/, hooks/, services/, types.ts, index.ts
-│   ├── landing/                # components/, hooks/, services/, types.ts, index.ts
-│   ├── pages/                  # CMS page feature (components/, hooks/, services/, types.ts, index.ts)
-│   └── profile/                # profile & settings (components/, hooks/, services/, types.ts, index.ts)
+│   ├── auth/                   # pages/ (login, register, etc.), components/, hooks/, services/, types.ts, index.ts
+│   ├── blog/                   # pages/ (Index, Show), components/, hooks/, services/, types.ts, index.ts
+│   ├── contact/                # pages/ (Show), components/, hooks/, services/, types.ts, index.ts
+│   ├── dashboard/              # pages/ (dashboard), components/, hooks/, services/, types.ts, index.ts
+│   ├── landing/                # pages/ (welcome), components/, hooks/, services/, types.ts, index.ts
+│   ├── pages/                  # CMS page feature: pages/ (Show), components/, hooks/, services/, types.ts, index.ts
+│   ├── profile/                # profile & settings types; settings pages in features/settings/
+│   └── settings/              # pages/ (profile, password, appearance, two-factor)
 ├── context/                    # Optional React contexts (ThemeContext, AuthContext)
 ├── hooks/                      # Shared React hooks (use-appearance, use-mobile, use-initials, etc.)
 ├── i18n/                       # i18next configuration + translation files
@@ -304,7 +317,11 @@ resources/
 ├── types/                      # Shared TS types (backend DTO mirrors)
 └── (wayfinder-generated: actions/, routes/, wayfinder/)
 
-**Path aliases:** `@/*` → `resources/js/*`; optional `@features/*` → `resources/js/features/*`. Inertia pages live in `resources/js/pages/` with the same names as backend `Inertia::render()` (e.g. `auth/login`, `blog/Index`, `welcome`).
+**Path aliases:** `@/*` → `resources/js/*`; optional `@features/*` → `resources/js/features/*`. **Inertia pages** live in `resources/js/features/<name>/pages/` (e.g. `blog/Index` → `features/blog/pages/Index.tsx`, `welcome` → `features/landing/pages/welcome.tsx`). `app.tsx` and `ssr.tsx` resolve component names to these paths via a shared `pagePath()` / merged glob; `pages/` is used as fallback for any component not under a feature. PHP tests use `App\Core\Inertia\TestingViewFinder` so `assertInertia()->component(...)` finds feature-based pages.
+
+**To add a new Inertia page:** Add a file under `resources/js/features/<name>/pages/` and render that component name from the backend (e.g. `Inertia::render('blog/Show', ...)`). For single-segment names (e.g. `welcome`) and TestingViewFinder behavior, see [EXTENDING.md](EXTENDING.md).
+
+**Optional frontend folders:** Do not add `.gitkeep` or empty placeholder directories. Create a folder when you add the first file (e.g. create `resources/js/features/<name>/` when adding a new feature module; add `components/`, `hooks/`, etc. inside it as you need them). See `resources/js/features/README.md` for feature-module layout.
 
 Frontend tests may live in `tests/` at repo root (e.g. Pest Browser/Playwright) or in `resources/js/__tests__/` when using Jest/RTL; align with project setup.
 
