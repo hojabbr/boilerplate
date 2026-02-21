@@ -348,6 +348,8 @@ return [
         '/skipped',
         '/admin',
         '/admin/*',
+        '/translations',
+        '/translations/*',
     ],
 
     'httpMethodsIgnored' => ['POST', 'PUT', 'PATCH', 'DELETE'],

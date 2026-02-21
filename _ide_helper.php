@@ -24751,7 +24751,7 @@ namespace Illuminate\Support {
      */
     class Collection {
         /**
-         * @see \App\Domains\Pages\Models\Page::casts()
+         * @see \App\Domains\Page\Models\Page::getUseFactoryAttribute()
          * @static
          */
         public static function searchable()
@@ -24760,7 +24760,7 @@ namespace Illuminate\Support {
         }
 
         /**
-         * @see \App\Domains\Pages\Models\Page::casts()
+         * @see \App\Domains\Page\Models\Page::getUseFactoryAttribute()
          * @static
          */
         public static function unsearchable()
@@ -24769,7 +24769,7 @@ namespace Illuminate\Support {
         }
 
         /**
-         * @see \App\Domains\Pages\Models\Page::bootInteractsWithMedia()
+         * @see \App\Domains\Page\Models\Page::casts()
          * @static
          */
         public static function searchableSync()
@@ -24778,7 +24778,7 @@ namespace Illuminate\Support {
         }
 
         /**
-         * @see \App\Domains\Pages\Models\Page::setAttribute()
+         * @see \App\Domains\Page\Models\Page::setAttribute()
          * @static
          */
         public static function unsearchableSync()

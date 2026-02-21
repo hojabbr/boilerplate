@@ -26,7 +26,7 @@ Use `search-docs` for detailed Inertia v2 React patterns and documentation.
 
 ### Page Components Location
 
-React page components should be placed in the `resources/js/pages/` directory (names match backend, e.g. `auth/login`, `blog/Index`). Feature-scoped components, hooks, and types live under `resources/js/features/<name>/` (e.g. `@/features/blog`).
+React page components should be placed in the `resources/js/pages` directory.
 
 ### Page Component Structure
 

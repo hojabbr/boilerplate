@@ -6,6 +6,7 @@ use App\Domains\Dashboard\Http\Controllers\DashboardController;
 use App\Domains\Landing\Http\Controllers\LandingController;
 use App\Domains\Page\Http\Controllers\PageController;
 use App\Domains\Search\Http\Controllers\SearchController;
+use App\Http\Controllers\TranslationsCsvController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -14,6 +15,10 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 Route::get('/', function () {
     return redirect()->to(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale()));
 })->middleware('web');
+
+Route::get('translations/export-csv', [TranslationsCsvController::class, 'export'])
+    ->middleware(['web', 'auth'])
+    ->name('translations.export-csv');
 
 Route::group(
     [

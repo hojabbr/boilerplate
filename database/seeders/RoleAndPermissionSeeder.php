@@ -25,6 +25,7 @@ class RoleAndPermissionSeeder extends Seeder
             'manage users',
             'manage roles',
             'manage feature flags',
+            'manage translations',
         ];
 
         foreach ($permissions as $name) {

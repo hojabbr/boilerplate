@@ -9,6 +9,7 @@ use App\Core\Models\Setting;
 use App\Core\Observers\LanguageObserver;
 use App\Core\Observers\SettingObserver;
 use App\Core\Services\PagePropsService as CorePagePropsService;
+use App\Domains\Auth\Models\User;
 use App\Domains\Landing\Models\LandingSection;
 use App\Domains\Landing\Models\LandingSectionItem;
 use App\Domains\Landing\Observers\LandingSectionItemObserver;
@@ -63,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
         LandingSection::observe(LandingSectionObserver::class);
         LandingSectionItem::observe(LandingSectionItemObserver::class);
         $this->registerPolicies();
+        Gate::define('use-translation-manager', fn (?User $user) => $user !== null && $user->can('manage translations'));
         $this->configureDefaults();
     }
 
@@ -77,6 +79,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(\App\Domains\Page\Models\Page::class, \App\Domains\Page\Policies\PagePolicy::class);
         Gate::policy(\App\Domains\Landing\Models\LandingSection::class, \App\Domains\Landing\Policies\LandingSectionPolicy::class);
         Gate::policy(\App\Core\Models\FeatureFlag::class, \App\Core\Policies\FeatureFlagPolicy::class);
+        Gate::policy(\Spatie\TranslationLoader\LanguageLine::class, \App\Core\Policies\LanguageLinePolicy::class);
     }
 
     /**

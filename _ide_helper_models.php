@@ -49,7 +49,7 @@ namespace App\Core\Models{
  * @property \Carbon\CarbonImmutable|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Blog\Models\BlogPost> $blogPosts
  * @property-read int|null $blog_posts_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Pages\Models\Page> $pages
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Page\Models\Page> $pages
  * @property-read int|null $pages_count
  * @method static \Database\Factories\LanguageFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language newModelQuery()
@@ -321,8 +321,9 @@ namespace App\Domains\Landing\Models{
 	class IdeHelperLandingSectionItem {}
 }
 
-namespace App\Domains\Pages\Models{
+namespace App\Domains\Page\Models{
 /**
+ * @extends Model<Page>
  * @property int $id
  * @property string $slug
  * @property array<array-key, mixed>|null $title
