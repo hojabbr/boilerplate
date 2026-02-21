@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/hojabbr/boilerplate/compare/v1.1.0...v1.2.0) (2026-02-21)
+
+### Features
+
+- add login and registration feature flags and update related logic ([3309963](https://github.com/hojabbr/boilerplate/commit/3309963445d5c78e160a06833670408fd96d54d3))
+
 ## [1.1.0](https://github.com/hojabbr/boilerplate/compare/v1.0.0...v1.1.0) (2026-02-21)
 
 ### Features
