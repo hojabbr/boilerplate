@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/hojabbr/boilerplate/compare/v1.2.0...v1.3.0) (2026-02-21)
+
+### Features
+
+- integrate Laravel AI SDK and enhance blog features ([4d79835](https://github.com/hojabbr/boilerplate/commit/4d798356ca9d6f90b0986945e6e6628ae0c2ab4f))
+
 ## [1.2.0](https://github.com/hojabbr/boilerplate/compare/v1.1.0...v1.2.0) (2026-02-21)
 
 ### Features
