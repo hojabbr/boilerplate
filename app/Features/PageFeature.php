@@ -2,7 +2,7 @@
 
 namespace App\Features;
 
-class PagesFeature
+class PageFeature
 {
     public function __invoke(mixed $scope): mixed
     {

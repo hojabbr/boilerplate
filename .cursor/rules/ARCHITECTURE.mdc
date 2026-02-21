@@ -45,10 +45,10 @@ app/
 │   ├── Contact/                # Http/, Models/ContactSubmission, Actions, Policies, Jobs/ (optional)
 │   ├── Dashboard/              # Http/Controllers, Jobs/ (optional)
 │   ├── Landing/                # Http/, Models/, DTOs, Services, Observers, Policies, Jobs/ (optional)
-│   ├── Pages/                  # Http/, Models/Page, Queries, Search, Observers, Policies, Jobs/ (optional)
+│   ├── Page/                   # Http/, Models/Page, Queries, Search, Observers, Policies, Jobs/ (optional)
 │   ├── Profile/                # Http/Controllers, Http/Requests (profile, password, 2FA), Jobs/ (optional)
-│   └── Search/                 # Http/Controllers (orchestrates Blog + Pages search), Jobs/ (optional)
-├── Features/                   # Pennant feature-flag definitions only (BlogFeature, ContactFormFeature, PagesFeature)
+│   └── Search/                 # Http/Controllers (orchestrates Blog + Page search), Jobs/ (optional)
+├── Features/                   # Pennant feature-flag definitions only (BlogFeature, ContactFormFeature, PageFeature)
 ├── Filament/                   # Admin UI only; resources reference Core/Domain models
 ├── Http/
 │   └── Controllers/Controller.php   # Base controller only; domain controllers extend it
@@ -71,7 +71,7 @@ app/
 
 - **PHP files and classes:** PascalCase (e.g. `BlogController`, `PagePropsService`, `BlogPost`).
 - **Namespaces:** Match folder structure.
-- **Filament resources:** Plural resource name (e.g. `BlogPosts`, `Pages`); CRUD pages under `ResourceName/Pages/` (e.g. `ListBlogPosts`, `CreateBlogPost`, `EditBlogPost`).
+- **Filament resources:** Plural resource name (e.g. `BlogPosts`, `Pages`); CRUD pages under `ResourceName/Pages/` (e.g. `ListBlogPosts`, `CreateBlogPost`, `EditBlogPost`). Domain folder names are singular (e.g. `Page`, not `Pages`).
 
 **IDE Helper (barryvdh/laravel-ide-helper):** Model discovery uses `config/ide-helper.php` → `model_locations`: `app/Core/Models` and each `app/Domains/<Name>/Models`. Run `php artisan ide-helper:models -M` (or `composer run post-autoload-dump`) to regenerate `_ide_helper_models.php` after adding or moving models.
 

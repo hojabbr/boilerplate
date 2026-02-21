@@ -2,7 +2,7 @@
 
 use App\Core\Models\Setting;
 use App\Domains\Landing\Models\LandingSection;
-use App\Domains\Pages\Models\Page;
+use App\Domains\Page\Models\Page;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Pennant\Feature;
@@ -30,7 +30,7 @@ test('setting cache is invalidated on update and next request returns fresh data
 });
 
 test('page cache is invalidated on update and next request returns fresh data', function () {
-    Feature::activate('pages');
+    Feature::activate('page');
 
     $page = Page::create([
         'slug' => 'cache-test-page',
@@ -91,7 +91,7 @@ test('setting cache is used on read and invalidated on delete', function () {
 });
 
 test('page cache is invalidated on delete', function () {
-    Feature::activate('pages');
+    Feature::activate('page');
 
     $page = Page::create([
         'slug' => 'cache-delete-test',

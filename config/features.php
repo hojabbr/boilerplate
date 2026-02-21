@@ -14,7 +14,7 @@ return [
 
     'toggleable' => [
         'blog' => 'Blog',
-        'pages' => 'Static pages',
+        'page' => 'Static pages',
         'contact-form' => 'Contact form',
     ],
 

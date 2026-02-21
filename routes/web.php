@@ -4,7 +4,7 @@ use App\Domains\Blog\Http\Controllers\BlogController;
 use App\Domains\Contact\Http\Controllers\ContactController;
 use App\Domains\Dashboard\Http\Controllers\DashboardController;
 use App\Domains\Landing\Http\Controllers\LandingController;
-use App\Domains\Pages\Http\Controllers\PageController;
+use App\Domains\Page\Http\Controllers\PageController;
 use App\Domains\Search\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;

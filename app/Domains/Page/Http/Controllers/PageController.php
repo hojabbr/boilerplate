@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Domains\Pages\Http\Controllers;
+namespace App\Domains\Page\Http\Controllers;
 
 use App\Core\Contracts\PagePropsServiceInterface;
 use App\Core\Models\Setting;
-use App\Domains\Pages\Queries\GetPageBySlug;
+use App\Domains\Page\Queries\GetPageBySlug;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,7 +16,7 @@ class PageController extends Controller
 {
     public function show(Request $request, string $slug, GetPageBySlug $query, PagePropsServiceInterface $pageProps): Response|HttpResponse
     {
-        if (! Feature::active('pages')) {
+        if (! Feature::active('page')) {
             abort(404);
         }
 

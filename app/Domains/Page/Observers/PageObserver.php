@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domains\Pages\Observers;
+namespace App\Domains\Page\Observers;
 
-use App\Domains\Pages\Models\Page;
+use App\Domains\Page\Models\Page;
 use Illuminate\Support\Facades\Cache;
 
 /**

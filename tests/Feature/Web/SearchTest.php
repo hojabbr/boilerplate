@@ -2,7 +2,7 @@
 
 use App\Core\Models\Language;
 use App\Domains\Blog\Models\BlogPost;
-use App\Domains\Pages\Models\Page;
+use App\Domains\Page\Models\Page;
 
 beforeEach(function () {
     $this->locale = 'en';

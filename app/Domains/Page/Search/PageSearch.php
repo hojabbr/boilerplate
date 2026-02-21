@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domains\Pages\Search;
+namespace App\Domains\Page\Search;
 
-use App\Domains\Pages\Models\Page;
+use App\Domains\Page\Models\Page;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 

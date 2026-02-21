@@ -60,13 +60,20 @@ class BoilerplateDomainCommand extends Command
         }
 
         $name = text(
-            label: 'Domain name (PascalCase)',
-            placeholder: 'Products, Events',
+            label: 'Domain name (PascalCase, singular)',
+            placeholder: 'Product, Event, Page',
             default: '',
             required: 'Domain name is required.',
-            validate: fn (string $value) => preg_match('/^[A-Z][a-zA-Z0-9]*$/', $value)
-                ? null
-                : 'Domain name must be PascalCase (e.g. Products, Events).'
+            validate: function (string $value): ?string {
+                if (! preg_match('/^[A-Z][a-zA-Z0-9]*$/', $value)) {
+                    return 'Domain name must be PascalCase (e.g. Product, Event).';
+                }
+                if (Str::singular($value) !== $value) {
+                    return 'Domain name must be singular (e.g. '.Str::singular($value).', not '.$value.').';
+                }
+
+                return null;
+            }
         );
         $path = text(
             label: 'Route path (kebab-case)',
@@ -490,7 +497,7 @@ PHP;
         $path = config_path('scout.php');
         $content = File::get($path);
         $entry = '            '.$modelClass.'::class => [],';
-        $needle = '            \App\Domains\Pages\Models\Page::class => [],';
+        $needle = '            \App\Domains\Page\Models\Page::class => [],';
         if (str_contains($content, $modelClass)) {
             return;
         }

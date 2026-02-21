@@ -144,7 +144,7 @@ return [
         'app/Domains/Blog/Models',
         'app/Domains/Contact/Models',
         'app/Domains/Landing/Models',
-        'app/Domains/Pages/Models',
+        'app/Domains/Page/Models',
     ],
 
     /*

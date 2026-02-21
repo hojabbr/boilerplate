@@ -25,7 +25,7 @@ export interface PublicSettings {
 }
 
 export interface PublicFeatures {
-    pages?: boolean;
+    page?: boolean;
     blog?: boolean;
     contactForm?: boolean;
 }
@@ -71,7 +71,7 @@ export default function PublicLayout({
     };
     const t = translations ?? {};
     const prefix = locale ? `/${locale}` : '';
-    const showPages = features.pages ?? false;
+    const showPages = features.page ?? false;
     const showBlog = features.blog ?? false;
     const showContact = features.contactForm ?? false;
     const siteName =

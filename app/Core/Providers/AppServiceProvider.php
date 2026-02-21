@@ -13,11 +13,11 @@ use App\Domains\Landing\Models\LandingSection;
 use App\Domains\Landing\Models\LandingSectionItem;
 use App\Domains\Landing\Observers\LandingSectionItemObserver;
 use App\Domains\Landing\Observers\LandingSectionObserver;
-use App\Domains\Pages\Models\Page;
-use App\Domains\Pages\Observers\PageObserver;
+use App\Domains\Page\Models\Page;
+use App\Domains\Page\Observers\PageObserver;
 use App\Features\BlogFeature;
 use App\Features\ContactFormFeature;
-use App\Features\PagesFeature;
+use App\Features\PageFeature;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Feature::define('blog', BlogFeature::class);
-        Feature::define('pages', PagesFeature::class);
+        Feature::define('page', PageFeature::class);
         Feature::define('contact-form', ContactFormFeature::class);
 
         // Observers run for all CRUD (create/update/delete/restore/force delete) from Filament, API, tinker, etc.
@@ -70,7 +70,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(\App\Domains\Auth\Models\User::class, \App\Domains\Auth\Policies\UserPolicy::class);
         Gate::policy(\App\Domains\Blog\Models\BlogPost::class, \App\Domains\Blog\Policies\BlogPostPolicy::class);
         Gate::policy(\App\Domains\Contact\Models\ContactSubmission::class, \App\Domains\Contact\Policies\ContactSubmissionPolicy::class);
-        Gate::policy(\App\Domains\Pages\Models\Page::class, \App\Domains\Pages\Policies\PagePolicy::class);
+        Gate::policy(\App\Domains\Page\Models\Page::class, \App\Domains\Page\Policies\PagePolicy::class);
         Gate::policy(\App\Domains\Landing\Models\LandingSection::class, \App\Domains\Landing\Policies\LandingSectionPolicy::class);
         Gate::policy(\App\Core\Models\FeatureFlag::class, \App\Core\Policies\FeatureFlagPolicy::class);
     }

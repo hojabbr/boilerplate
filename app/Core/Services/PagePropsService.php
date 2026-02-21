@@ -30,14 +30,14 @@ class PagePropsService implements PagePropsServiceInterface
     }
 
     /**
-     * Feature flags array for Inertia page props (pages, blog, contactForm).
+     * Feature flags array for Inertia page props (page, blog, contactForm).
      *
-     * @return array{pages: bool, blog: bool, contactForm: bool}
+     * @return array{page: bool, blog: bool, contactForm: bool}
      */
     public function featuresArray(): array
     {
         return [
-            'pages' => Feature::active('pages'),
+            'page' => Feature::active('page'),
             'blog' => Feature::active('blog'),
             'contactForm' => Feature::active('contact-form'),
         ];

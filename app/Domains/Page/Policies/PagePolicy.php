@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Domains\Pages\Policies;
+namespace App\Domains\Page\Policies;
 
 use App\Domains\Auth\Models\User;
-use App\Domains\Pages\Models\Page;
+use App\Domains\Page\Models\Page;
 
 class PagePolicy
 {

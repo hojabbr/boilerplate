@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Pages;
 
-use App\Domains\Pages\Models\Page;
+use App\Domains\Page\Models\Page;
 use App\Filament\Resources\Pages\Pages\CreatePage;
 use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ListPages;

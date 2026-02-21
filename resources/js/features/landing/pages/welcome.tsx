@@ -501,7 +501,7 @@ export default function Welcome({
         nav_pages?: Array<{ slug: string; title: string }>;
     };
     const prefix = locale ? `/${locale}` : '';
-    const showPages = features.pages ?? false;
+    const showPages = features.page ?? false;
     const showBlog = features.blog ?? false;
     const showContact = features.contactForm ?? false;
     const tagline =

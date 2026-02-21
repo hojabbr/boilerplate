@@ -3,7 +3,7 @@
 namespace App\Domains\Search\Http\Controllers;
 
 use App\Domains\Blog\Search\BlogSearch;
-use App\Domains\Pages\Search\PageSearch;
+use App\Domains\Page\Search\PageSearch;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

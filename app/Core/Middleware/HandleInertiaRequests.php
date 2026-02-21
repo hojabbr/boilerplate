@@ -3,7 +3,7 @@
 namespace App\Core\Middleware;
 
 use App\Core\Models\Setting;
-use App\Domains\Pages\Models\Page;
+use App\Domains\Page\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;

@@ -143,7 +143,7 @@ return [
             \App\Domains\Blog\Models\BlogPost::class => [
                 'filterableAttributes' => ['language_id'],
             ],
-            \App\Domains\Pages\Models\Page::class => [],
+            \App\Domains\Page\Models\Page::class => [],
         ],
     ],
 
