@@ -33,6 +33,7 @@ class BlogPost extends Model implements HasMedia
      */
     protected $fillable = [
         'language_id',
+        'blog_post_series_id',
         'slug',
         'title',
         'excerpt',
@@ -57,6 +58,14 @@ class BlogPost extends Model implements HasMedia
     public function language(): BelongsTo
     {
         return $this->belongsTo(Language::class);
+    }
+
+    /**
+     * @return BelongsTo<BlogPostSeries, $this>
+     */
+    public function series(): BelongsTo
+    {
+        return $this->belongsTo(BlogPostSeries::class, 'blog_post_series_id');
     }
 
     /**

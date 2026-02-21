@@ -67,7 +67,8 @@ class BlogPostGenerationService
         $sourceStructured = $this->structuredArrayFromResponse($response);
         $slug = Str::slug($sourceStructured['title'] ?? 'untitled');
 
-        $sourcePost = $this->createPostFromStructured($sourceLanguage, $slug, $sourceStructured, $publishImmediately);
+        $seriesId = isset($data['series_id']) ? (int) $data['series_id'] : null;
+        $sourcePost = $this->createPostFromStructured($sourceLanguage, $slug, $sourceStructured, $publishImmediately, $seriesId);
         $posts->push($sourcePost);
 
         // Translate the same content into each remaining language.
@@ -79,7 +80,7 @@ class BlogPostGenerationService
                 $agent,
                 $providerOrFailover
             );
-            $post = $this->createPostFromStructured($language, $slug, $translatedStructured, $publishImmediately);
+            $post = $this->createPostFromStructured($language, $slug, $translatedStructured, $publishImmediately, $seriesId);
             $posts->push($post);
         }
 
@@ -99,14 +100,14 @@ class BlogPostGenerationService
      *
      * @param  array<string, mixed>  $structured
      */
-    private function createPostFromStructured(Language $language, string $slug, array $structured, bool $publishImmediately = false): BlogPost
+    private function createPostFromStructured(Language $language, string $slug, array $structured, bool $publishImmediately = false, ?int $seriesId = null): BlogPost
     {
         $title = $structured['title'] ?? 'Untitled';
         $excerpt = strip_tags($structured['excerpt'] ?? '');
         $body = $structured['body'] ?? '';
         $metaDescription = strip_tags($structured['meta_description'] ?? $excerpt);
 
-        return BlogPost::create([
+        $attributes = [
             'language_id' => $language->id,
             'slug' => $slug,
             'title' => $title,
@@ -114,7 +115,12 @@ class BlogPostGenerationService
             'body' => $body,
             'meta_description' => $metaDescription,
             'published_at' => $publishImmediately ? now() : null,
-        ]);
+        ];
+        if ($seriesId !== null) {
+            $attributes['blog_post_series_id'] = $seriesId;
+        }
+
+        return BlogPost::create($attributes);
     }
 
     /**

@@ -39,6 +39,7 @@ class RunScheduledBlogSeriesCommand extends Command
         foreach ($due as $series) {
             $data = [
                 'topic_source' => 'series',
+                'series_id' => $series->id,
                 'series_purpose' => $series->purpose ?? '',
                 'series_objective' => $series->objective ?? '',
                 'series_topics' => $series->topics ?? '',

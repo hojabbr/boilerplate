@@ -33,6 +33,7 @@ return new class extends Migration
             $table->timestamp('last_run_at')->nullable();
             $table->unsignedInteger('posts_generated')->default(0);
             $table->boolean('is_active')->default(true);
+            $table->foreignId('blog_post_series_id')->nullable()->constrained('blog_post_series')->nullOnDelete();
             $table->timestamps();
         });
     }
