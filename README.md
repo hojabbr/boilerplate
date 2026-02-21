@@ -145,6 +145,7 @@ cp .env.example .env
 - **Frontend (Vite):** `npm run dev`
 - **All-in-one (server, queue, logs, Vite):** `composer run dev` (with Sail, run inside the container)
 - **Admin:** [http://localhost/admin](http://localhost/admin) (locale-independent)
+- **Scaffolding:** `php artisan boilerplate:domain` and `php artisan boilerplate:locale` scaffold new domains and locales (use `--dry-run` to preview, `--rollback=<name>` to undo). Scaffolding output is kept in sync with ARCHITECTURE; structure changes that affect it require command and test updates—see [EXTENDING.md](EXTENDING.md) and [.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc).
 
 ---
 
