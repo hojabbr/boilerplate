@@ -30,7 +30,7 @@ Locale JSON files (`lang/*.json`) can be managed from the admin panel via **Tran
 
 ## Blog: Generate with AI
 
-The Blog Posts resource includes a **Generate with AI** action that creates posts via the Laravel AI SDK. Generation runs in a queued job (`App\Domains\Blog\Jobs\GenerateBlogPostsJob` on the `blog` queue). You choose languages (one post per language), optional length (short/medium/long), and a shared featured image is generated. When the job finishes (success or failure), the user receives a **Filament database notification** in the admin panel. Ensure Horizon (or your queue worker) is running and `QUEUE_CONNECTION=redis` so the job is processed.
+The Blog Posts resource includes a **Generate with AI** action that creates posts via the Laravel AI SDK. Generation runs in a queued job (`App\Domains\Blog\Jobs\GenerateBlogPostsJob` on the `blog` queue). You choose languages; the post is generated once in the first language and that same content is translated into each other language (one logical post, multiple language rows). Optional length (short/medium/long) and a shared featured image. When the job finishes (success or failure), the user receives a **Filament database notification** in the admin panel. Ensure Horizon (or your queue worker) is running and `QUEUE_CONNECTION=redis` so the job is processed.
 
 ## Database notifications
 

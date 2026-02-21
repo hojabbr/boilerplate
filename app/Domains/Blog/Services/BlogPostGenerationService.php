@@ -17,8 +17,9 @@ use Laravel\Ai\Responses\StructuredAgentResponse;
 class BlogPostGenerationService
 {
     /**
-     * Run blog post generation for the given form data. Generates one post per selected language
-     * with language-specific content (AI is instructed to write in each target language).
+     * Run blog post generation for the given form data. Generates one post (one prompt) in the first
+     * selected language, then translates that same content into each other selected language so all
+     * rows are the same logical post in different languages.
      *
      * @param  array<string, mixed>  $data
      * @return Collection<int, BlogPost>
@@ -46,39 +47,38 @@ class BlogPostGenerationService
             ->orderBy('sort_order')
             ->get();
 
+        if ($languages->isEmpty()) {
+            return new Collection;
+        }
+
         $basePrompt = $this->buildBasePrompt($topicSource, $topic, $hint, $length, $usePgvector);
         /** @var Collection<int, BlogPost> $posts */
         $posts = new Collection;
-        $slug = null;
 
-        foreach ($languages as $language) {
-            $languageInstruction = sprintf(
-                ' Write the entire blog post in %s (locale: %s). Output title, excerpt, body, and meta_description in that language.',
-                $language->name,
-                $language->code
+        // Generate once in the source (first) language.
+        $sourceLanguage = $languages->first();
+        $sourceInstruction = sprintf(
+            ' Write the entire blog post in %s (locale: %s). Output title, excerpt, body, and meta_description in that language.',
+            $sourceLanguage->name,
+            $sourceLanguage->code
+        );
+        $response = $agent->prompt($basePrompt.$sourceInstruction, provider: $providerOrFailover, model: null);
+        $sourceStructured = $this->structuredArrayFromResponse($response);
+        $slug = Str::slug($sourceStructured['title'] ?? 'untitled');
+
+        $sourcePost = $this->createPostFromStructured($sourceLanguage, $slug, $sourceStructured);
+        $posts->push($sourcePost);
+
+        // Translate the same content into each remaining language.
+        $remainingLanguages = $languages->slice(1);
+        foreach ($remainingLanguages as $language) {
+            $translatedStructured = $this->translateStructuredContent(
+                $sourceStructured,
+                $language,
+                $agent,
+                $providerOrFailover
             );
-            $prompt = $basePrompt.$languageInstruction;
-
-            $response = $agent->prompt($prompt, provider: $providerOrFailover, model: null);
-            $structured = $this->structuredArrayFromResponse($response);
-            $title = $structured['title'] ?? 'Untitled';
-            $excerpt = strip_tags($structured['excerpt'] ?? '');
-            $body = $structured['body'] ?? '';
-            $metaDescription = strip_tags($structured['meta_description'] ?? $excerpt);
-
-            if ($slug === null) {
-                $slug = Str::slug($title);
-            }
-
-            $post = BlogPost::create([
-                'language_id' => $language->id,
-                'slug' => $slug,
-                'title' => $title,
-                'excerpt' => $excerpt,
-                'body' => $body,
-                'meta_description' => $metaDescription,
-                'published_at' => null,
-            ]);
+            $post = $this->createPostFromStructured($language, $slug, $translatedStructured);
             $posts->push($post);
         }
 
@@ -91,6 +91,76 @@ class BlogPostGenerationService
         }
 
         return $posts;
+    }
+
+    /**
+     * Create a BlogPost from structured content (title, excerpt, body, meta_description).
+     *
+     * @param  array<string, mixed>  $structured
+     */
+    private function createPostFromStructured(Language $language, string $slug, array $structured): BlogPost
+    {
+        $title = $structured['title'] ?? 'Untitled';
+        $excerpt = strip_tags($structured['excerpt'] ?? '');
+        $body = $structured['body'] ?? '';
+        $metaDescription = strip_tags($structured['meta_description'] ?? $excerpt);
+
+        return BlogPost::create([
+            'language_id' => $language->id,
+            'slug' => $slug,
+            'title' => $title,
+            'excerpt' => $excerpt,
+            'body' => $body,
+            'meta_description' => $metaDescription,
+            'published_at' => null,
+        ]);
+    }
+
+    /**
+     * Translate structured post content into the target language. Uses the same agent schema;
+     * prompt instructs translation only (no new content).
+     *
+     * @param  array<string, mixed>  $sourceStructured
+     * @param  Lab|array<int, Lab>|string  $providerOrFailover
+     * @return array<string, mixed>
+     */
+    private function translateStructuredContent(
+        array $sourceStructured,
+        Language $targetLanguage,
+        BlogPostGenerator $agent,
+        Lab|array|string $providerOrFailover
+    ): array {
+        $prompt = $this->buildTranslationPrompt($sourceStructured, $targetLanguage);
+        $response = $agent->prompt($prompt, provider: $providerOrFailover, model: null);
+
+        return $this->structuredArrayFromResponse($response);
+    }
+
+    /**
+     * Build a prompt that asks to translate existing post content into the target language.
+     * Output must match the same schema (title, excerpt, body, meta_description).
+     *
+     * @param  array<string, mixed>  $sourceStructured
+     */
+    private function buildTranslationPrompt(array $sourceStructured, Language $targetLanguage): string
+    {
+        $title = $sourceStructured['title'] ?? '';
+        $excerpt = $sourceStructured['excerpt'] ?? '';
+        $body = $sourceStructured['body'] ?? '';
+        $metaDescription = $sourceStructured['meta_description'] ?? '';
+
+        return sprintf(
+            'Translate the following blog post into %s (locale: %s). Do not invent new content—only translate. '
+            .'Preserve HTML structure in the body (tags, headings, links). Output the same four fields in the target language: title, excerpt, body, meta_description. '
+            ."Output only valid JSON with keys: title, excerpt, body, meta_description.\n\n"
+            ."---\nTitle: %s\n\nExcerpt: %s\n\nBody: %s\n\nMeta description: %s\n---",
+            $targetLanguage->name,
+            $targetLanguage->code,
+            $title,
+            $excerpt,
+            $body,
+            $metaDescription
+        );
     }
 
     /**
