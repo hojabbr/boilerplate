@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/hojabbr/boilerplate/compare/v1.0.0...v1.1.0) (2026-02-21)
+
+### Features
+
+- **docs:** update project documentation for clarity and consistency ([4adea62](https://github.com/hojabbr/boilerplate/commit/4adea625fd630797c5bda06ddc9da92f7ae9c677))
+
 ## 1.0.0 (2026-02-20)
 
 ### Features
