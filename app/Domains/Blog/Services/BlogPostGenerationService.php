@@ -34,6 +34,7 @@ class BlogPostGenerationService
         $languageIds = $data['language_ids'] ?? [];
         $generateImage = (bool) ($data['generate_image'] ?? false);
         $generateAudio = (bool) ($data['generate_audio'] ?? false);
+        $publishImmediately = (bool) ($data['publish_immediately'] ?? false);
 
         $usePgvector = config('ai.blog.use_pgvector', true)
             && SchemaFacade::getConnection()->getDriverName() === 'pgsql'
@@ -51,7 +52,7 @@ class BlogPostGenerationService
             return new Collection;
         }
 
-        $basePrompt = $this->buildBasePrompt($topicSource, $topic, $hint, $length, $usePgvector);
+        $basePrompt = $this->buildBasePrompt($data, $topicSource, $topic, $hint, $length, $usePgvector);
         /** @var Collection<int, BlogPost> $posts */
         $posts = new Collection;
 
@@ -66,7 +67,7 @@ class BlogPostGenerationService
         $sourceStructured = $this->structuredArrayFromResponse($response);
         $slug = Str::slug($sourceStructured['title'] ?? 'untitled');
 
-        $sourcePost = $this->createPostFromStructured($sourceLanguage, $slug, $sourceStructured);
+        $sourcePost = $this->createPostFromStructured($sourceLanguage, $slug, $sourceStructured, $publishImmediately);
         $posts->push($sourcePost);
 
         // Translate the same content into each remaining language.
@@ -78,7 +79,7 @@ class BlogPostGenerationService
                 $agent,
                 $providerOrFailover
             );
-            $post = $this->createPostFromStructured($language, $slug, $translatedStructured);
+            $post = $this->createPostFromStructured($language, $slug, $translatedStructured, $publishImmediately);
             $posts->push($post);
         }
 
@@ -98,7 +99,7 @@ class BlogPostGenerationService
      *
      * @param  array<string, mixed>  $structured
      */
-    private function createPostFromStructured(Language $language, string $slug, array $structured): BlogPost
+    private function createPostFromStructured(Language $language, string $slug, array $structured, bool $publishImmediately = false): BlogPost
     {
         $title = $structured['title'] ?? 'Untitled';
         $excerpt = strip_tags($structured['excerpt'] ?? '');
@@ -112,7 +113,7 @@ class BlogPostGenerationService
             'excerpt' => $excerpt,
             'body' => $body,
             'meta_description' => $metaDescription,
-            'published_at' => null,
+            'published_at' => $publishImmediately ? now() : null,
         ]);
     }
 
@@ -190,7 +191,10 @@ class BlogPostGenerationService
         return Lab::tryFrom($providerKey) ?? $providerKey;
     }
 
-    private function buildBasePrompt(string $topicSource, string $topic, string $hint, string $length, bool $usePgvector): string
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function buildBasePrompt(array $data, string $topicSource, string $topic, string $hint, string $length, bool $usePgvector): string
     {
         $lengthInstruction = match ($length) {
             'short' => ' Keep the post short: 2–3 concise paragraphs only. Be direct and scannable.',
@@ -198,9 +202,16 @@ class BlogPostGenerationService
             default => ' Write a medium-length post: roughly 4–6 paragraphs, with clear structure (headings if needed).',
         };
 
-        $prompt = $topicSource === 'specific'
-            ? "Write a new blog post on this topic: {$topic}. Output HTML body only (headings, paragraphs, lists, links).{$lengthInstruction}"
-            : 'Suggest and write one new blog post that fits this site. '.($hint !== '' ? "Hint: {$hint}. " : '').'Use the similarity search tool to see existing posts and produce something distinct. Output HTML body only.'.$lengthInstruction;
+        if ($topicSource === 'series') {
+            $purpose = $data['series_purpose'] ?? $data['purpose'] ?? '';
+            $objective = $data['series_objective'] ?? $data['objective'] ?? '';
+            $topics = $data['series_topics'] ?? $data['topics'] ?? '';
+            $prompt = 'This post is part of a series. Purpose: '.$purpose.'. Objective: '.$objective.'. Topics: '.$topics.'. Write the next blog post in this series. Output HTML body only (headings, paragraphs, lists, links).'.$lengthInstruction;
+        } elseif ($topicSource === 'specific') {
+            $prompt = "Write a new blog post on this topic: {$topic}. Output HTML body only (headings, paragraphs, lists, links).{$lengthInstruction}";
+        } else {
+            $prompt = 'Suggest and write one new blog post that fits this site. '.($hint !== '' ? "Hint: {$hint}. " : '').'Use the similarity search tool to see existing posts and produce something distinct. Output HTML body only.'.$lengthInstruction;
+        }
 
         if (! $usePgvector) {
             $titles = app(GetLastBlogPostTitles::class)->handle(100);

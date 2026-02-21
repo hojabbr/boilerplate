@@ -248,7 +248,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - `bootstrap/app.php` is the file to register middleware, exceptions, and routing files.
 - `bootstrap/providers.php` contains application specific service providers.
 - The `app\Console\Kernel.php` file no longer exists; use `bootstrap/app.php` or `routes/console.php` for console configuration.
-- Console commands in `app/Console/Commands/` are automatically available and do not require manual registration.
+- Artisan commands live in `app/Core/Console/Commands/` (scaffolding, translations) or `app/Domains/<Name>/Console/Commands/` (e.g. Blog: `blog:run-scheduled-series`, `blog:sync-embeddings`). Paths are registered in `bootstrap/app.php` via `withCommands()`.
 
 ## Database
 

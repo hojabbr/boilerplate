@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Domains\Blog\Console\Commands;
 
 use App\Domains\Blog\Models\BlogPost;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Schema;
 
 class BlogSyncEmbeddingsCommand extends Command
 {
@@ -14,13 +15,13 @@ class BlogSyncEmbeddingsCommand extends Command
 
     public function handle(): int
     {
-        if (\Illuminate\Support\Facades\Schema::getConnection()->getDriverName() !== 'pgsql') {
+        if (Schema::getConnection()->getDriverName() !== 'pgsql') {
             $this->warn('Embeddings sync is only supported on PostgreSQL with pgvector.');
 
             return self::FAILURE;
         }
 
-        if (! \Illuminate\Support\Facades\Schema::hasTable('blog_post_chunks')) {
+        if (! Schema::hasTable('blog_post_chunks')) {
             $this->warn('Table blog_post_chunks does not exist. Run migrations on PostgreSQL first.');
 
             return self::FAILURE;

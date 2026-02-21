@@ -78,6 +78,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(\App\Domains\Auth\Models\User::class, \App\Domains\Auth\Policies\UserPolicy::class);
         Gate::policy(\App\Domains\Blog\Models\BlogPost::class, \App\Domains\Blog\Policies\BlogPostPolicy::class);
+        Gate::policy(\App\Domains\Blog\Models\BlogPostSeries::class, \App\Domains\Blog\Policies\BlogPostSeriesPolicy::class);
         Gate::policy(\App\Domains\Contact\Models\ContactSubmission::class, \App\Domains\Contact\Policies\ContactSubmissionPolicy::class);
         Gate::policy(\App\Domains\Page\Models\Page::class, \App\Domains\Page\Policies\PagePolicy::class);
         Gate::policy(\App\Domains\Landing\Models\LandingSection::class, \App\Domains\Landing\Policies\LandingSectionPolicy::class);

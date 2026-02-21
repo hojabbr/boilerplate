@@ -42,6 +42,7 @@ Check `composer.json`, `package.json`, and `AGENTS.md` in the repository for the
 | Domain controller          | `app/Domains/<Name>/Http/Controllers/`                                                                           |
 | Domain model               | `app/Domains/<Name>/Models/`                                                                                     |
 | Feature flags (Pennant)    | `app/Core/Features/`                                                                                             |
+| Artisan commands           | `app/Core/Console/Commands/` (scaffolding, translations), `app/Domains/<Name>/Console/Commands/` (e.g. Blog)     |
 | Filament resources         | `app/Filament/Resources/`                                                                                        |
 | Inertia pages              | `resources/js/features/<name>/pages/`                                                                            |
 | Shared UI                  | `resources/js/components/ui/`, `resources/js/components/common/`                                                 |

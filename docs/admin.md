@@ -32,6 +32,8 @@ Locale JSON files (`lang/*.json`) can be managed from the admin panel via **Tran
 
 The Blog Posts resource includes a **Generate with AI** action that creates posts via the Laravel AI SDK. Generation runs in a queued job (`App\Domains\Blog\Jobs\GenerateBlogPostsJob` on the `blog` queue). You choose languages; the post is generated once in the first language and that same content is translated into each other language (one logical post, multiple language rows). Optional length (short/medium/long) and a shared featured image. When the job finishes (success or failure), the user receives a **Filament database notification** in the admin panel. Ensure Horizon (or your queue worker) is running and `QUEUE_CONNECTION=redis` so the job is processed.
 
+From the same wizard you can create a **scheduled series** (recurring generation): set name, purpose, topics, date range, days of week, hours, optional total post limit, and publish behaviour. The series is stored in `blog_post_series` and processed by the `blog:run-scheduled-series` Artisan command (scheduled every minute in `routes/console.php`). View and deactivate series under **Scheduled series** (`BlogPostSeriesResource`, CMS group); access uses the “manage blog” permission (BlogPostSeriesPolicy).
+
 ## Database notifications
 
 The admin panel enables Filament database notifications (`databaseNotifications()`). Users see notifications in the panel (e.g. when a queued job like blog generation completes). Requires the Laravel `notifications` table; on PostgreSQL the `data` column must be `json`/`jsonb`.

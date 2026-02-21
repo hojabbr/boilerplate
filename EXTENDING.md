@@ -8,7 +8,7 @@
 - **Frontend:** [Frontend](docs/frontend.md) (pages, layouts, UI, adding a page).
 - **Other:** [Localization](docs/localization.md), [Testing](docs/testing.md).
 
-When changing project structure or scaffolding output, update the [boilerplate commands](app/Console/Commands/) and [tests/Feature/BoilerplateCommandsTest.php](tests/Feature/BoilerplateCommandsTest.php) so they stay in sync with the [architecture](docs/architecture.md).
+When changing project structure or scaffolding output, update the [boilerplate commands](app/Core/Console/Commands/) and [tests/Feature/BoilerplateCommandsTest.php](tests/Feature/BoilerplateCommandsTest.php) so they stay in sync with the [architecture](docs/architecture.md).
 
 ---
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Core\Console\Commands;
 
 use App\Core\Services\TranslationKeyScanner;
 use Illuminate\Console\Command;

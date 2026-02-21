@@ -13,7 +13,7 @@ description: 'Core, Domains, models, jobs, and conventions. No app/Models/.'
 - **Core** (`app/Core/`) — Cross-cutting: Middleware, Models (Language, Setting, FeatureFlag), Observers, Policies, Providers, Services (PagePropsService), Contracts, Exceptions, Traits. **Core/Inertia/** contains `TestingViewFinder` for resolving Inertia page component names in PHP tests.
 - **Domains** (`app/Domains/<Name>/`) — Vertical slices: Auth, Blog, Contact, Dashboard, Landing, Page, Profile, Search. Each may have Http/Controllers, Http/Requests, Models, Observers, Policies, Queries, Services, Actions, DTOs, Search, Jobs/. Example: Blog has `Jobs/` (e.g. `GenerateBlogPostsJob`) and `Services/` (e.g. `BlogPostGenerationService`) for queued AI-powered post generation.
 
-There is **no** global `app/Models/` or `app/Jobs/`; models live in `Core/Models/` or `Domains/<Name>/Models/`, jobs in `Domains/<Name>/Jobs/` or `Core/Jobs/`.
+There is **no** global `app/Models/` or `app/Jobs/`; models live in `Core/Models/` or `Domains/<Name>/Models/`, jobs in `Domains/<Name>/Jobs/` or `Core/Jobs/`. **Artisan commands** live in `app/Core/Console/Commands/` (scaffolding, translations) or `app/Domains/<Name>/Console/Commands/` (e.g. Blog: `blog:run-scheduled-series`, `blog:sync-embeddings`). Paths are registered in `bootstrap/app.php` via `withCommands()`.
 
 ## Controllers and requests
 

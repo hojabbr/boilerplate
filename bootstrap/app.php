@@ -21,6 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
     )
+    ->withCommands([
+        app_path('Console/Commands'),
+        app_path('Core/Console/Commands'),
+        app_path('Domains/Blog/Console/Commands'),
+    ])
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'locale', 'sidebar_state']);
 

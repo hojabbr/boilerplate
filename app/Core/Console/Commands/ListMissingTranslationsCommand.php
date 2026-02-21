@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Core\Console\Commands;
 
 use App\Core\Services\TranslationFileImporter;
 use Illuminate\Console\Command;

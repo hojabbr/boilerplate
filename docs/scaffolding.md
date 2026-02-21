@@ -44,8 +44,8 @@ Scaffolds a new domain (vertical slice).
 
 When you change project structure or conventions that affect command output, update:
 
-- `app/Console/Commands/BoilerplateDomainCommand.php`
-- `app/Console/Commands/BoilerplateLocaleCommand.php`
+- `app/Core/Console/Commands/BoilerplateDomainCommand.php`
+- `app/Core/Console/Commands/BoilerplateLocaleCommand.php`
 - `tests/Feature/BoilerplateCommandsTest.php`
 
 Run the boilerplate tests so they still pass; they define the contract for non-interactive behavior, rollback, and dry-run.

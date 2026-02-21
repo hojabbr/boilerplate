@@ -14,8 +14,8 @@ The boilerplate backend is organized around **Core** (cross-cutting) and **Domai
 
 **Backend (`app/`)**
 
-- `Core/` — Middleware, Models (Language, Setting, FeatureFlag), Observers, Policies, Providers, Services (PagePropsService, Ai/), Features (Pennant), Http/Controllers (base Controller and core controllers), Contracts, Inertia (TestingViewFinder).
-- `Domains/<Name>/` — Auth, Blog, Contact, Dashboard, Landing, Page, Profile, Search. Each may have Http/, Models/, Observers/, Policies/, Queries/, Services/, Actions/, Jobs/.
+- `Core/` — Middleware, Models (Language, Setting, FeatureFlag), Observers, Policies, Providers, Services (PagePropsService, Ai/), Features (Pennant), Http/Controllers (base Controller and core controllers), Console/Commands (scaffolding, translations), Contracts, Inertia (TestingViewFinder).
+- `Domains/<Name>/` — Auth, Blog, Contact, Dashboard, Landing, Page, Profile, Search. Each may have Http/, Models/, Observers/, Policies/, Queries/, Services/, Actions/, Jobs/, Console/Commands/.
 - `Filament/` — Admin UI; resources reference Core/Domain models.
 
 **Frontend (`resources/js/`)**
