@@ -15,3 +15,5 @@ export const sepia = {
         ring: '#704214',
     },
 } as const;
+
+export type Sepia = typeof sepia;

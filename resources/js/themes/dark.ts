@@ -15,3 +15,5 @@ export const dark = {
         ring: 'hsl(var(--ring))',
     },
 } as const;
+
+export type Dark = typeof dark;
