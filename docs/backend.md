@@ -11,13 +11,13 @@ description: 'Core, Domains, models, jobs, and conventions. No app/Models/.'
 ## Core vs Domains
 
 - **Core** (`app/Core/`) — Cross-cutting: Middleware, Models (Language, Setting, FeatureFlag), Observers, Policies, Providers, Services (PagePropsService), Contracts, Exceptions, Traits. **Core/Inertia/** contains `TestingViewFinder` for resolving Inertia page component names in PHP tests.
-- **Domains** (`app/Domains/<Name>/`) — Vertical slices: Auth, Blog, Contact, Dashboard, Landing, Page, Profile, Search. Each may have Http/Controllers, Http/Requests, Models, Observers, Policies, Queries, Services, Actions, DTOs, Search, Jobs/.
+- **Domains** (`app/Domains/<Name>/`) — Vertical slices: Auth, Blog, Contact, Dashboard, Landing, Page, Profile, Search. Each may have Http/Controllers, Http/Requests, Models, Observers, Policies, Queries, Services, Actions, DTOs, Search, Jobs/. Example: Blog has `Jobs/` (e.g. `GenerateBlogPostsJob`) and `Services/` (e.g. `BlogPostGenerationService`) for queued AI-powered post generation.
 
 There is **no** global `app/Models/` or `app/Jobs/`; models live in `Core/Models/` or `Domains/<Name>/Models/`, jobs in `Domains/<Name>/Jobs/` or `Core/Jobs/`.
 
 ## Controllers and requests
 
-- Controllers live in `Domains/<Name>/Http/Controllers/` and extend `App\Http\Controllers\Controller`. They are thin: call Queries/Services/Actions, merge with PagePropsService when needed, return `Inertia::render(...)`.
+- Controllers live in `Domains/<Name>/Http/Controllers/` and extend `App\Core\Http\Controllers\Controller`. The base controller and core-only controllers (e.g. TranslationsCsvController) live in `app/Core/Http/Controllers/`. They are thin: call Queries/Services/Actions, merge with PagePropsService when needed, return `Inertia::render(...)`.
 - FormRequests live in `Domains/<Name>/Http/Requests/`. Routes in `routes/web.php` point to domain controllers (e.g. `App\Domains\Blog\Http\Controllers\BlogController`).
 
 ## Models and IDE Helper

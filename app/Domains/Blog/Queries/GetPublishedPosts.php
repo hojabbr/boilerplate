@@ -30,7 +30,7 @@ class GetPublishedPosts
                     'title' => $post->title,
                     'excerpt' => $post->excerpt,
                     'published_at' => $publishedAt instanceof \DateTimeInterface ? $publishedAt->format('c') : null,
-                    'thumbnail_url' => $firstImage?->getUrl('thumb'),
+                    'thumbnail_url' => $firstImage?->getUrl('card'),
                 ];
             });
     }

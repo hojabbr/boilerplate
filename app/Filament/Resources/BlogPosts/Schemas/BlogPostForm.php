@@ -6,6 +6,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -27,14 +28,10 @@ class BlogPostForm
                     ->rules(['alpha_dash']),
                 TextInput::make('title')
                     ->maxLength(255),
-                RichEditor::make('excerpt')
-                    ->toolbarButtons([
-                        'bold',
-                        'italic',
-                        'link',
-                        'bulletList',
-                        'orderedList',
-                    ])
+                Textarea::make('excerpt')
+                    ->label('Excerpt (plain text, one or two sentences)')
+                    ->rows(3)
+                    ->maxLength(500)
                     ->columnSpanFull(),
                 RichEditor::make('body')
                     ->toolbarButtons([

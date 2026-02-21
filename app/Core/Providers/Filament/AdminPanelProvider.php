@@ -38,6 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->databaseNotifications()
             ->plugin(SpatieTranslatablePlugin::make()->defaultLocales($locales))
             ->colors([
                 'primary' => Color::Amber,

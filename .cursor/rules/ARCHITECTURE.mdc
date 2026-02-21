@@ -42,7 +42,9 @@ app/
 │   ├── Observers/              # Observers for Core models (LanguageObserver, SettingObserver)
 │   ├── Policies/               # Policies for Core models (FeatureFlagPolicy)
 │   ├── Providers/              # AppServiceProvider, Fortify, Telescope, Horizon, Filament AdminPanel
-│   ├── Services/               # Shared services (e.g. PagePropsService for Inertia props)
+│   ├── Services/               # Shared services (e.g. PagePropsService, Ai/ agents and support)
+│   ├── Features/               # Pennant feature-flag definitions (BlogFeature, ContactFormFeature, etc.)
+│   ├── Http/Controllers/      # Base controller; core controllers (e.g. TranslationsCsvController)
 │   ├── Support/                # Helpers, base classes
 │   └── Traits/                 # Shared model/controller traits
 ├── Domains/                    # Feature-based vertical slices; each owns its HTTP, Models, Observers, Policies, Jobs
@@ -54,24 +56,21 @@ app/
 │   ├── Page/                   # Http/, Models/Page, Queries, Search, Observers, Policies, Jobs/ (optional)
 │   ├── Profile/                # Http/Controllers, Http/Requests (profile, password, 2FA), Jobs/ (optional)
 │   └── Search/                 # Http/Controllers (orchestrates Blog + Page search), Jobs/ (optional)
-├── Features/                   # Pennant feature-flag definitions only (BlogFeature, ContactFormFeature, PageFeature, LoginFeature, RegistrationFeature)
 ├── Filament/                   # Admin UI only; resources reference Core/Domain models
-├── Http/
-│   └── Controllers/Controller.php   # Base controller only; domain controllers extend it
 └── Rules/                      # Optional: custom validation rules
 
-**Domain HTTP:** Controllers and Requests live inside each domain under `Domains/<Name>/Http/Controllers/` and `Domains/<Name>/Http/Requests/`. Routes point to these domain controllers (e.g. `App\Domains\Blog\Http\Controllers\BlogController`). There is no global `app/Http/Controllers/Web/` or `app/Http/Controllers/Settings/`. **Models** live in `Core/Models/` (Language, Setting, FeatureFlag) or in each domain under `Domains/<Name>/Models/`; there is no top-level `app/Models/`. **Middleware** live in `Core/Middleware/` (HandleInertiaRequests, HandleAppearance, SetLocalizedFortifyRedirects, EnsureAuthFeaturesEnabled, EnsureUserHasAdminRole); `app/Http/` holds only the base Controller.
+**Domain HTTP:** Controllers and Requests live inside each domain under `Domains/<Name>/Http/Controllers/` and `Domains/<Name>/Http/Requests/`. Routes point to these domain controllers (e.g. `App\Domains\Blog\Http\Controllers\BlogController`). There is no global `app/Http/Controllers/Web/` or `app/Http/Controllers/Settings/`. **Models** live in `Core/Models/` (Language, Setting, FeatureFlag) or in each domain under `Domains/<Name>/Models/`; there is no top-level `app/Models/`. **Middleware** live in `Core/Middleware/`. The base Controller and core-only controllers (e.g. TranslationsCsvController) live in `Core/Http/Controllers/`; domain controllers extend `App\Core\Http\Controllers\Controller`.
 
 **Domain structure per slice:** Each domain may contain **Models/**, **Observers/**, **Policies/**, **Http/**, **Queries/**, **Services/**, **Search/**, **Actions/**, **DTOs/**, **Jobs/** (queued jobs for that domain), and optionally **Providers/**. **Core** may contain **Jobs/** for cross-cutting queued work (e.g. search reindexing that spans domains). There is no global `app/Jobs/`; jobs live in `Domains/<Name>/Jobs/` or `Core/Jobs/`. **Core** holds cross-cutting **Models/** (Language, Setting, FeatureFlag), **Observers/**, **Policies/**, and **Providers/** (AppServiceProvider, Fortify, Telescope, Horizon, Filament). **PagePropsService** lives in `Core/Services/` and implements `Core/Contracts/PagePropsServiceInterface`; it builds the settings slice and feature-flags array for Inertia shared props. Policies are registered in `Core/Providers/AppServiceProvider::registerPolicies()`.
 
 ### 📌 Domain Concepts
 
-- **Controllers** live in `Domains/<Name>/Http/Controllers/`. They are thin: call domain Queries/Services/Actions, merge with PagePropsService when needed, return `Inertia::render(...)`. They extend `App\Http\Controllers\Controller`.
+- **Controllers** live in `Domains/<Name>/Http/Controllers/`. They are thin: call domain Queries/Services/Actions, merge with PagePropsService when needed, return `Inertia::render(...)`. They extend `App\Core\Http\Controllers\Controller`.
 - **Requests** (FormRequests) live in `Domains/<Name>/Http/Requests/` alongside their controllers.
 - **Domains** encapsulate all domain logic: Http (entry points), Queries, Services, Search, Actions, DTOs.
 - **Core** holds cross-cutting code only: Middleware, Models (Language, Setting, FeatureFlag), Observers, Policies, Providers, PagePropsService, contracts, exceptions, traits. **Core/Inertia/** contains `TestingViewFinder` for resolving Inertia page component names in PHP tests (mirrors frontend `pagePath()`).
 - **Filament** is UI-only; resources use Domain Queries or model scopes, not inline business logic.
-- **Features/** (Pennant) = feature-flag definitions; do not confuse with frontend “features” or Domains.
+- **Core/Features/** (Pennant) = feature-flag definitions; **Core/Services/Ai/** = AI agents and support (e.g. BlogPostGenerator, AiProviderOptions). Do not confuse Pennant features with frontend features or Domains. **Blog generation** (Filament “Generate with AI”): runs in a queued job (`App\Domains\Blog\Jobs\GenerateBlogPostsJob`, queue `blog`); `BlogPostGenerationService` performs language-aware generation (one post per selected language with AI instructed to write in that language), optional length (short/medium/long), one shared featured image for all language variants, plain-text excerpt/meta_description. Uses Laravel AI SDK default model; optional failover via `config('ai.blog.failover_providers')`. On completion the job sends a Filament database notification to the user. Horizon runs the `blog` queue (see **Real-Time & Background Jobs**).
 
 ### Naming conventions (Backend)
 
@@ -126,7 +125,7 @@ Use **mcamara/laravel‑localization** to prefix all routes with locale identifi
 
 - **Pages:** Row-per-locale: `Page` has `language_id` (FK to `languages`). One row per locale per logical page (e.g. privacy EN, privacy DE). Slug/title/body on `Page`; resolve by locale/slug in controllers.
 - **Settings:** Single global site settings. Translatable fields (company name, tagline, address, etc.) via **Spatie Laravel Translatable** (JSON columns). No `language_id`; locale chosen at runtime.
-- **Blog:** `BlogPost` uses Spatie Translatable for `title`, `excerpt`, `body`, `meta_description`. Rely on Translatable and app locale. Blog posts support rich content (WYSIWYG in Filament), media (images in `gallery`, videos in `videos`, files in `documents` via Spatie Media Library). The public show page uses Yet Another React Lightbox (YARL) for gallery and video with plugins: Captions, Fullscreen, Slideshow, Thumbnails, Video, Zoom.
+- **Blog:** Row-per-locale: `BlogPost` has `language_id` (FK to `languages`). One row per locale per logical post; slug/title/excerpt/body/meta_description on `BlogPost`. Excerpt and meta_description are plain text (no HTML). Rich body in Filament (WYSIWYG). Media (images in `gallery`, videos in `videos`, files in `documents`, optional `audio`) via Spatie Media Library; **all blog media use the `public` disk** so conversion URLs are served under `/storage`. Conversions: `thumb`, `card` (640×400, listing/hero), `medium`, `full`. Public listing and show use `card` for thumbnails; show hero displays full image (whole photo). The public show page uses Yet Another React Lightbox (YARL) for gallery and video with plugins: Captions, Fullscreen, Slideshow, Thumbnails, Video, Zoom.
 - **Contact form:** `ContactSubmission` stores submissions (name, email, subject, message). No translation; optionally store `locale` for analytics.
 - **Landing page sections:** `LandingSection` (types: hero, features, testimonials, cta) and `LandingSectionItem` (for features/testimonials) use Spatie Translatable for titles, body, CTAs, and Spatie Media Library for section images and item icons. The public welcome page renders sections from the DB; when no hero section exists, fallback uses `Setting` and `lang` messages.
 - **Language model:** `languages` table keyed by code (e.g. `en`, `de`). Seed from `config('laravellocalization.supportedLocales')`. Used by `Page` (`language_id`) and anywhere an FK to a locale is needed.
@@ -182,13 +181,13 @@ When adding new guarded features or Filament resources: (1) Add the permission(s
 
 Use **Laravel Pennant** for all feature flagging: gradual rollouts, A/B tests, and conditional features. **Always** gate optional or experimental features (blog, static pages, contact form, registration, 2FA, any new module) via Pennant.
 
-- **Define features** in `app/Features/` and register with `Feature::define()` in `AppServiceProvider`. Use the `Feature` facade and the `@feature` Blade directive (or server-side checks) in controllers and Filament to gate UI and behavior.
+- **Define features** in `app/Core/Features/` and register with `Feature::define()` in `AppServiceProvider`. Use the `Feature` facade and the `@feature` Blade directive (or server-side checks) in controllers and Filament to gate UI and behavior.
 - **Toggle in Filament:** Admins can enable/disable feature flags from the **Feature flags** resource in Filament (Settings group). **Toggleable in Filament (Feature flags resource):** blog, page, contact-form, login, registration. Document these in `config/features.php` (keys and labels). Seed with `FeatureFlagSeeder`; add new entries to config and run the seeder when introducing a new toggleable feature. **Login** and **registration** are gated by Pennant (when inactive, login/register routes return 404 via EnsureAuthFeaturesEnabled). **Two-factor authentication** is controlled via Laravel Fortify configuration, not the Filament feature-flags list.
 - **Current usage:** Gate blog, pages, contact form, login, registration (Pennant); 2FA is a Fortify option. Other optional features can be gated per environment or audience via Pennant when added.
 - **Future features:** Any new optional or experimental feature must get a Pennant flag, be added to `config/features.php` if admin-toggleable, and be documented in ARCHITECTURE or README.
 - **Testing:** Use Pennant’s in-memory driver or `Feature::activate()` / `Feature::deactivate()` in tests to assert both on/off states.
 
-**To add a new toggleable feature:** (1) Create feature class in `app/Features/`, (2) Register with `Feature::define()` in AppServiceProvider, (3) Add key and label to `config/features.php`, (4) Run FeatureFlagSeeder, (5) Gate controllers/Filament with `Feature::active()`.
+**To add a new toggleable feature:** (1) Create feature class in `app/Core/Features/`, (2) Register with `Feature::define()` in AppServiceProvider, (3) Add key and label to `config/features.php`, (4) Run FeatureFlagSeeder, (5) Gate controllers/Filament with `Feature::active()`.
 
 ---
 
@@ -197,6 +196,7 @@ Use **Laravel Pennant** for all feature flagging: gradual rollouts, A/B tests, a
 - **Laravel Reverb** for WebSockets and user notifications. 
 - Use Events + Listeners for domain events (e.g., user registered, order placed). 
 - **Jobs** live in **Domains/<Name>/Jobs/** or **Core/Jobs/** (no global `app/Jobs/`). Use `ShouldQueue` for async tasks (email, search reindexing, analytics).
+- **Horizon** (`config/horizon.php`): default supervisor handles `default` queue; **supervisor-blog** handles the `blog` queue (e.g. `GenerateBlogPostsJob`) with longer timeout (600s) and higher memory (256MB). Ensure `QUEUE_CONNECTION=redis` and Horizon is running so queued jobs (including blog generation and Filament database notifications) are processed.
 
 ---
 
@@ -217,6 +217,7 @@ app/
 
 - Leverage policies & roles for admin access control.
 - **Feature flags resource:** Under Settings, lists and edits feature flags (from `config/features.php`; seeded by `FeatureFlagSeeder`). Changes sync to Pennant. Access via “manage feature flags” permission.
+- **Database notifications:** The admin panel enables `databaseNotifications()` so users receive Filament notifications (e.g. when a queued job like blog generation completes). Requires the Laravel `notifications` table; on PostgreSQL the `data` column must be `json`/`jsonb`. Notifications are sent via `Notification::make()->...->sendToDatabase($user)`.
 - Extend Filament with custom tools, reports, and charts.
 
 ### Filament CLI (resources and widgets)

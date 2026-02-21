@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Features;
+namespace App\Core\Features;
 
-class PageFeature
+class RegistrationFeature
 {
     public function __invoke(mixed $scope): mixed
     {

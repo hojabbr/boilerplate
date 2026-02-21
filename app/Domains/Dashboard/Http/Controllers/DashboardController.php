@@ -2,7 +2,7 @@
 
 namespace App\Domains\Dashboard\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Core\Http\Controllers\Controller;
 use Inertia\Inertia;
 use Inertia\Response;
 

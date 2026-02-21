@@ -14,11 +14,9 @@ The boilerplate backend is organized around **Core** (cross-cutting) and **Domai
 
 **Backend (`app/`)**
 
-- `Core/` — Middleware, Models (Language, Setting, FeatureFlag), Observers, Policies, Providers, Services (PagePropsService), Contracts, Inertia (TestingViewFinder).
+- `Core/` — Middleware, Models (Language, Setting, FeatureFlag), Observers, Policies, Providers, Services (PagePropsService, Ai/), Features (Pennant), Http/Controllers (base Controller and core controllers), Contracts, Inertia (TestingViewFinder).
 - `Domains/<Name>/` — Auth, Blog, Contact, Dashboard, Landing, Page, Profile, Search. Each may have Http/, Models/, Observers/, Policies/, Queries/, Services/, Actions/, Jobs/.
-- `Features/` — Pennant feature-flag definitions only.
 - `Filament/` — Admin UI; resources reference Core/Domain models.
-- `Http/Controllers/Controller.php` — Base controller only.
 
 **Frontend (`resources/js/`)**
 
@@ -31,7 +29,6 @@ flowchart LR
   subgraph Backend
     Core[Core]
     Domains[Domains]
-    Features[Features]
     Filament[Filament]
   end
   subgraph Frontend
@@ -41,7 +38,6 @@ flowchart LR
   end
   Domains --> Inertia
   Core --> Domains
-  Features --> Domains
   Filament --> Domains
   Inertia --> FeaturesJS
   Inertia --> Components

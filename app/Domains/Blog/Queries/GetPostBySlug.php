@@ -27,6 +27,7 @@ class GetPostBySlug
             'url' => $media->getUrl(),
             'full_url' => $media->getUrl('full'),
             'thumb_url' => $media->getUrl('thumb'),
+            'card_url' => $media->getUrl('card'),
             'type' => 'image',
             'alt' => $media->getCustomProperty('alt'),
             'title' => $media->getCustomProperty('title') ?? $media->name,

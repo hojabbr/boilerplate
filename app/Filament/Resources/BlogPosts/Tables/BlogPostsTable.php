@@ -16,6 +16,7 @@ class BlogPostsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('id', 'desc')
             ->columns([
                 TextColumn::make('language.name')->label('Language'),
                 TextColumn::make('title'),

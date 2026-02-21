@@ -5,6 +5,7 @@ namespace App\Filament\Resources\BlogPosts;
 use App\Domains\Blog\Models\BlogPost;
 use App\Filament\Resources\BlogPosts\Pages\CreateBlogPost;
 use App\Filament\Resources\BlogPosts\Pages\EditBlogPost;
+use App\Filament\Resources\BlogPosts\Pages\GenerateBlogPost;
 use App\Filament\Resources\BlogPosts\Pages\ListBlogPosts;
 use App\Filament\Resources\BlogPosts\Schemas\BlogPostForm;
 use App\Filament\Resources\BlogPosts\Tables\BlogPostsTable;
@@ -50,6 +51,7 @@ class BlogPostResource extends Resource
         return [
             'index' => ListBlogPosts::route('/'),
             'create' => CreateBlogPost::route('/create'),
+            'generate' => GenerateBlogPost::route('/generate'),
             'edit' => EditBlogPost::route('/{record}/edit'),
         ];
     }

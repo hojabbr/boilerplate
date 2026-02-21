@@ -3,10 +3,10 @@
 namespace App\Domains\Contact\Http\Controllers;
 
 use App\Core\Contracts\PagePropsServiceInterface;
+use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Setting;
 use App\Domains\Contact\Actions\StoreContactSubmission;
 use App\Domains\Contact\Http\Requests\StoreContactSubmissionRequest;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

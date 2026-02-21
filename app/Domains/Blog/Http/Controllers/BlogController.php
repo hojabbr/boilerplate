@@ -3,10 +3,11 @@
 namespace App\Domains\Blog\Http\Controllers;
 
 use App\Core\Contracts\PagePropsServiceInterface;
+use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Setting;
 use App\Domains\Blog\Queries\GetPostBySlug;
 use App\Domains\Blog\Queries\GetPublishedPosts;
-use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -37,7 +38,12 @@ class BlogController extends Controller
 
     public function show(Request $request, string $slug, GetPostBySlug $query, PagePropsServiceInterface $pageProps): Response|HttpResponse
     {
-        $result = $query->handle($slug);
+        try {
+            $result = $query->handle($slug);
+        } catch (ModelNotFoundException) {
+            return redirect()->route('blog.index');
+        }
+
         $setting = Setting::site();
         $settings = $pageProps->settingsSlice($setting);
 

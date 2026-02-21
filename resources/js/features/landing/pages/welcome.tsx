@@ -295,7 +295,7 @@ function WelcomeLatestPostsSection({
                                     <img
                                         src={post.thumbnail_url}
                                         alt=""
-                                        className="h-44 w-full shrink-0 object-cover"
+                                        className="h-56 w-full shrink-0 object-cover"
                                     />
                                 )}
                                 <CardHeader className="py-6">

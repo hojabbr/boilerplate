@@ -32,24 +32,25 @@ Check `composer.json`, `package.json`, and `AGENTS.md` in the repository for the
 
 ## Key paths
 
-| Purpose                    | Path                                                                       |
-| -------------------------- | -------------------------------------------------------------------------- |
-| Core models                | `app/Core/Models/`                                                         |
-| Core middleware            | `app/Core/Middleware/`                                                     |
-| Core services              | `app/Core/Services/`                                                       |
-| Core Inertia (tests)       | `app/Core/Inertia/TestingViewFinder.php`                                   |
-| Domain slice               | `app/Domains/<Name>/` (e.g. Blog, Page)                                    |
-| Domain controller          | `app/Domains/<Name>/Http/Controllers/`                                     |
-| Domain model               | `app/Domains/<Name>/Models/`                                               |
-| Feature flags (Pennant)    | `app/Features/`                                                            |
-| Filament resources         | `app/Filament/Resources/`                                                  |
-| Inertia pages              | `resources/js/features/<name>/pages/`                                      |
-| Shared UI                  | `resources/js/components/ui/`, `resources/js/components/common/`           |
-| Routes                     | `routes/web.php`, `routes/settings.php`                                    |
-| IDE helper model locations | `config/ide-helper.php` → `model_locations`                                |
-| Scout index settings       | `config/scout.php` → `meilisearch.index-settings` (key = full model class) |
-| Toggleable feature flags   | `config/features.php` → `toggleable`                                       |
-| Localization config        | `config/laravellocalization.php`                                           |
+| Purpose                    | Path                                                                                                             |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Core models                | `app/Core/Models/`                                                                                               |
+| Core middleware            | `app/Core/Middleware/`                                                                                           |
+| Core services              | `app/Core/Services/`                                                                                             |
+| Core Inertia (tests)       | `app/Core/Inertia/TestingViewFinder.php`                                                                         |
+| Domain slice               | `app/Domains/<Name>/` (e.g. Blog, Page)                                                                          |
+| Domain controller          | `app/Domains/<Name>/Http/Controllers/`                                                                           |
+| Domain model               | `app/Domains/<Name>/Models/`                                                                                     |
+| Feature flags (Pennant)    | `app/Core/Features/`                                                                                             |
+| Filament resources         | `app/Filament/Resources/`                                                                                        |
+| Inertia pages              | `resources/js/features/<name>/pages/`                                                                            |
+| Shared UI                  | `resources/js/components/ui/`, `resources/js/components/common/`                                                 |
+| Routes                     | `routes/web.php`, `routes/settings.php`                                                                          |
+| IDE helper model locations | `config/ide-helper.php` → `model_locations`                                                                      |
+| Scout index settings       | `config/scout.php` → `meilisearch.index-settings` (key = full model class)                                       |
+| Toggleable feature flags   | `config/features.php` → `toggleable`                                                                             |
+| Localization config        | `config/laravellocalization.php`                                                                                 |
+| AI (blog generation)       | `config/ai.php` → `blog.failover_providers`, `provider_capabilities`; uses Laravel AI SDK provider default model |
 
 ## Environment variables (main)
 

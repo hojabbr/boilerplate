@@ -239,8 +239,8 @@ class BoilerplateDomainCommand extends Command
 
         $param = $createFrontend ? 'Request $request, PagePropsServiceInterface $pageProps' : 'Request $request';
         $uses = $createFrontend
-            ? "use App\\Core\\Contracts\\PagePropsServiceInterface;\nuse App\\Http\\Controllers\\Controller;"
-            : 'use App\Http\Controllers\Controller;';
+            ? "use App\\Core\\Contracts\\PagePropsServiceInterface;\nuse App\\Core\\Http\\Controllers\\Controller;"
+            : 'use App\Core\Http\Controllers\Controller;';
 
         $controllerContent = <<<PHP
 <?php
@@ -799,19 +799,19 @@ PHP;
     {
         $className = "{$name}Feature";
         if ($this->isDryRun()) {
-            $this->plan('Create feature class', "Features/{$className}.php");
+            $this->plan('Create feature class', "Core/Features/{$className}.php");
             $this->plan('Register feature', 'AppServiceProvider + config/features.php');
 
             return;
         }
-        $dir = app_path('Features');
+        $dir = app_path('Core/Features');
         if (! File::isDirectory($dir)) {
             File::makeDirectory($dir, 0755, true);
         }
         $content = <<<PHP
 <?php
 
-namespace App\Features;
+namespace App\Core\Features;
 
 class {$className}
 {
@@ -836,8 +836,8 @@ PHP;
             $providerContent
         );
         $providerContent = str_replace(
-            'use App\Features\ContactFormFeature;',
-            "use App\\Features\\ContactFormFeature;\nuse App\\Features\\{$className};",
+            'use App\Core\Features\ContactFormFeature;',
+            "use App\\Core\\Features\\ContactFormFeature;\nuse App\\Core\\Features\\{$className};",
             $providerContent
         );
         File::put($providerPath, $providerContent);
@@ -939,7 +939,7 @@ TSX;
         $modelClass = "App\\Domains\\{$name}\\Models\\{$singular}";
         $controllerPath = app_path("Domains/{$name}/Http/Controllers/{$name}Controller.php");
         $modelPath = app_path("Domains/{$name}/Models/{$singular}.php");
-        $featurePath = app_path("Features/{$name}Feature.php");
+        $featurePath = app_path("Core/Features/{$name}Feature.php");
         $resourceDir = app_path("Filament/Resources/{$plural}");
         $frontendDir = resource_path("js/features/{$path}");
         $migrationGlob = database_path("migrations/*create_{$tableName}_table.php");
@@ -982,7 +982,7 @@ TSX;
         $defineLine = "Feature::define('{$featureKey}', {$name}Feature::class);";
         if (str_contains($providerContent, $defineLine)) {
             $providerContent = str_replace("\n        ".$defineLine, '', $providerContent);
-            $providerContent = str_replace("use App\\Features\\{$name}Feature;\n", '', $providerContent);
+            $providerContent = str_replace("use App\\Core\\Features\\{$name}Feature;\n", '', $providerContent);
             File::put($providerPath, $providerContent);
             $rolled[] = ['Reverted', 'AppServiceProvider (Feature::define)'];
         }

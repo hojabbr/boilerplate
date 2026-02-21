@@ -2,8 +2,8 @@
 
 namespace App\Domains\Profile\Http\Controllers;
 
+use App\Core\Http\Controllers\Controller;
 use App\Domains\Profile\Http\Requests\TwoFactorAuthenticationRequest;
-use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 use Inertia\Response;
 use Laravel\Fortify\Features;

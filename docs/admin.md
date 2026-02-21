@@ -28,6 +28,14 @@ Locale JSON files (`lang/*.json`) can be managed from the admin panel via **Tran
 
 **List missing translations for AI:** Run `php artisan translations:missing` to print all keys that have no translation per locale, with a reference (source) text so you can paste the list to an AI. The command **imports from lang files first** so the list reflects the current state after syncing. Options: `--locale=de` (only one locale), `--format=json` (machine-readable), `--reference=en` (locale to use as source text), `--no-import` (skip import and list missing from current DB only). Add the completed translations in Filament or via CSV import.
 
+## Blog: Generate with AI
+
+The Blog Posts resource includes a **Generate with AI** action that creates posts via the Laravel AI SDK. Generation runs in a queued job (`App\Domains\Blog\Jobs\GenerateBlogPostsJob` on the `blog` queue). You choose languages (one post per language), optional length (short/medium/long), and a shared featured image is generated. When the job finishes (success or failure), the user receives a **Filament database notification** in the admin panel. Ensure Horizon (or your queue worker) is running and `QUEUE_CONNECTION=redis` so the job is processed.
+
+## Database notifications
+
+The admin panel enables Filament database notifications (`databaseNotifications()`). Users see notifications in the panel (e.g. when a queued job like blog generation completes). Requires the Laravel `notifications` table; on PostgreSQL the `data` column must be `json`/`jsonb`.
+
 ## Adding a resource
 
 1. `php artisan make:filament-resource ModelName --generate --soft-deletes` (omit `--soft-deletes` if the model does not use it).

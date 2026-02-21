@@ -37,6 +37,7 @@ interface GalleryItem {
     url: string;
     full_url: string;
     thumb_url: string;
+    card_url: string;
     type: 'image';
     alt?: string;
     title?: string;
@@ -170,8 +171,8 @@ export default function BlogShow({
                         <div className="-mx-4 mb-6 overflow-hidden sm:mx-0 sm:rounded-xl">
                             <img
                                 src={heroImage.full_url || heroImage.url}
-                                alt=""
-                                className="h-56 w-full object-cover sm:h-72"
+                                alt={heroImage.alt ?? heroImage.title ?? ''}
+                                className="w-full object-contain"
                             />
                         </div>
                     )}
@@ -229,11 +230,15 @@ export default function BlogShow({
                                             }}
                                         >
                                             <img
-                                                src={item.thumb_url || item.url}
+                                                src={
+                                                    item.card_url ||
+                                                    item.thumb_url ||
+                                                    item.url
+                                                }
                                                 alt={
                                                     item.alt ?? item.title ?? ''
                                                 }
-                                                className="aspect-video w-full rounded-lg object-cover"
+                                                className="aspect-[8/5] w-full rounded-lg object-cover"
                                             />
                                         </Button>
                                     </CarouselItem>

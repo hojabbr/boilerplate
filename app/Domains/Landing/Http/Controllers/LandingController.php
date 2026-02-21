@@ -3,9 +3,9 @@
 namespace App\Domains\Landing\Http\Controllers;
 
 use App\Core\Contracts\PagePropsServiceInterface;
+use App\Core\Http\Controllers\Controller;
 use App\Core\Models\Setting;
 use App\Domains\Landing\Services\LandingService;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;

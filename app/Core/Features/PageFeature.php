@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Features;
+namespace App\Core\Features;
 
-class BlogFeature
+class PageFeature
 {
     public function __invoke(mixed $scope): mixed
     {

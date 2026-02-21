@@ -27,7 +27,7 @@ Thank you for your interest in contributing. This document explains how to get s
 - **New backend domain** — `app/Domains/<Name>/` (Http, Models, etc.); register routes and policy.
 - **New model** — `app/Core/Models/` (cross-cutting) or `app/Domains/<Name>/Models/`.
 - **New Inertia page** — `resources/js/features/<name>/pages/`; backend must render that component name.
-- **New feature flag** — Define in `app/Features/`, add to `config/features.php`, run `FeatureFlagSeeder`.
+- **New feature flag** — Define in `app/Core/Features/`, add to `config/features.php`, run `FeatureFlagSeeder`.
 
 For full rules and step-by-step instructions, see the [documentation](docs/) ([Architecture](docs/architecture.md), [Extending](docs/extending.md), [Scaffolding](docs/scaffolding.md)). [EXTENDING.md](EXTENDING.md) is a short pointer and convention table.
 

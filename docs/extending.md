@@ -18,7 +18,7 @@ This page summarizes where to put new code and which conventions to follow. The 
 | Policies                   | Core: `app/Core/Policies/`. Domain: `app/Domains/<Name>/Policies/`. Register in `AppServiceProvider::registerPolicies()`.                     | [Laravel Authorization](https://laravel.com/docs/12.x/authorization) |
 | Jobs                       | `app/Domains/<Name>/Jobs/` or `app/Core/Jobs/`. No global `app/Jobs/`. Create folder when adding first job.                                   | [Laravel Queues](https://laravel.com/docs/12.x/queues)               |
 | Auth (login, 2FA, profile) | Fortify views render Inertia; routes under locale prefix. Profile in `app/Domains/Profile/`.                                                  | [Laravel Fortify](https://laravel.com/docs/12.x/fortify)             |
-| Feature flags              | Define in `app/Features/`, register in AppServiceProvider. Toggleable: `config/features.php` + FeatureFlagSeeder.                             | [Laravel Pennant](https://laravel.com/docs/11.x/pennant)             |
+| Feature flags              | Define in `app/Core/Features/`, register in AppServiceProvider. Toggleable: `config/features.php` + FeatureFlagSeeder.                        | [Laravel Pennant](https://laravel.com/docs/11.x/pennant)             |
 | Search                     | Add model to `config/scout.php` `meilisearch.index-settings` (key = full class name).                                                         | [Laravel Scout](https://laravel.com/docs/12.x/scout)                 |
 | Filament                   | Resources under `app/Filament/Resources/`; reference domain/Core models. Add permission in RoleAndPermissionSeeder.                           | [Filament 5](https://filamentphp.com/docs/5.x)                       |
 | Inertia pages              | `resources/js/features/<name>/pages/`. Backend renders component name (e.g. `blog/Index`).                                                    | [Inertia 2](https://inertiajs.com)                                   |
@@ -29,7 +29,7 @@ This page summarizes where to put new code and which conventions to follow. The 
 - **New domain:** Create `app/Domains/<Name>/` with Http, Models, etc.; register routes and policy. Add model path to `config/ide-helper.php` if needed. Or use [Scaffolding](scaffolding.md).
 - **Migrations:** `php artisan make:migration`; place in `database/migrations/`.
 - **Observers:** `app/Core/Observers/` or `app/Domains/<Name>/Observers/`; register in `AppServiceProvider::boot()`. Use model cache-key helpers for cache invalidation (e.g. `Setting::siteCacheKey()`, `Page::slugCacheKey($slug)`).
-- **Feature flag (toggleable):** Feature class in `app/Features/`, register with `Feature::define()`, add to `config/features.php`, run FeatureFlagSeeder, gate with `Feature::active()`.
+- **Feature flag (toggleable):** Feature class in `app/Core/Features/`, register with `Feature::define()`, add to `config/features.php`, run FeatureFlagSeeder, gate with `Feature::active()`.
 
 ## Frontend: quick steps
 

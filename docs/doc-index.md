@@ -36,4 +36,4 @@ All documentation files for the [Laravel React Boilerplate](https://github.com/h
 | `reference.md`         | Paths, config & env: package versions, key paths, config files, env vars, commands   |
 | `doc-index.md`         | This file: list of all doc files and one-line descriptions                           |
 
-**Terminology:** _Domain_ = vertical slice under `app/Domains/<Name>` (e.g. Blog, Page). _Core_ = cross-cutting code in `app/Core/`. _Feature_ (frontend) = module under `resources/js/features/<name>/`. _Feature flag_ (Pennant) = definition in `app/Features/` and optional toggle in Filament.
+**Terminology:** _Domain_ = vertical slice under `app/Domains/<Name>` (e.g. Blog, Page). _Core_ = cross-cutting code in `app/Core/`. _Feature_ (frontend) = module under `resources/js/features/<name>/`. _Feature flag_ (Pennant) = definition in `app/Core/Features/` and optional toggle in Filament.

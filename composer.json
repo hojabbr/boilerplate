@@ -26,6 +26,7 @@
         "http-interop/http-factory-guzzle": "^1.2",
         "inertiajs/inertia-laravel": "^2.0",
         "lara-zeus/spatie-translatable": "^2.0",
+        "laravel/ai": "^0.2.1",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
         "laravel/horizon": "^5.44",

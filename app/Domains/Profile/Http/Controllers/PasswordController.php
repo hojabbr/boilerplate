@@ -2,8 +2,8 @@
 
 namespace App\Domains\Profile\Http\Controllers;
 
+use App\Core\Http\Controllers\Controller;
 use App\Domains\Profile\Http\Requests\PasswordUpdateRequest;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 use Spatie\Image\Enums\Fit;
@@ -59,6 +60,14 @@ class BlogPost extends Model implements HasMedia
     }
 
     /**
+     * @return HasMany<BlogPostChunk, $this>
+     */
+    public function chunks(): HasMany
+    {
+        return $this->hasMany(BlogPostChunk::class);
+    }
+
+    /**
      * @param  Builder<BlogPost>  $query
      * @return Builder<BlogPost>
      */
@@ -79,13 +88,20 @@ class BlogPost extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('gallery')
+            ->useDisk('public')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
 
         $this->addMediaCollection('videos')
+            ->useDisk('public')
             ->acceptsMimeTypes(['video/mp4', 'video/webm', 'video/ogg']);
 
         $this->addMediaCollection('documents')
+            ->useDisk('public')
             ->acceptsMimeTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
+
+        $this->addMediaCollection('audio')
+            ->useDisk('public')
+            ->acceptsMimeTypes(['audio/mpeg', 'audio/mp3', 'audio/wav']);
     }
 
     public function registerMediaConversions(?\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null): void
@@ -93,6 +109,12 @@ class BlogPost extends Model implements HasMedia
         $this->addMediaConversion('thumb')
             ->performOnCollections('gallery')
             ->fit(Fit::Crop, 300, 300)
+            ->nonQueued();
+
+        $this->addMediaConversion('card')
+            ->performOnCollections('gallery')
+            ->fit(Fit::Crop, 640, 400)
+            ->quality(90)
             ->nonQueued();
 
         $this->addMediaConversion('medium')

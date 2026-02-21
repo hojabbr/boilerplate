@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Features;
+namespace App\Core\Features;
 
 class LoginFeature
 {
