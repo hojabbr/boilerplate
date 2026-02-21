@@ -29,7 +29,7 @@ Thank you for your interest in contributing. This document explains how to get s
 - **New Inertia page** — `resources/js/features/<name>/pages/`; backend must render that component name.
 - **New feature flag** — Define in `app/Features/`, add to `config/features.php`, run `FeatureFlagSeeder`.
 
-For full rules and step-by-step instructions, see [.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc) and [EXTENDING.md](EXTENDING.md).
+For full rules and step-by-step instructions, see the [documentation](docs/) ([Architecture](docs/architecture.md), [Extending](docs/extending.md), [Scaffolding](docs/scaffolding.md)). [EXTENDING.md](EXTENDING.md) is a short pointer and convention table.
 
 ## Code quality (run before submitting)
 

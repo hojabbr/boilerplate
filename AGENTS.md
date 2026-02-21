@@ -62,12 +62,12 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 ## Application Structure & Architecture
 
-- **Backend:** Use `app/Core/` for cross-domain infrastructure (Contracts, Exceptions, Middleware, Models like Language/Setting/FeatureFlag, Observers, Policies, Providers, Services like PagePropsService). Use `app/Domains/<Name>/` for vertical slices (Auth, Blog, Contact, Page, Dashboard, Profile, Landing, Search); domain names are singular (e.g. Page, not Pages). with Http/Controllers, Http/Requests, Models, Actions, DTOs, Queries, Services, Observers, Policies. There is no global `app/Http/Controllers/Web/` or `app/Models/`; controllers and models live inside Core or each domain. Pennant feature definitions in `app/Features/`.
-- **Frontend:** Inertia pages live in `resources/js/features/<name>/pages/` (backend component name e.g. `blog/Index` resolves to `features/blog/pages/Index.tsx`). Feature-scoped code in `resources/js/features/<name>/` (pages/, components/, hooks/, services/, types.ts, index.ts). Shared UI in `resources/js/components/` (ui/, common/). Use path alias `@/` for `resources/js` and optionally `@features/*` for feature modules.
-- **When extending the project** (new feature, model, page, job, feature flag, etc.), follow [EXTENDING.md](EXTENDING.md) and [.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc); for framework and package API details use official Laravel, Inertia, Filament, Pennant, Wayfinder, React, Shadcn, and Tailwind docs and the project skills.
-- **Scaffolding commands:** When modifying architecture or the boilerplate commands (`boilerplate:domain`, `boilerplate:locale`), check and update the other (architecture ↔ commands) and run or update [tests/Feature/BoilerplateCommandsTest.php](tests/Feature/BoilerplateCommandsTest.php).
-- Stick to this directory structure; don't create new base folders without approval.
-- Do not change the application's dependencies without approval.
+- **Canonical documentation:** The [documentation](/docs) in this repository ([docs/](docs/) and [GitHub Pages](https://hojabbr.github.io/boilerplate/)) is the single source of truth for structure, architecture, extending, scaffolding, testing, and DevOps. Prefer it over duplicating content here.
+- **Backend:** `app/Core/` (cross-cutting); `app/Domains/<Name>/` (vertical slices; singular name). No `app/Models/` or global `app/Jobs/`. Pennant in `app/Features/`. Full detail: [docs/backend.md](docs/backend.md), [docs/overview.md](docs/overview.md).
+- **Frontend:** Inertia pages in `resources/js/features/<name>/pages/`; shared UI in `resources/js/components/` (ui/, common/). Path alias `@/` → `resources/js`. Full detail: [docs/frontend.md](docs/frontend.md).
+- **When extending the project,** follow the [docs](docs/) ([Extending](docs/extending.md), [Scaffolding](docs/scaffolding.md)) and [.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc) for condensed rules; use official Laravel, Inertia, Filament, etc. docs and project skills for package APIs.
+- **Scaffolding:** When changing structure or boilerplate commands, update commands and [tests/Feature/BoilerplateCommandsTest.php](tests/Feature/BoilerplateCommandsTest.php); see [docs/scaffolding.md](docs/scaffolding.md).
+- Stick to this directory structure; don't create new base folders without approval. Do not change the application's dependencies without approval.
 
 ## Frontend Bundling
 

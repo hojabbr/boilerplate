@@ -1,0 +1,34 @@
+# Laravel React Boilerplate — Documentation (Just the Docs)
+# GitHub Pages: set Source to "Deploy from a branch", branch main, folder /docs
+
+title: Laravel React Boilerplate
+description: Documentation for the Laravel 12 + Inertia 2 + React 19 boilerplate with localization, Filament, feature flags, and Scout.
+baseurl: "" # Set to /REPO_NAME if your site is at https://USER.github.io/REPO_NAME/
+url: "" # e.g. https://yourusername.github.io (optional; GitHub Pages sets this)
+
+remote_theme: just-the-docs/just-the-docs
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+search_enabled: true
+enable_copy_code_button: true
+
+# Optional: link to repo (customize for your repo)
+aux_links:
+  Repository: https://github.com/hojabbr/boilerplate
+  Changelog: https://github.com/hojabbr/boilerplate/blob/main/CHANGELOG.md
+
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: default
+
+kramdown:
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false

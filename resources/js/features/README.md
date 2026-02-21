@@ -1,5 +1,7 @@
 # Feature modules
 
+**Full frontend and extending docs:** [docs/frontend.md](../../../docs/frontend.md), [docs/extending.md](../../../docs/extending.md).
+
 Feature-specific code lives under `resources/js/features/<name>/`. Create the `<name>/` directory when you add a new feature; add `pages/` (Inertia page components), `components/`, `hooks/`, `services/`, `types.ts`, and `index.ts` as needed (no `.gitkeep` or empty placeholders). Inertia resolves page components from `features/<name>/pages/` when the backend renders that name (e.g. `blog/Index` → `features/blog/pages/Index.tsx`); the `welcome` page lives under `features/landing/pages/welcome.tsx`.
 
 - **components/** — UI scoped to this feature (e.g. BlogPostCard, ContactForm).

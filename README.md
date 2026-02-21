@@ -65,20 +65,20 @@ A production-ready starter for **Laravel 12**, **Inertia 2**, and **React 19** w
 
 ### Project structure
 
-- **Backend:** `app/Core/` (contracts, exceptions, middleware, models like Language/Setting/FeatureFlag, observers, policies, providers, shared services like PagePropsService), `app/Domains/` (Auth, Blog, Contact, Page, Dashboard, Profile, Landing, Search — each with Http/Controllers, Http/Requests, Models, Actions, DTOs, Queries, Services, Observers, Policies). Controllers live in each domain and are thin. Filament is UI-only and uses domain or Core models. Models live in `app/Core/Models/` or `app/Domains/<Name>/Models/`, not `app/Models/`. Jobs live in `Domains/<Name>/Jobs/` or `Core/Jobs/` (create the folder when adding the first job). Pennant feature-flag definitions live in `app/Features/`.
-- **Frontend:** `resources/js/` — Inertia pages live in `resources/js/features/<name>/pages/` (see ARCHITECTURE and EXTENDING.md). Feature modules (auth, blog, contact, dashboard, landing, pages, profile, settings) each have `pages/`, `components/`, `hooks/`, `services/`, `types.ts`, `index.ts` as needed; shared UI in `components/` (ui, common), plus `layouts/`, `hooks/`, `store/`, `themes/`, `services/`, `types/`. Use `@/` for `resources/js` and optionally `@features/*` for feature modules.
+- **Backend:** `app/Core/` (cross-cutting) and `app/Domains/<Name>/` (vertical slices). No `app/Models/`; models in Core or Domains. Jobs in `Domains/<Name>/Jobs/` or `Core/Jobs/`. See [docs: Architecture → Backend](docs/backend.md).
+- **Frontend:** Inertia pages in `resources/js/features/<name>/pages/`; shared UI in `components/` (ui, common). See [docs: Architecture → Frontend](docs/frontend.md).
 
 ---
 
-## Optional features (gated by Pennant)
+## Optional features
 
-These can be turned on or off via **Filament → Settings → Feature flags** (or in code):
+**Filament → Settings → Feature flags** toggles: Blog, Static pages, Contact form. Registration and two-factor authentication are controlled via Laravel Fortify configuration, not the Filament feature-flags list.
 
 - **Blog** — Translatable posts, WYSIWYG, media (gallery, videos, documents), public listing and show with lightbox
 - **Static pages** — Per-locale CMS pages (e.g. Privacy, Terms)
 - **Contact form** — Public form with Filament list/edit of submissions
-- **Registration** — Fortify registration
-- **Two-factor authentication** — TOTP-based 2FA for users
+- **Registration** — Fortify registration (enable/disable in Fortify config)
+- **Two-factor authentication** — TOTP-based 2FA (Fortify)
 
 ---
 
@@ -145,7 +145,7 @@ cp .env.example .env
 - **Frontend (Vite):** `npm run dev`
 - **All-in-one (server, queue, logs, Vite):** `composer run dev` (with Sail, run inside the container)
 - **Admin:** [http://localhost/admin](http://localhost/admin) (locale-independent)
-- **Scaffolding:** `php artisan boilerplate:domain` and `php artisan boilerplate:locale` scaffold new domains and locales (use `--dry-run` to preview, `--rollback=<name>` to undo). Scaffolding output is kept in sync with ARCHITECTURE; structure changes that affect it require command and test updates—see [EXTENDING.md](EXTENDING.md) and [.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc).
+- **Scaffolding:** `php artisan boilerplate:domain` and `php artisan boilerplate:locale` (use `--dry-run`, `--rollback=<name>`). See [docs: Scaffolding](docs/scaffolding.md).
 
 ---
 
@@ -167,12 +167,11 @@ Run tests before submitting changes; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Documentation
 
-- **[.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc)** — Backend and frontend architecture, localization, feature flags, theme, RTL, DevOps, and conventions. Useful for contributors and for AI-assisted development (e.g. Cursor).
-- **[EXTENDING.md](EXTENDING.md)** — How to add or extend features, domains, models, migrations, observers, policies, jobs, feature flags, cache, locales, search, Filament resources, Inertia pages, UI components, themes, and tests; Laravel vs project conventions and when to check official docs (Laravel, Inertia, Filament, mcamara, Pennant, Scout, Wayfinder, React, Shadcn).
-- **Naming:** Backend uses PascalCase for PHP files and classes; frontend follows ARCHITECTURE (see “Directory Structure” and “Naming conventions” there): kebab-case for page/component/layout files, PascalCase for React component names and hooks.
-- **Feature flags** — Laravel Pennant; see ARCHITECTURE “Feature Flags — Laravel Pennant”.
-- **Theme** — Single source of truth (`useAppearance`) for light/dark/system; see ARCHITECTURE “Theme (light / dark / system)”.
-- **RTL** — RTL locales set `dir="rtl"`; use direction-aware icons and logical spacing; see ARCHITECTURE “RTL and direction‑aware UI”.
+**Canonical documentation** is in the [`/docs`](docs/) folder and on [GitHub Pages](https://hojabbr.github.io/boilerplate/) (when enabled). It covers installation, configuration, architecture (overview, backend, frontend), features (localization, feature flags, search, admin), development (extending, scaffolding, testing), DevOps, and reference (paths, config, env). Use it as the single source of truth.
+
+- **[docs/](docs/)** — Start at [docs/index.md](docs/index.md) or the GitHub Pages site for the full guide and sidebar navigation.
+- **[EXTENDING.md](EXTENDING.md)** — Short summary and links to the extending and scaffolding docs.
+- **[.cursor/rules/ARCHITECTURE.mdc](.cursor/rules/ARCHITECTURE.mdc)** — Condensed rules for Cursor/IDE; points to /docs for full architecture and conventions.
 
 ---
 

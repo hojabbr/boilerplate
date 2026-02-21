@@ -7,7 +7,13 @@ metadata:
   author: your‑team
 ---
 
+**Canonical documentation:** The single source of truth for architecture, extending, and conventions is the [documentation](docs/) folder ([docs/](docs/) and [GitHub Pages](https://hojabbr.github.io/boilerplate/)). When changing structure or conventions, update the docs there first; this file is a condensed rule set for Cursor. Full detail: [docs/overview.md](docs/overview.md), [docs/backend.md](docs/backend.md), [docs/frontend.md](docs/frontend.md), [docs/extending.md](docs/extending.md), [docs/scaffolding.md](docs/scaffolding.md), and related pages under [docs/](docs/).
+
+---
+
 # 🧠 Architecture — Part 1: Backend Core (Laravel 12)
+
+**Full detail:** [docs/overview.md](docs/overview.md), [docs/backend.md](docs/backend.md), [docs/feature-flags.md](docs/feature-flags.md), [docs/search.md](docs/search.md), [docs/admin.md](docs/admin.md), [docs/localization.md](docs/localization.md).
 
 ## 🚀 **1. Core Architectural Vision**
 
@@ -63,7 +69,7 @@ app/
 - **Controllers** live in `Domains/<Name>/Http/Controllers/`. They are thin: call domain Queries/Services/Actions, merge with PagePropsService when needed, return `Inertia::render(...)`. They extend `App\Http\Controllers\Controller`.
 - **Requests** (FormRequests) live in `Domains/<Name>/Http/Requests/` alongside their controllers.
 - **Domains** encapsulate all domain logic: Http (entry points), Queries, Services, Search, Actions, DTOs.
-- **Core** holds cross-cutting code only: Middleware, Models (Language, Setting, FeatureFlag), Observers, Policies, Providers, PagePropsService, contracts, exceptions, traits.
+- **Core** holds cross-cutting code only: Middleware, Models (Language, Setting, FeatureFlag), Observers, Policies, Providers, PagePropsService, contracts, exceptions, traits. **Core/Inertia/** contains `TestingViewFinder` for resolving Inertia page component names in PHP tests (mirrors frontend `pagePath()`).
 - **Filament** is UI-only; resources use Domain Queries or model scopes, not inline business logic.
 - **Features/** (Pennant) = feature-flag definitions; do not confuse with frontend “features” or Domains.
 
@@ -79,9 +85,9 @@ app/
 
 **To add a new domain:** Create `app/Domains/<Name>/` with Http, Models, etc.; register routes and policy in AppServiceProvider; add the model path to `config/ide-helper.php` if the domain has models. Alternatively, use `php artisan boilerplate:domain` to scaffold a domain interactively (options: `--dry-run`, `--rollback=<Name>`). See EXTENDING.md.
 
-**Scaffolding and code generation:** The canonical scaffolding commands are `boilerplate:domain` and `boilerplate:locale`. Their output (paths, namespaces, registered routes, config edits, Filament/Pennant/frontend/locale artifacts) must match the structure and conventions described in this file and in EXTENDING.md. Any change to project structure or conventions that affects that output (e.g. new domain subfolder, new required config, new Filament pattern) must be reflected in the command code (`app/Console/Commands/BoilerplateDomainCommand.php`, `app/Console/Commands/BoilerplateLocaleCommand.php`) and in their tests (`tests/Feature/BoilerplateCommandsTest.php`). AI-assisted edits to architecture or to these commands should always verify and update the other (architecture ↔ commands) and run or update the boilerplate tests. The tests define the contract for non-interactive behavior, rollback, and dry-run. For usage and options (e.g. `--dry-run`, `--rollback`), see EXTENDING.md.
+**Scaffolding and code generation:** The canonical scaffolding commands are `boilerplate:domain` and `boilerplate:locale`. Their output (paths, namespaces, registered routes, config edits, Filament/Pennant/frontend/locale artifacts) must match the structure and conventions described in [docs/](docs/) and this file. Any change to project structure or conventions that affects that output (e.g. new domain subfolder, new required config, new Filament pattern) must be reflected in the command code (`app/Console/Commands/BoilerplateDomainCommand.php`, `app/Console/Commands/BoilerplateLocaleCommand.php`) and in their tests (`tests/Feature/BoilerplateCommandsTest.php`). AI-assisted edits to architecture or to these commands should always verify and update the other (architecture ↔ commands) and run or update the boilerplate tests. The tests define the contract for non-interactive behavior, rollback, and dry-run. For usage and options, see [docs/scaffolding.md](docs/scaffolding.md).
 
-**How to extend (backend and frontend):** For step-by-step instructions to add or change domains, models, migrations, observers, policies, jobs, feature flags, cache, locales, search, Filament, Inertia pages, UI, themes, and tests, see [EXTENDING.md](EXTENDING.md). The table there indicates what follows Laravel/Inertia/Filament/etc. conventions and when to consult official documentation.
+**How to extend (backend and frontend):** For step-by-step instructions, see [docs/extending.md](docs/extending.md) and [docs/scaffolding.md](docs/scaffolding.md); [EXTENDING.md](EXTENDING.md) is a short pointer.
 
 ### 🗑️ Soft Deletes and Cascading
 
@@ -102,9 +108,9 @@ All CMS and future domain models use `SoftDeletes`.
 
 Use **mcamara/laravel‑localization** to prefix all routes with locale identifiers.
 
-**bootstrap/app.php:** Register middleware aliases: `localize` (LaravelLocalizationRoutes), `localizationRedirect` (LaravelLocalizationRedirectFilter), `localeSessionRedirect` (LocaleSessionRedirect), `localeCookieRedirect` (LocaleCookieRedirect), `localeViewPath` (LaravelLocalizationViewPath), `setLocalizedFortifyRedirects` (SetLocalizedFortifyRedirects). Prepend `LocaleSessionRedirect` to the web stack so `/` redirects to the preferred locale.
+**bootstrap/app.php:** Register middleware aliases: `localize` (LaravelLocalizationRoutes), `localizationRedirect` (LaravelLocalizationRedirectFilter), `localeSessionRedirect` (LocaleSessionRedirect), `localeCookieRedirect` (LocaleCookieRedirect), `localeViewPath` (LaravelLocalizationViewPath), `setLocalizedFortifyRedirects` (SetLocalizedFortifyRedirects). Prepend **LocaleCookieRedirect** to the web stack so `/` redirects to the preferred locale.
 
-**routes/web.php:** Use a route group with `prefix => LaravelLocalization::setLocale()` and middleware `localeSessionRedirect`, `localizationRedirect`, `localeViewPath`, `setLocalizedFortifyRedirects`. The package sets app locale (and translator/regional) when the prefix is evaluated per request. Call `Fortify::ignoreRoutes()` in FortifyServiceProvider::register(), then require Fortify routes inside the locale group so auth is under `/{locale}/login`, etc. SetLocalizedFortifyRedirects sets Fortify redirect config from `app()->getLocale()` so login/logout stay in the current locale.
+**routes/web.php:** Use a route group with `prefix => LaravelLocalization::setLocale()` and middleware `localeCookieRedirect`, `localizationRedirect`, `localeViewPath`, `setLocalizedFortifyRedirects`. The package sets app locale (and translator/regional) when the prefix is evaluated per request. Call `Fortify::ignoreRoutes()` in FortifyServiceProvider::register(), then require Fortify routes inside the locale group so auth is under `/{locale}/login`, etc. SetLocalizedFortifyRedirects sets Fortify redirect config from `app()->getLocale()` so login/logout stay in the current locale.
 
 **config/laravellocalization urlsIgnored:** Only `/skipped` and `/admin`, `/admin/*`. Do not ignore login/register so they stay under the locale prefix.
 
@@ -177,8 +183,8 @@ When adding new guarded features or Filament resources: (1) Add the permission(s
 Use **Laravel Pennant** for all feature flagging: gradual rollouts, A/B tests, and conditional features. **Always** gate optional or experimental features (blog, static pages, contact form, registration, 2FA, any new module) via Pennant.
 
 - **Define features** in `app/Features/` and register with `Feature::define()` in `AppServiceProvider`. Use the `Feature` facade and the `@feature` Blade directive (or server-side checks) in controllers and Filament to gate UI and behavior.
-- **Toggle in Filament:** Admins can enable/disable feature flags from the **Feature flags** resource in Filament (Settings group). Document toggleable features in `config/features.php` (keys and labels). Seed with `FeatureFlagSeeder`; add new entries to config and run the seeder when introducing a new toggleable feature.
-- **Current usage:** Gate registration, two-factor auth, blog, pages, contact form, and other Fortify/application features so they can be toggled per environment or audience.
+- **Toggle in Filament:** Admins can enable/disable feature flags from the **Feature flags** resource in Filament (Settings group). **Toggleable in Filament (Feature flags resource):** blog, page, contact-form only. Document these in `config/features.php` (keys and labels). Seed with `FeatureFlagSeeder`; add new entries to config and run the seeder when introducing a new toggleable feature. **Registration** and **two-factor authentication** are controlled via Laravel Fortify configuration, not the Filament feature-flags list.
+- **Current usage:** Gate blog, pages, contact form (Pennant); registration and 2FA are Fortify options. Other optional features can be gated per environment or audience via Pennant when added.
 - **Future features:** Any new optional or experimental feature must get a Pennant flag, be added to `config/features.php` if admin-toggleable, and be documented in ARCHITECTURE or README.
 - **Testing:** Use Pennant’s in-memory driver or `Feature::activate()` / `Feature::deactivate()` in tests to assert both on/off states.
 
@@ -272,6 +278,8 @@ Testing	Pest + PHPUnit coverage
 ---
 
 # 🧠 Architecture — Part 2: Frontend & UI
+
+**Full detail:** [docs/frontend.md](docs/frontend.md), [docs/localization.md](docs/localization.md) (i18n, RTL, theme).
 
 ## 📦 Overview: Frontend Stack
 
@@ -545,6 +553,8 @@ Testing	Jest + Playwright
 ---
 
 # 🤖 Architecture — Part 3: DevOps, Quality, CI/CD & Releases
+
+**Full detail:** [docs/devops.md](docs/devops.md), [docs/ci.md](docs/ci.md), [docs/code-quality.md](docs/code-quality.md), [docs/testing.md](docs/testing.md).
 
 ## 📈 Continuous Integration & Delivery (CI/CD)
 
