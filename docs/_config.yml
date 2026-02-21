@@ -3,8 +3,9 @@
 
 title: Laravel React Boilerplate
 description: Documentation for the Laravel 12 + Inertia 2 + React 19 boilerplate with localization, Filament, feature flags, and Scout.
-baseurl: "" # Set to /REPO_NAME if your site is at https://USER.github.io/REPO_NAME/
-url: "" # e.g. https://yourusername.github.io (optional; GitHub Pages sets this)
+# Project site: https://hojabbr.github.io/boilerplate/ — baseurl must be the repo path so theme assets load
+baseurl: "/boilerplate"
+url: "https://hojabbr.github.io"
 
 remote_theme: just-the-docs/just-the-docs
 plugins:
