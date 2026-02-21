@@ -26,13 +26,11 @@ class FeatureFlag extends Model
     protected static function booted(): void
     {
         static::saved(function (FeatureFlag $flag): void {
-            if (! $flag->wasChanged('is_active')) {
-                return;
-            }
+            // Always sync current is_active to Pennant (null scope) so the toggle applies globally.
             if ($flag->is_active) {
-                Feature::activate($flag->key);
+                Feature::for(null)->activate($flag->key);
             } else {
-                Feature::deactivate($flag->key);
+                Feature::for(null)->deactivate($flag->key);
             }
         });
     }

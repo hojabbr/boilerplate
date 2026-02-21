@@ -17,7 +17,9 @@ use App\Domains\Page\Models\Page;
 use App\Domains\Page\Observers\PageObserver;
 use App\Features\BlogFeature;
 use App\Features\ContactFormFeature;
+use App\Features\LoginFeature;
 use App\Features\PageFeature;
+use App\Features\RegistrationFeature;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +53,8 @@ class AppServiceProvider extends ServiceProvider
         Feature::define('blog', BlogFeature::class);
         Feature::define('page', PageFeature::class);
         Feature::define('contact-form', ContactFormFeature::class);
+        Feature::define('login', LoginFeature::class);
+        Feature::define('registration', RegistrationFeature::class);
 
         // Observers run for all CRUD (create/update/delete/restore/force delete) from Filament, API, tinker, etc.
         Language::observe(LanguageObserver::class);

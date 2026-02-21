@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Laravel\Fortify\Features;
+use Laravel\Pennant\Feature;
 
 class LandingController extends Controller
 {
@@ -25,7 +25,7 @@ class LandingController extends Controller
         $settings = $pageProps->settingsSlice($setting);
 
         return Inertia::render('welcome', [
-            'canRegister' => Features::enabled(Features::registration()),
+            'canRegister' => Feature::for(null)->active('registration'),
             'settings' => $settings,
             'features' => $pageProps->featuresArray(),
             'seo' => [

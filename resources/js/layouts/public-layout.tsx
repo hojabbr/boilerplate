@@ -28,6 +28,8 @@ export interface PublicFeatures {
     page?: boolean;
     blog?: boolean;
     contactForm?: boolean;
+    login?: boolean;
+    registration?: boolean;
 }
 
 /** Module-level empty defaults to avoid new object reference every render */
@@ -54,26 +56,31 @@ export default function PublicLayout({
     breadcrumbs,
     settings = EMPTY_PUBLIC_SETTINGS,
     features = EMPTY_PUBLIC_FEATURES,
-    canRegister = true,
 }: PublicLayoutProps) {
+    const pageProps = usePage().props as {
+        auth: { user: unknown };
+        locale: string;
+        translations?: Record<string, string>;
+        nav_pages?: Array<{ slug: string; title: string }>;
+        footer_pages?: Array<{ slug: string; title: string }>;
+        features?: PublicFeatures;
+    };
     const {
         auth,
         locale,
         translations,
         nav_pages = [],
         footer_pages = [],
-    } = usePage().props as {
-        auth: { user: unknown };
-        locale: string;
-        translations?: Record<string, string>;
-        nav_pages?: Array<{ slug: string; title: string }>;
-        footer_pages?: Array<{ slug: string; title: string }>;
-    };
+    } = pageProps;
     const t = translations ?? {};
     const prefix = locale ? `/${locale}` : '';
-    const showPages = features.page ?? false;
-    const showBlog = features.blog ?? false;
-    const showContact = features.contactForm ?? false;
+    const resolvedFeatures =
+        features ?? pageProps.features ?? EMPTY_PUBLIC_FEATURES;
+    const showPages = resolvedFeatures.page ?? false;
+    const showBlog = resolvedFeatures.blog ?? false;
+    const showContact = resolvedFeatures.contactForm ?? false;
+    const showLogin = resolvedFeatures.login === true;
+    const showRegister = resolvedFeatures.registration === true;
     const siteName =
         settings.company_name || (t['common.app_fallback'] ?? 'App');
 
@@ -159,12 +166,14 @@ export default function PublicLayout({
                             </Button>
                         ) : (
                             <>
-                                <Button variant="ghost" size="sm" asChild>
-                                    <Link href={`${prefix}${login.url()}`}>
-                                        {t['nav.login'] ?? 'Log in'}
-                                    </Link>
-                                </Button>
-                                {canRegister && (
+                                {showLogin && (
+                                    <Button variant="ghost" size="sm" asChild>
+                                        <Link href={`${prefix}${login.url()}`}>
+                                            {t['nav.login'] ?? 'Log in'}
+                                        </Link>
+                                    </Button>
+                                )}
+                                {showRegister && (
                                     <Button variant="outline" size="sm" asChild>
                                         <Link
                                             href={`${prefix}${register.url()}`}
@@ -240,19 +249,22 @@ export default function PublicLayout({
                                         </Button>
                                     ) : (
                                         <>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="mt-2 w-full justify-start"
-                                                asChild
-                                            >
-                                                <Link
-                                                    href={`${prefix}${login.url()}`}
+                                            {showLogin && (
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="mt-2 w-full justify-start"
+                                                    asChild
                                                 >
-                                                    {t['nav.login'] ?? 'Log in'}
-                                                </Link>
-                                            </Button>
-                                            {canRegister && (
+                                                    <Link
+                                                        href={`${prefix}${login.url()}`}
+                                                    >
+                                                        {t['nav.login'] ??
+                                                            'Log in'}
+                                                    </Link>
+                                                </Button>
+                                            )}
+                                            {showRegister && (
                                                 <Button
                                                     variant="outline"
                                                     size="sm"

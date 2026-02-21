@@ -18,7 +18,7 @@ Route::get('/', function () {
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),
-        'middleware' => ['localeCookieRedirect', 'localizationRedirect', 'localeViewPath', 'setLocalizedFortifyRedirects'],
+        'middleware' => ['localeCookieRedirect', 'localizationRedirect', 'localeViewPath', 'setLocalizedFortifyRedirects', 'authFeatures'],
     ], function () {
         require base_path('vendor/laravel/fortify/routes/routes.php');
 

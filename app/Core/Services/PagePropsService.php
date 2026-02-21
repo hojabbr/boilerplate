@@ -30,9 +30,9 @@ class PagePropsService implements PagePropsServiceInterface
     }
 
     /**
-     * Feature flags array for Inertia page props (page, blog, contactForm).
+     * Feature flags array for Inertia page props (page, blog, contactForm, login, registration).
      *
-     * @return array{page: bool, blog: bool, contactForm: bool}
+     * @return array{page: bool, blog: bool, contactForm: bool, login: bool, registration: bool}
      */
     public function featuresArray(): array
     {
@@ -40,6 +40,8 @@ class PagePropsService implements PagePropsServiceInterface
             'page' => Feature::active('page'),
             'blog' => Feature::active('blog'),
             'contactForm' => Feature::active('contact-form'),
+            'login' => Feature::for(null)->active('login'),
+            'registration' => Feature::for(null)->active('registration'),
         ];
     }
 }

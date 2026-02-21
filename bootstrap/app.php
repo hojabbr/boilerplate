@@ -1,5 +1,6 @@
 <?php
 
+use App\Core\Middleware\EnsureAuthFeaturesEnabled;
 use App\Core\Middleware\HandleAppearance;
 use App\Core\Middleware\HandleInertiaRequests;
 use App\Core\Middleware\SetLocalizedFortifyRedirects;
@@ -24,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->encryptCookies(except: ['appearance', 'locale', 'sidebar_state']);
 
         $middleware->alias([
+            'authFeatures' => EnsureAuthFeaturesEnabled::class,
             'localize' => LaravelLocalizationRoutes::class,
             'localizationRedirect' => LaravelLocalizationRedirectFilter::class,
             'localeSessionRedirect' => LocaleSessionRedirect::class,

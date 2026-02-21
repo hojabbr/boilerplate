@@ -16,6 +16,8 @@ return [
         'blog' => 'Blog',
         'page' => 'Static pages',
         'contact-form' => 'Contact form',
+        'login' => 'Login',
+        'registration' => 'Registration',
     ],
 
 ];

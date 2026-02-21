@@ -20,7 +20,7 @@ class FeatureFlagSeeder extends Seeder
                 ['key' => $key],
                 [
                     'label' => $label,
-                    'is_active' => (bool) Feature::active($key),
+                    'is_active' => (bool) Feature::for(null)->active($key),
                 ]
             );
         }

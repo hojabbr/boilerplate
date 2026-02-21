@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
+use Laravel\Pennant\Feature;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -37,7 +38,8 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::loginView(fn (Request $request) => Inertia::render('auth/login', [
             'canResetPassword' => Features::enabled(Features::resetPasswords()),
-            'canRegister' => Features::enabled(Features::registration()),
+            'canRegister' => Feature::for(null)->active('registration'),
+            'canLogin' => Feature::for(null)->active('login'),
             'status' => $request->session()->get('status'),
         ]));
 

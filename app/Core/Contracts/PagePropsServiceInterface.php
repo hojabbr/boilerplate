@@ -16,7 +16,7 @@ interface PagePropsServiceInterface
     /**
      * Feature flags array for Inertia page props.
      *
-     * @return array{page: bool, blog: bool, contactForm: bool}
+     * @return array{page: bool, blog: bool, contactForm: bool, login: bool, registration: bool}
      */
     public function featuresArray(): array;
 }

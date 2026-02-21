@@ -2,6 +2,7 @@
 
 namespace App\Core\Middleware;
 
+use App\Core\Contracts\PagePropsServiceInterface;
 use App\Core\Models\Setting;
 use App\Domains\Page\Models\Page;
 use Illuminate\Http\Request;
@@ -301,6 +302,7 @@ class HandleInertiaRequests extends Middleware
             'translations' => $this->sharedTranslations(),
             'nav_pages' => ($menu = $this->menuPages())['nav'][$locale] ?? [],
             'footer_pages' => $menu['footer'][$locale] ?? [],
+            'features' => app(PagePropsServiceInterface::class)->featuresArray(),
         ];
     }
 }
