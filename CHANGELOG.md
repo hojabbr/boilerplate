@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/hojabbr/boilerplate/compare/v1.3.0...v1.4.0) (2026-02-21)
+
+### Features
+
+- enhance blog post series functionality and relationships ([55823f9](https://github.com/hojabbr/boilerplate/commit/55823f9d5915bce65abd64b09aa4fda04a85f3b5))
+
 ## [1.3.0](https://github.com/hojabbr/boilerplate/compare/v1.2.0...v1.3.0) (2026-02-21)
 
 ### Features
