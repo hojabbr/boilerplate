@@ -1,3 +1,16 @@
+## [1.5.0](https://github.com/hojabbr/boilerplate/compare/v1.4.0...v1.5.0) (2026-02-23)
+
+### Features
+
+- enhance blog post generation and management features ([38e1c27](https://github.com/hojabbr/boilerplate/commit/38e1c27ba607c2e751df0e9dcb189a23db02a85f))
+- enhance language management and feature flagging ([e58d621](https://github.com/hojabbr/boilerplate/commit/e58d621b3ef62baf4d6e0e05e4dd29a057c3fa20))
+- enhance language management and localization features ([c69f355](https://github.com/hojabbr/boilerplate/commit/c69f355b084a0e7b3710f2efaa449f37d4df5d74))
+- enhance search indexing and configuration for Scout ([8389d99](https://github.com/hojabbr/boilerplate/commit/8389d9920500361124b6c7ae8c51538fce51e3d8))
+
+### Bug Fixes
+
+- update package-lock.json and enhance BlogPostSeriesTest ([52c6036](https://github.com/hojabbr/boilerplate/commit/52c6036ee475f8df5495c85ab0167e8dfa67f1d4))
+
 ## [1.4.0](https://github.com/hojabbr/boilerplate/compare/v1.3.0...v1.4.0) (2026-02-21)
 
 ### Features
