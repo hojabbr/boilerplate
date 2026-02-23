@@ -2,6 +2,7 @@
 
 use App\Domains\Auth\Models\User;
 use App\Domains\Blog\Models\BlogPostSeries;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function (): void {
@@ -48,16 +49,19 @@ test('blog:run-scheduled-series claims run before dispatching job', function ():
     $user = User::factory()->create();
     $user->givePermissionTo('manage blog');
 
+    $now = Carbon::create(2026, 2, 23, 14, 30, 0); // Monday 14:30
+    Carbon::setTestNow($now);
+
     $series = BlogPostSeries::create([
         'user_id' => $user->id,
         'name' => 'Claim test',
         'purpose' => 'Purpose',
         'objective' => 'Objective',
         'topics' => 'Topics',
-        'start_date' => now(),
-        'end_date' => now()->addWeek(),
-        'days_of_week' => [(int) now()->format('w')],
-        'run_at_hours' => [(int) now()->format('G')],
+        'start_date' => $now,
+        'end_date' => $now->copy()->addWeek(),
+        'days_of_week' => [(int) $now->format('w')],
+        'run_at_hours' => [(int) $now->format('G')],
         'posts_per_run' => 1,
         'total_posts_limit' => 2,
         'provider' => 'openai',
@@ -71,6 +75,8 @@ test('blog:run-scheduled-series claims run before dispatching job', function ():
     $initialCount = (int) $series->posts_generated;
 
     Artisan::call('blog:run-scheduled-series');
+
+    Carbon::setTestNow();
 
     $series->refresh();
     expect($series->last_run_at)->not->toBeNull()
