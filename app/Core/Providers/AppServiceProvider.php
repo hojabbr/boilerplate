@@ -14,6 +14,7 @@ use App\Core\Models\Setting;
 use App\Core\Observers\LanguageObserver;
 use App\Core\Observers\SettingObserver;
 use App\Core\Services\PagePropsService as CorePagePropsService;
+use App\Core\Services\SupportedLocalesService;
 use App\Domains\Auth\Models\User;
 use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Blog\Observers\BlogPostObserver;
@@ -24,6 +25,7 @@ use App\Domains\Landing\Observers\LandingSectionObserver;
 use App\Domains\Page\Models\Page;
 use App\Domains\Page\Observers\PageObserver;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -68,6 +70,7 @@ class AppServiceProvider extends ServiceProvider
         LandingSectionItem::observe(LandingSectionItemObserver::class);
         $this->registerPolicies();
         Gate::define('use-translation-manager', fn (?User $user) => $user !== null && $user->can('manage translations'));
+        $this->injectSupportedLocalesFromDb();
         $this->configureDefaults();
     }
 
@@ -83,7 +86,20 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(\App\Domains\Page\Models\Page::class, \App\Domains\Page\Policies\PagePolicy::class);
         Gate::policy(\App\Domains\Landing\Models\LandingSection::class, \App\Domains\Landing\Policies\LandingSectionPolicy::class);
         Gate::policy(\App\Core\Models\FeatureFlag::class, \App\Core\Policies\FeatureFlagPolicy::class);
+        Gate::policy(\App\Core\Models\Language::class, \App\Core\Policies\LanguagePolicy::class);
         Gate::policy(\Spatie\TranslationLoader\LanguageLine::class, \App\Core\Policies\LanguageLinePolicy::class);
+    }
+
+    /**
+     * Inject DB-backed supported locales into config so mcamara and all config() callers use them.
+     * Fallback to config when DB has no languages (e.g. before first seed).
+     */
+    protected function injectSupportedLocalesFromDb(): void
+    {
+        $locales = $this->app->make(SupportedLocalesService::class)->get();
+        if ($locales !== []) {
+            Config::set('laravellocalization.supportedLocales', $locales);
+        }
     }
 
     /**

@@ -11,7 +11,8 @@ This application is a Laravel application and its main Laravel ecosystems packag
 
 - php - 8.5.3
 - filament/filament (FILAMENT) - v5
-- inertiajs/inertia-laravel (INERTIA) - v2
+- inertiajs/inertia-laravel (INERTIA_LARAVEL) - v2
+- laravel/ai (AI) - v0
 - laravel/fortify (FORTIFY) - v1
 - laravel/framework (LARAVEL) - v12
 - laravel/horizon (HORIZON) - v5
@@ -31,10 +32,10 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/sail (SAIL) - v1
 - pestphp/pest (PEST) - v4
 - phpunit/phpunit (PHPUNIT) - v12
-- @inertiajs/react (INERTIA) - v2
+- @inertiajs/react (INERTIA_REACT) - v2
 - react (REACT) - v19
 - tailwindcss (TAILWINDCSS) - v4
-- @laravel/vite-plugin-wayfinder (WAYFINDER) - v0
+- @laravel/vite-plugin-wayfinder (WAYFINDER_VITE) - v0
 - eslint (ESLINT) - v9
 - laravel-echo (ECHO) - v2
 - prettier (PRETTIER) - v3
@@ -162,7 +163,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
 - Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test --compact` with a specific filename or filter.
 
-=== inertia-laravel/core rules ===
+=== inertia-laravel/v2 rules ===
 
 # Inertia
 
@@ -170,8 +171,6 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Components live in `resources/js/pages` (unless specified in `vite.config.js`). Use `Inertia::render()` for server-side routing instead of Blade views.
 - ALWAYS use `search-docs` tool for version-specific Inertia documentation and updated code examples.
 - IMPORTANT: Activate `inertia-react-development` when working with Inertia client-side patterns.
-
-=== inertia-laravel/v2 rules ===
 
 # Inertia v2
 
@@ -248,7 +247,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - `bootstrap/app.php` is the file to register middleware, exceptions, and routing files.
 - `bootstrap/providers.php` contains application specific service providers.
 - The `app\Console\Kernel.php` file no longer exists; use `bootstrap/app.php` or `routes/console.php` for console configuration.
-- Artisan commands live in `app/Core/Console/Commands/` (scaffolding, translations) or `app/Domains/<Name>/Console/Commands/` (e.g. Blog: `blog:run-scheduled-series`, `blog:sync-embeddings`). Paths are registered in `bootstrap/app.php` via `withCommands()`.
+- Console commands in `app/Console/Commands/` are automatically available and do not require manual registration.
 
 ## Database
 

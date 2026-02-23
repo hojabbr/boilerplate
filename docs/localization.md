@@ -13,7 +13,7 @@ description: 'Route prefixes, mcamara, RTL, and i18next sync.'
 - **mcamara/laravel-localization** prefixes routes with locale (e.g. `/en/dashboard`). `bootstrap/app.php` prepends **LocaleCookieRedirect** to the web stack; the locale route group uses `localeCookieRedirect`, `localizationRedirect`, `localeViewPath`, `setLocalizedFortifyRedirects`.
 - **config/laravellocalization.php** — `supportedLocales`; `urlsIgnored`: `/skipped`, `/admin`, `/admin/*` (login/register stay under locale).
 - **Content** — Pages and Blog are row-per-locale (`Page` and `BlogPost` have `language_id`; one row per locale per logical page/post). Settings and Landing sections use Spatie Translatable (JSON columns). Language model: `languages` table keyed by code.
-- **Locale JSON files** — `lang/*.json` can be managed from the Filament admin panel via **Translation Manager** (Settings group). It uses **spatie/laravel-translation-loader**: translations are stored in the `language_lines` table and optionally synced to/from `lang/*.json`. Database entries override file-based translations when present.
+- **Locale JSON files** — `lang/*.json` can be managed from the Filament admin panel via **Translation Manager** (Settings group). It uses **spatie/laravel-translation-loader**: translations are stored in the `language_lines` table and optionally synced to/from `lang/*.json`. Database entries override file-based translations when present. The list page shows a **missing keys summary** (locale buttons with counts); each opens **Fill missing translations** (`/admin/language-lines/fill-missing?locale=…`) to fill all missing keys for that locale in one form.
 
 ## Frontend
 

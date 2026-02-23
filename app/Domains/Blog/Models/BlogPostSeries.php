@@ -32,6 +32,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property bool $is_active
  *
  * @extends Model<BlogPostSeries>
+ *
+ * @mixin IdeHelperBlogPostSeries
  */
 class BlogPostSeries extends Model
 {

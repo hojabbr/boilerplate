@@ -15,8 +15,6 @@ configureEcho({
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-const rtlLocales = new Set(['ar', 'fa']);
-
 const pageGlob = {
     ...import.meta.glob('./pages/**/*.tsx'),
     ...import.meta.glob('./features/*/pages/**/*.tsx'),
@@ -35,16 +33,24 @@ createInertiaApp({
     title: (title) => title || appName,
     resolve: (name) => resolvePageComponent(pagePath(name), pageGlob),
     setup({ el, App, props }) {
-        const { locale, dir } = props.initialPage.props as {
+        const { locale, dir, supported_locale_codes } = props.initialPage
+            .props as {
             locale?: string;
             dir?: 'ltr' | 'rtl';
+            supported_locale_codes?: string[];
         };
         if (locale) {
             void i18n.changeLanguage(locale);
             document.documentElement.lang = locale;
         }
-        const resolvedDir =
-            dir ?? (locale && rtlLocales.has(locale) ? 'rtl' : 'ltr');
+        if (
+            supported_locale_codes &&
+            Array.isArray(supported_locale_codes) &&
+            supported_locale_codes.length > 0
+        ) {
+            i18n.store.options.supportedLngs = supported_locale_codes;
+        }
+        const resolvedDir = dir ?? 'ltr';
         document.documentElement.setAttribute('dir', resolvedDir);
 
         hydrateRoot(

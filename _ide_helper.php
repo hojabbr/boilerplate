@@ -24792,7 +24792,7 @@ namespace Illuminate\Support {
         }
 
         /**
-         * @see \App\Domains\Page\Models\Page::getUseFactoryAttribute()
+         * @see \App\Domains\Blog\Models\BlogPost::casts()
          * @static
          */
         public static function searchable()
@@ -24801,7 +24801,7 @@ namespace Illuminate\Support {
         }
 
         /**
-         * @see \App\Domains\Page\Models\Page::getUseFactoryAttribute()
+         * @see \App\Domains\Blog\Models\BlogPost::getUseFactoryAttribute()
          * @static
          */
         public static function unsearchable()
@@ -24810,7 +24810,7 @@ namespace Illuminate\Support {
         }
 
         /**
-         * @see \App\Domains\Page\Models\Page::casts()
+         * @see \App\Domains\Blog\Models\BlogPost::language()
          * @static
          */
         public static function searchableSync()
@@ -24819,7 +24819,7 @@ namespace Illuminate\Support {
         }
 
         /**
-         * @see \App\Domains\Page\Models\Page::setAttribute()
+         * @see \App\Domains\Blog\Models\BlogPost::bootInteractsWithMedia()
          * @static
          */
         public static function unsearchableSync()

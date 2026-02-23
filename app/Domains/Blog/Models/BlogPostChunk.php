@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property array $embedding
  *
  * @extends Model<BlogPostChunk>
+ *
+ * @mixin IdeHelperBlogPostChunk
  */
 class BlogPostChunk extends Model
 {

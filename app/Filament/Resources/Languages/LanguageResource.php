@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Languages;
 
 use App\Core\Models\Language;
-use App\Filament\Resources\Languages\Pages\CreateLanguage;
+use App\Filament\Resources\Languages\Pages\AddLanguage;
 use App\Filament\Resources\Languages\Pages\EditLanguage;
 use App\Filament\Resources\Languages\Pages\ListLanguages;
 use App\Filament\Resources\Languages\Schemas\LanguageForm;
@@ -49,7 +49,7 @@ class LanguageResource extends Resource
     {
         return [
             'index' => ListLanguages::route('/'),
-            'create' => CreateLanguage::route('/create'),
+            'create' => AddLanguage::route('/create'),
             'edit' => EditLanguage::route('/{record}/edit'),
         ];
     }

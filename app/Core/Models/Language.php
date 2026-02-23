@@ -28,8 +28,13 @@ class Language extends Model
         'name',
         'script',
         'regional',
+        'direction',
         'is_default',
         'sort_order',
+    ];
+
+    protected $attributes = [
+        'direction' => 'ltr',
     ];
 
     /**

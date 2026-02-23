@@ -70,6 +70,24 @@ class BlogPostSeeder extends Seeder
             'body' => '<p>Это содержание первой записи блога. Вы можете редактировать этот контент в панели администратора Filament.</p>',
             'meta_description' => 'Добро пожаловать в наш блог',
         ],
+        'ro' => [
+            'title' => 'Bine ați venit pe blogul nostru',
+            'excerpt' => 'Acesta este primul articol. Editați sau adăugați mai multe în panoul de administrare.',
+            'body' => '<p>Acesta este conținutul primului articol de blog. Puteți edita acest conținut în panoul de administrare Filament.</p>',
+            'meta_description' => 'Bine ați venit pe blogul nostru',
+        ],
+        'tr' => [
+            'title' => 'Blogumuza hoş geldiniz',
+            'excerpt' => 'Bu ilk yazıdır. Yönetim panelinden düzenleyin veya daha fazla ekleyin.',
+            'body' => '<p>Bu, ilk blog yazısının içeriğidir. Bu içeriği Filament yönetim panelinden düzenleyebilirsiniz.</p>',
+            'meta_description' => 'Blogumuza hoş geldiniz',
+        ],
+        'ur' => [
+            'title' => 'ہمارے بلاگ میں خوش آمدید',
+            'excerpt' => 'یہ پہلی پوسٹ ہے۔ ایڈمن پینل میں ترمیم کریں یا مزید شامل کریں۔',
+            'body' => '<p>یہ پہلی بلاگ پوسٹ کا مواد ہے۔ آپ Filament ایڈمن پینل میں اس مواد میں ترمیم کر سکتے ہیں۔</p>',
+            'meta_description' => 'ہمارے بلاگ میں خوش آمدید',
+        ],
         'ar' => [
             'title' => 'مرحباً بكم في مدونتنا',
             'excerpt' => 'هذه أول مشاركة. قم بالتعديل أو الإضافة في لوحة الإدارة.',

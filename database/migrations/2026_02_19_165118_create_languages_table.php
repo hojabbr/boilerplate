@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('script')->nullable();
             $table->string('regional')->nullable();
+            $table->string('direction', 3)->default('ltr');
             $table->boolean('is_default')->default(false);
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();

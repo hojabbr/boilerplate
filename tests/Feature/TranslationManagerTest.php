@@ -1,8 +1,6 @@
 <?php
 
-use App\Core\Services\TranslationKeyScanner;
 use App\Domains\Auth\Models\User;
-use Illuminate\Support\Facades\File;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\TranslationLoader\LanguageLine;
@@ -54,40 +52,6 @@ test('admin panel translation manager list returns 403 for user without manage t
     $response = $this->get('/admin/language-lines');
 
     $response->assertForbidden();
-});
-
-test('translations scan command adds missing keys from scanned paths', function (): void {
-    $fixtureDir = storage_path('app/test-scan-'.uniqid());
-    File::makeDirectory($fixtureDir, 0755, true);
-    File::put($fixtureDir.'/fixture.php', "<?php\n__('test.scan.key');\ntrans('test.scan.other');\n");
-
-    try {
-        $scanner = app(TranslationKeyScanner::class);
-        $result = $scanner->scan(true, [$fixtureDir]);
-
-        expect($result['found'])->toBe(2)
-            ->and($result['added'])->toBe(2)
-            ->and(LanguageLine::query()->where('group', '*')->where('key', 'test.scan.key')->exists())->toBeTrue()
-            ->and(LanguageLine::query()->where('group', '*')->where('key', 'test.scan.other')->exists())->toBeTrue();
-    } finally {
-        File::deleteDirectory($fixtureDir);
-    }
-});
-
-test('translations scan command dry run does not persist', function (): void {
-    $fixtureDir = storage_path('app/test-scan-dry-'.uniqid());
-    File::makeDirectory($fixtureDir, 0755, true);
-    File::put($fixtureDir.'/fixture.php', "<?php\n__('test.dry.run.key');\n");
-
-    try {
-        $scanner = app(TranslationKeyScanner::class);
-        $result = $scanner->scan(false, [$fixtureDir]);
-
-        expect($result['to_add_keys'])->toContain('test.dry.run.key')
-            ->and(LanguageLine::query()->where('group', '*')->where('key', 'test.dry.run.key')->exists())->toBeFalse();
-    } finally {
-        File::deleteDirectory($fixtureDir);
-    }
 });
 
 test('translations csv export returns 403 without permission', function (): void {

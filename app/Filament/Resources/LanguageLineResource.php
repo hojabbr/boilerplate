@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\LanguageLineResource\Pages\CreateLanguageLine;
 use App\Filament\Resources\LanguageLineResource\Pages\EditLanguageLine;
+use App\Filament\Resources\LanguageLineResource\Pages\FillMissingTranslations;
 use App\Filament\Resources\LanguageLineResource\Pages\ListLanguageLines;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -170,6 +171,7 @@ class LanguageLineResource extends Resource
         return [
             'index' => ListLanguageLines::route('/'),
             'create' => CreateLanguageLine::route('/create'),
+            'fill-missing' => FillMissingTranslations::route('/fill-missing'),
             'edit' => EditLanguageLine::route('/{record}/edit'),
         ];
     }

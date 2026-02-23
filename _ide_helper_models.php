@@ -42,6 +42,7 @@ namespace App\Core\Models{
  * @property string $name
  * @property string|null $script
  * @property string|null $regional
+ * @property string $direction
  * @property bool $is_default
  * @property int $sort_order
  * @property \Carbon\CarbonImmutable|null $created_at
@@ -59,6 +60,7 @@ namespace App\Core\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereDirection($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereIsDefault($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereName($value)
@@ -165,6 +167,7 @@ namespace App\Domains\Blog\Models{
  * @extends Model<BlogPost>
  * @property int $id
  * @property int $language_id
+ * @property int|null $blog_post_series_id
  * @property string $slug
  * @property string|null $title
  * @property string|null $excerpt
@@ -173,9 +176,12 @@ namespace App\Domains\Blog\Models{
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property \Carbon\CarbonImmutable|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Blog\Models\BlogPostChunk> $chunks
+ * @property-read int|null $chunks_count
  * @property-read \App\Core\Models\Language $language
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
  * @property-read int|null $media_count
+ * @property-read \App\Domains\Blog\Models\BlogPostSeries|null $series
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPost byLocale(string $code)
  * @method static \Database\Factories\BlogPostFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPost newModelQuery()
@@ -183,6 +189,7 @@ namespace App\Domains\Blog\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPost onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPost published()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPost query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPost whereBlogPostSeriesId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPost whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPost whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPost whereDeletedAt($value)
@@ -200,6 +207,86 @@ namespace App\Domains\Blog\Models{
  */
 	#[\AllowDynamicProperties]
 	class IdeHelperBlogPost {}
+}
+
+namespace App\Domains\Blog\Models{
+/**
+ * @property int $blog_post_id
+ * @property string $content
+ * @property array $embedding
+ * @extends Model<BlogPostChunk>
+ * @property-read \App\Domains\Blog\Models\BlogPost|null $blogPost
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostChunk newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostChunk newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostChunk query()
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperBlogPostChunk {}
+}
+
+namespace App\Domains\Blog\Models{
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string|null $name
+ * @property string|null $purpose
+ * @property string|null $objective
+ * @property string|null $topics
+ * @property \Carbon\Carbon $start_date
+ * @property \Carbon\Carbon $end_date
+ * @property array<int, int> $days_of_week
+ * @property array<int, int> $run_at_hours
+ * @property int $posts_per_run
+ * @property int|null $total_posts_limit
+ * @property string $provider
+ * @property string $length
+ * @property array<int, int> $language_ids
+ * @property bool $generate_image
+ * @property bool $generate_audio
+ * @property bool $publish_immediately
+ * @property \Carbon\Carbon|null $last_run_at
+ * @property int $posts_generated
+ * @property bool $is_active
+ * @extends Model<BlogPostSeries>
+ * @property int|null $blog_post_series_id
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Blog\Models\BlogPost> $blogPosts
+ * @property-read int|null $blog_posts_count
+ * @property-read \App\Domains\Auth\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereBlogPostSeriesId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereDaysOfWeek($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereGenerateAudio($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereGenerateImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereLanguageIds($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereLastRunAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereLength($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereObjective($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries wherePostsGenerated($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries wherePostsPerRun($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereProvider($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries wherePublishImmediately($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries wherePurpose($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereRunAtHours($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereTopics($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereTotalPostsLimit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereUserId($value)
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperBlogPostSeries {}
 }
 
 namespace App\Domains\Contact\Models{

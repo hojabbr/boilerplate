@@ -38,6 +38,18 @@ class SettingSeeder extends Seeder
             'tagline' => 'Создавайте, запускайте и масштабируйте с уверенностью.',
             'address' => 'ул. Бизнес 123, офис 100',
         ],
+        'ro' => [
+            'tagline' => 'Construiți, lansați și scalați cu încredere.',
+            'address' => 'Strada Business 123, Suite 100',
+        ],
+        'tr' => [
+            'tagline' => 'Güvenle oluşturun, yayınlayın ve ölçeklendirin.',
+            'address' => 'İş Caddesi 123, Suite 100',
+        ],
+        'ur' => [
+            'tagline' => 'اعتماد کے ساتھ بنائیں، لانچ کریں اور پھیلائیں۔',
+            'address' => 'بزنس سٹریٹ 123، سوٹ 100',
+        ],
         'ar' => [
             'tagline' => 'ابنِ واصنع ووسّع بثقة.',
             'address' => 'شارع الأعمال 123، جناح 100',

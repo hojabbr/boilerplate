@@ -3,11 +3,13 @@
 namespace App\Filament\Resources\LanguageLineResource\Pages;
 
 use App\Core\Services\TranslationFileImporter;
-use App\Core\Services\TranslationKeyScanner;
 use App\Filament\Resources\LanguageLineResource;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Html;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -17,24 +19,66 @@ class ListLanguageLines extends ListRecords
 {
     protected static string $resource = LanguageLineResource::class;
 
+    /**
+     * For each locale, count of keys that are missing (empty or null). Only locales with count > 0.
+     *
+     * @return array<string, int>
+     */
+    public function getMissingKeysByLocale(): array
+    {
+        $locales = array_keys(config('laravellocalization.supportedLocales', []));
+        $lines = LanguageLine::query()->where('group', '*')->get();
+        $missingByLocale = [];
+        foreach ($locales as $locale) {
+            $count = 0;
+            foreach ($lines as $line) {
+                $text = $line->text ?? [];
+                $val = $text[$locale] ?? null;
+                if ($val === null || (string) $val === '') {
+                    $count++;
+                }
+            }
+            if ($count > 0) {
+                $missingByLocale[$locale] = $count;
+            }
+        }
+
+        return $missingByLocale;
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        $missingSummary = Html::make(function (): string {
+            $missingByLocale = $this->getMissingKeysByLocale();
+            if ($missingByLocale === []) {
+                return '';
+            }
+
+            $supported = config('laravellocalization.supportedLocales', []);
+            $localeNames = [];
+            foreach (array_keys($missingByLocale) as $locale) {
+                $localeNames[$locale] = $supported[$locale]['name'] ?? $locale;
+            }
+
+            return view('filament.resources.language-line-resource.pages.missing-keys-summary', [
+                'missingByLocale' => $missingByLocale,
+                'localeNames' => $localeNames,
+                'fillMissingUrl' => static::getResource()::getUrl('fill-missing'),
+            ])->render();
+        });
+
+        return $schema->components([
+            Section::make(__('Missing keys'))
+                ->description(__('Click a locale to open the form and fill all missing translations.'))
+                ->schema([$missingSummary])
+                ->visible(fn (): bool => $this->getMissingKeysByLocale() !== []),
+            ...parent::content($schema)->getComponents(),
+        ]);
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('scanForKeys')
-                ->label(__('Scan for new keys'))
-                ->icon('heroicon-o-magnifying-glass-circle')
-                ->action(function (): void {
-                    $scanner = app(TranslationKeyScanner::class);
-                    $result = $scanner->scan(true);
-                    \Filament\Notifications\Notification::make()
-                        ->title(__('Scan complete'))
-                        ->body(__('Found :found unique key(s), :added new key(s) added.', [
-                            'found' => $result['found'],
-                            'added' => $result['added'],
-                        ]))
-                        ->success()
-                        ->send();
-                }),
             Action::make('clearAll')
                 ->label(__('Clear all translations'))
                 ->icon('heroicon-o-trash')

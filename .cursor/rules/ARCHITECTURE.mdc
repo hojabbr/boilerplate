@@ -36,7 +36,7 @@ This structure enables multiple teams to work in parallel while minimizing coupl
 app/
 ├── Core/                       # Cross-domain infrastructure
 │   ├── Contracts/              # Shared interfaces (e.g. PagePropsServiceInterface)
-│   ├── Console/Commands/       # Artisan commands (BoilerplateDomain, BoilerplateLocale, ScanTranslationKeys, ListMissingTranslations)
+│   ├── Console/Commands/       # Artisan commands (BoilerplateDomain, BoilerplateLocale, ListMissingTranslations)
 │   ├── Exceptions/             # DomainException and shared exceptions
 │   ├── Middleware/             # Global HTTP middleware (HandleInertiaRequests, HandleAppearance, etc.)
 │   ├── Models/                 # Cross-cutting models (Language, Setting, FeatureFlag)
@@ -218,6 +218,7 @@ app/
 
 - Leverage policies & roles for admin access control.
 - **Feature flags resource:** Under Settings, lists and edits feature flags (from `config/features.php`; seeded by `FeatureFlagSeeder`). Changes sync to Pennant. Access via “manage feature flags” permission.
+- **Translation Manager** (LanguageLineResource, Settings group): List shows a **missing keys summary** (locale buttons with language name and count); each links to **Fill missing translations** (`/admin/language-lines/fill-missing?locale=…`) where all missing keys for that locale can be filled in one form. Import/export lang files and CSV; locale filters; no scan-for-keys feature. See [docs/admin.md](docs/admin.md).
 - **Database notifications:** The admin panel enables `databaseNotifications()` so users receive Filament notifications (e.g. when a queued job like blog generation completes). Requires the Laravel `notifications` table; on PostgreSQL the `data` column must be `json`/`jsonb`. Notifications are sent via `Notification::make()->...->sendToDatabase($user)`.
 - Extend Filament with custom tools, reports, and charts.
 

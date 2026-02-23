@@ -7,6 +7,7 @@ declare module '@inertiajs/core' {
             auth: Auth;
             sidebarOpen: boolean;
             locale: string;
+            dir: 'ltr' | 'rtl';
             supportedLocales: Record<
                 string,
                 {
@@ -14,8 +15,10 @@ declare module '@inertiajs/core' {
                     script?: string;
                     native: string;
                     regional?: string;
+                    dir?: 'ltr' | 'rtl';
                 }
             >;
+            supported_locale_codes?: string[];
             locale_switch_urls?: Array<{
                 code: string;
                 name: string;

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Languages\Schemas;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
@@ -23,6 +24,10 @@ class LanguageForm
                     ->maxLength(255),
                 TextInput::make('regional')
                     ->maxLength(255),
+                Select::make('direction')
+                    ->options(['ltr' => 'LTR', 'rtl' => 'RTL'])
+                    ->default('ltr')
+                    ->required(),
                 Toggle::make('is_default'),
                 TextInput::make('sort_order')
                     ->numeric()

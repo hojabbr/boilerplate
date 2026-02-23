@@ -269,6 +269,7 @@ class HandleInertiaRequests extends Middleware
 
     /**
      * Define the props that are shared by default.
+     * Locales and dir come from config (injected from DB via SupportedLocalesService at boot).
      *
      * @see https://inertiajs.com/shared-data
      *
@@ -277,7 +278,8 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $locale = app()->getLocale();
-        $rtlLocales = ['ar', 'fa'];
+        $supportedLocales = config('laravellocalization.supportedLocales', []);
+        $dir = $supportedLocales[$locale]['dir'] ?? 'ltr';
         $setting = Setting::site();
         $siteName = $setting->company_name ?: config('app.name');
         $siteTagline = $setting->tagline ?: config('app.description');
@@ -293,8 +295,9 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'locale' => $locale,
-            'dir' => in_array($locale, $rtlLocales, true) ? 'rtl' : 'ltr',
-            'supportedLocales' => config('laravellocalization.supportedLocales', []),
+            'dir' => $dir,
+            'supportedLocales' => $supportedLocales,
+            'supported_locale_codes' => array_keys($supportedLocales),
             'locale_switch_urls' => $this->localeSwitchUrls(),
             'canonical_url' => $request->url(),
             'hreflang_urls' => $this->hreflangUrls(),
