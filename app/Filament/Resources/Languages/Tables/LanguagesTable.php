@@ -9,6 +9,7 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -21,10 +22,16 @@ class LanguagesTable
                 TextColumn::make('code'),
                 TextColumn::make('name'),
                 IconColumn::make('is_default')->boolean(),
+                IconColumn::make('is_enabled')->boolean(),
                 TextColumn::make('sort_order'),
             ])
             ->filters([
                 TrashedFilter::make(),
+                TernaryFilter::make('is_enabled')
+                    ->label('Enabled')
+                    ->placeholder('All')
+                    ->trueLabel('Enabled only')
+                    ->falseLabel('Disabled only'),
             ])
             ->recordActions([
                 EditAction::make(),

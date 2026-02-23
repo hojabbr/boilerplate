@@ -48,6 +48,7 @@ class AddLocaleService
                 'regional' => $regional ?: '',
                 'direction' => $direction,
                 'is_default' => $isDefault,
+                'is_enabled' => true,
                 'sort_order' => $sortOrder,
             ]
         );

@@ -60,6 +60,7 @@ class LanguageSeeder extends Seeder
                     'regional' => $config['regional'] ?? null,
                     'direction' => $this->directionFromScript($script),
                     'is_default' => $code === $defaultCode,
+                    'is_enabled' => true,
                     'sort_order' => $sortOrder++,
                 ]
             );

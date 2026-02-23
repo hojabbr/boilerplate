@@ -4,6 +4,7 @@ namespace App\Core\Models;
 
 use App\Domains\Blog\Models\BlogPost;
 use Database\Factories\LanguageFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,11 +31,13 @@ class Language extends Model
         'regional',
         'direction',
         'is_default',
+        'is_enabled',
         'sort_order',
     ];
 
     protected $attributes = [
         'direction' => 'ltr',
+        'is_enabled' => true,
     ];
 
     /**
@@ -44,7 +47,19 @@ class Language extends Model
     {
         return [
             'is_default' => 'boolean',
+            'is_enabled' => 'boolean',
         ];
+    }
+
+    /**
+     * Scope to only enabled languages (included in supported locales).
+     *
+     * @param  Builder<Language>  $query
+     * @return Builder<Language>
+     */
+    public function scopeEnabled(Builder $query): Builder
+    {
+        return $query->where('is_enabled', true);
     }
 
     /**

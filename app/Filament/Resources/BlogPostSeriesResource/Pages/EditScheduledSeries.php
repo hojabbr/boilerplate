@@ -60,7 +60,7 @@ class EditScheduledSeries extends EditRecord
         for ($h = 0; $h < 24; $h++) {
             $hourOptions[$h] = sprintf('%02d:00', $h);
         }
-        $languages = Language::query()->orderBy('sort_order')->pluck('name', 'id')->all();
+        $languages = Language::query()->where('is_enabled', true)->orderBy('sort_order')->pluck('name', 'id')->all();
         $providers = AiProviderOptions::availableProviders();
 
         return $schema

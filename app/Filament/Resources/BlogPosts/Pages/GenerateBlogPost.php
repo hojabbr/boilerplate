@@ -80,7 +80,12 @@ class GenerateBlogPost extends Page
 
     public function selectAllLanguages(): void
     {
-        $this->data['language_ids'] = Language::query()->orderBy('sort_order')->pluck('id')->values()->all();
+        $this->data['language_ids'] = Language::query()
+            ->where('is_enabled', true)
+            ->orderBy('sort_order')
+            ->pluck('id')
+            ->values()
+            ->all();
     }
 
     public function clearLanguages(): void
@@ -265,7 +270,7 @@ class GenerateBlogPost extends Page
                             CheckboxList::make('language_ids')
                                 ->label('Languages')
                                 ->options(
-                                    Language::query()->orderBy('sort_order')->pluck('name', 'id')->all()
+                                    Language::query()->where('is_enabled', true)->orderBy('sort_order')->pluck('name', 'id')->all()
                                 )
                                 ->required()
                                 ->minItems(1)

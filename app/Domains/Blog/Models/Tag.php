@@ -12,6 +12,8 @@ use Illuminate\Support\Str;
  * @property string $slug
  *
  * @extends Model<Tag>
+ *
+ * @mixin IdeHelperTag
  */
 class Tag extends Model
 {

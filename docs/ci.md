@@ -37,6 +37,10 @@ The repository uses **GitHub Actions** (`.github/workflows/ci.yml`) for CI.
 - Runs on push to `main`/`master` when lint and test pass, unless the commit message contains `skip release`.
 - Runs **semantic-release** (version bump, changelog, Git tag, GitHub release) using `GITHUB_TOKEN`. Requires Conventional Commits.
 
+## Boot without database
+
+The **lint** job runs Pint, PHPStan, and frontend checks without a database. The **test** job uses SQLite in-memory and runs migrations as part of the test run. The application boots successfully in both cases: `AppServiceProvider::injectSupportedLocalesFromDb()` catches exceptions when the DB or cache is unavailable and skips locale injection, leaving config file defaults in place.
+
 ## Environment
 
 - `PHP_VERSION`: 8.5

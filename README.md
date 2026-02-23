@@ -72,7 +72,7 @@ A production-ready starter for **Laravel 12**, **Inertia 2**, and **React 19** w
 
 ## Optional features
 
-**Filament → Settings → Feature flags** toggles: Blog, Static pages, Contact form. Registration and two-factor authentication are controlled via Laravel Fortify configuration, not the Filament feature-flags list.
+**Filament → Settings → Feature flags** toggles: Blog, Static pages, Contact form, Login, Registration. Two-factor authentication is controlled via Laravel Fortify configuration.
 
 - **Blog** — Translatable posts, WYSIWYG, media (gallery, videos, documents), public listing and show with lightbox
 - **Static pages** — Per-locale CMS pages (e.g. Privacy, Terms)

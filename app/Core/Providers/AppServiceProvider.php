@@ -90,12 +90,30 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Inject DB-backed supported locales into config so mcamara and all config() callers use them.
      * Fallback to config when DB has no languages (e.g. before first seed).
+     * Skips injection when DB or cache is unavailable (e.g. CI before migrations, PHPStan bootstrap).
      */
     protected function injectSupportedLocalesFromDb(): void
     {
-        $locales = $this->app->make(SupportedLocalesService::class)->get();
-        if ($locales !== []) {
-            Config::set('laravellocalization.supportedLocales', $locales);
+        try {
+            $locales = $this->app->make(SupportedLocalesService::class)->get();
+        } catch (\Throwable) {
+            return;
+        }
+
+        if ($locales === []) {
+            return;
+        }
+
+        Config::set('laravellocalization.supportedLocales', $locales);
+        try {
+            $defaultQuery = Language::query()->where('is_default', true);
+            if (\Illuminate\Support\Facades\Schema::hasColumn((new Language)->getTable(), 'is_enabled')) {
+                $defaultQuery->where('is_enabled', true);
+            }
+            $defaultCode = $defaultQuery->value('code') ?? array_key_first($locales);
+            Config::set('app.locale', $defaultCode);
+        } catch (\Throwable) {
+            Config::set('app.locale', array_key_first($locales));
         }
     }
 

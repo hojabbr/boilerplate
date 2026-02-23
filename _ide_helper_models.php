@@ -44,6 +44,7 @@ namespace App\Core\Models{
  * @property string|null $regional
  * @property string $direction
  * @property bool $is_default
+ * @property bool $is_enabled
  * @property int $sort_order
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
@@ -52,6 +53,7 @@ namespace App\Core\Models{
  * @property-read int|null $blog_posts_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Page\Models\Page> $pages
  * @property-read int|null $pages_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Language enabled()
  * @method static \Database\Factories\LanguageFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language newQuery()
@@ -63,6 +65,7 @@ namespace App\Core\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereDirection($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereIsDefault($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereIsEnabled($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereRegional($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Language whereScript($value)
@@ -86,6 +89,8 @@ namespace App\Core\Models{
  * @property string|null $email
  * @property string|null $phone
  * @property array<array-key, mixed>|null $social_links
+ * @property int|null $blog_posts_per_page
+ * @property int|null $blog_translation_body_chunk_size
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read mixed $translations
@@ -93,6 +98,8 @@ namespace App\Core\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereBlogPostsPerPage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereBlogTranslationBodyChunkSize($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCompanyName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereEmail($value)
@@ -176,12 +183,12 @@ namespace App\Domains\Blog\Models{
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property \Carbon\CarbonImmutable|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Blog\Models\BlogPostChunk> $chunks
- * @property-read int|null $chunks_count
  * @property-read \App\Core\Models\Language $language
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
  * @property-read int|null $media_count
  * @property-read \App\Domains\Blog\Models\BlogPostSeries|null $series
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Blog\Models\Tag> $tags
+ * @property-read int|null $tags_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPost byLocale(string $code)
  * @method static \Database\Factories\BlogPostFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPost newModelQuery()
@@ -211,22 +218,6 @@ namespace App\Domains\Blog\Models{
 
 namespace App\Domains\Blog\Models{
 /**
- * @property int $blog_post_id
- * @property string $content
- * @property array $embedding
- * @extends Model<BlogPostChunk>
- * @property-read \App\Domains\Blog\Models\BlogPost|null $blogPost
- * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostChunk newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostChunk newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostChunk query()
- * @mixin \Eloquent
- */
-	#[\AllowDynamicProperties]
-	class IdeHelperBlogPostChunk {}
-}
-
-namespace App\Domains\Blog\Models{
-/**
  * @property int $id
  * @property int $user_id
  * @property string|null $name
@@ -243,7 +234,8 @@ namespace App\Domains\Blog\Models{
  * @property string $length
  * @property array<int, int> $language_ids
  * @property bool $generate_image
- * @property bool $generate_audio
+ * @property string $image_style
+ * @property array<int, string>|null $image_styles
  * @property bool $publish_immediately
  * @property \Carbon\Carbon|null $last_run_at
  * @property int $posts_generated
@@ -263,9 +255,10 @@ namespace App\Domains\Blog\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereDaysOfWeek($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereEndDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereGenerateAudio($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereGenerateImage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereImageStyle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereImageStyles($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereLanguageIds($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|BlogPostSeries whereLastRunAt($value)
@@ -287,6 +280,30 @@ namespace App\Domains\Blog\Models{
  */
 	#[\AllowDynamicProperties]
 	class IdeHelperBlogPostSeries {}
+}
+
+namespace App\Domains\Blog\Models{
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @extends Model<Tag>
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Blog\Models\BlogPost> $blogPosts
+ * @property-read int|null $blog_posts_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperTag {}
 }
 
 namespace App\Domains\Contact\Models{

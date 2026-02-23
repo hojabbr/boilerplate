@@ -10,7 +10,7 @@ description: 'Filament 5 panel, resources, permissions, translatable models.'
 
 ## Filament 5
 
-The admin panel is at **`/admin`** (locale-independent; in `config/laravellocalization.php` `urlsIgnored`). Resources live under `app/Filament/Resources/` and reference Core or Domain models (e.g. `App\Domains\Blog\Models\BlogPost`). Filament is UI-only; use domain Queries or model scopes, not inline business logic.
+The admin panel is at **`/admin`** (locale-independent; in `config/laravellocalization.php` `urlsIgnored`). The Horizon dashboard is at **`/horizon`** (also in `urlsIgnored`). Resources live under `app/Filament/Resources/` and reference Core or Domain models (e.g. `App\Domains\Blog\Models\BlogPost`). Filament is UI-only; use domain Queries or model scopes, not inline business logic.
 
 ## Translation Manager
 

@@ -25,6 +25,7 @@ class LanguageFactory extends Factory
             'script' => 'Latn',
             'regional' => null,
             'is_default' => false,
+            'is_enabled' => true,
             'sort_order' => 0,
         ];
     }

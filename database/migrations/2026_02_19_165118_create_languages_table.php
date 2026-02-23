@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('regional')->nullable();
             $table->string('direction', 3)->default('ltr');
             $table->boolean('is_default')->default(false);
+            $table->boolean('is_enabled')->default(true);
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
             $table->softDeletes();

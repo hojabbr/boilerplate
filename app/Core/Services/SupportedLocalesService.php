@@ -4,6 +4,7 @@ namespace App\Core\Services;
 
 use App\Core\Models\Language;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Single source of truth for supported locales: reads from the languages table (cached).
@@ -25,9 +26,12 @@ class SupportedLocalesService
     public function get(): array
     {
         return Cache::remember(self::CACHE_KEY, self::CACHE_TTL_SECONDS, function (): array {
-            return Language::query()
-                ->orderBy('sort_order')
-                ->get()
+            $query = Language::query();
+            if (Schema::hasColumn((new Language)->getTable(), 'is_enabled')) {
+                $query->where('is_enabled', true);
+            }
+
+            return $query->orderBy('sort_order')->get()
                 ->keyBy('code')
                 ->map(fn (Language $lang): array => [
                     'name' => $lang->name,

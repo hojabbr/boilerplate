@@ -2,6 +2,7 @@
 
 namespace App\Domains\Blog\Console\Commands;
 
+use App\Core\Models\Language;
 use App\Domains\Blog\Jobs\GenerateBlogPostsJob;
 use App\Domains\Blog\Models\BlogPostSeries;
 use App\Domains\Blog\Support\ImageStyleOptions;
@@ -49,6 +50,9 @@ class RunScheduledBlogSeriesCommand extends Command
 
             $imageStyle = self::imageStyleForRun($series);
 
+            $enabledLanguageIds = Language::query()->where('is_enabled', true)->pluck('id')->all();
+            $languageIds = array_values(array_intersect($series->language_ids ?? [], $enabledLanguageIds));
+
             $data = [
                 'topic_source' => 'series',
                 'series_id' => $series->id,
@@ -57,7 +61,7 @@ class RunScheduledBlogSeriesCommand extends Command
                 'series_topics' => $series->topics ?? '',
                 'length' => $series->length,
                 'provider' => $series->provider,
-                'language_ids' => $series->language_ids,
+                'language_ids' => $languageIds,
                 'generate_image' => $series->generate_image,
                 'image_style' => $imageStyle,
                 'publish_immediately' => $series->publish_immediately,

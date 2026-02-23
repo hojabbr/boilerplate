@@ -58,18 +58,32 @@ test('localized dashboard route returns locale in shared props', function () {
 });
 
 test('root redirects to locale from cookie when user previously chose a language', function () {
-    // Supported locales come from DB; ensure en and fa exist so LocaleCookieRedirect and Inertia shared props see them.
-    Language::factory()->create(['code' => 'en', 'name' => 'English', 'direction' => 'ltr', 'sort_order' => 0, 'is_default' => true]);
-    Language::factory()->create(['code' => 'fa', 'name' => 'Persian', 'direction' => 'rtl', 'sort_order' => 1]);
+    // Supported locales come from DB; ensure en and fa exist and are enabled so LocaleCookieRedirect and Inertia see them.
+    Language::factory()->create(['code' => 'en', 'name' => 'English', 'direction' => 'ltr', 'sort_order' => 0, 'is_default' => true, 'is_enabled' => true]);
+    Language::factory()->create(['code' => 'fa', 'name' => 'Persian', 'direction' => 'rtl', 'sort_order' => 1, 'is_enabled' => true]);
     app(SupportedLocalesService::class)->clearCache();
     Config::set('laravellocalization.supportedLocales', app(SupportedLocalesService::class)->get());
-    // Package caches supported locales on first read; force it to re-read config for this request.
     app()->forgetInstance(LaravelLocalization::class);
     app()->forgetInstance('laravellocalization');
 
-    // Simulate user having chosen fa: request / with locale cookie set (call() passes cookies to request).
-    // Should redirect to /fa, not /en.
+    // Simulate user having chosen fa: request / with locale cookie set. Should redirect to /fa, not /en.
     $response = $this->call('GET', '/', [], ['locale' => 'fa']);
     $response->assertRedirect();
     expect($response->headers->get('Location'))->toContain('/fa');
+});
+
+test('root with cookie for disabled locale redirects to default not to disabled locale', function () {
+    // en enabled and default; fa disabled. Cookie says fa but fa is not in supported locales.
+    Language::factory()->create(['code' => 'en', 'name' => 'English', 'direction' => 'ltr', 'sort_order' => 0, 'is_default' => true, 'is_enabled' => true]);
+    Language::factory()->create(['code' => 'fa', 'name' => 'Persian', 'direction' => 'rtl', 'sort_order' => 1, 'is_enabled' => false]);
+    app(SupportedLocalesService::class)->clearCache();
+    Config::set('laravellocalization.supportedLocales', app(SupportedLocalesService::class)->get());
+    app()->forgetInstance(LaravelLocalization::class);
+    app()->forgetInstance('laravellocalization');
+
+    $response = $this->call('GET', '/', [], ['locale' => 'fa']);
+    $response->assertRedirect();
+    // Should redirect to default (en), not to /fa.
+    expect($response->headers->get('Location'))->not->toContain('/fa');
+    expect($response->headers->get('Location'))->toContain('/en');
 });

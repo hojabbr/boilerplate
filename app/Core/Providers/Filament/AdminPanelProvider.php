@@ -19,27 +19,18 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use LaraZeus\SpatieTranslatable\SpatieTranslatablePlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        $locales = array_keys(config('laravellocalization.supportedLocales', []));
-        $fallback = config('app.fallback_locale', 'en');
-        if (($key = array_search($fallback, $locales, true)) !== false) {
-            unset($locales[$key]);
-            array_unshift($locales, $fallback);
-            $locales = array_values($locales);
-        }
-
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
             ->login()
             ->databaseNotifications()
-            ->plugin(SpatieTranslatablePlugin::make()->defaultLocales($locales))
+            ->plugin(TranslatableLocalesPlugin::make())
             ->colors([
                 'primary' => Color::Amber,
             ])

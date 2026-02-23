@@ -112,7 +112,9 @@ Use **mcamara/laravel‑localization** to prefix all routes with locale identifi
 
 **routes/web.php:** Use a route group with `prefix => LaravelLocalization::setLocale()` and middleware `localeCookieRedirect`, `localizationRedirect`, `localeViewPath`, `setLocalizedFortifyRedirects`, `authFeatures`. The package sets app locale (and translator/regional) when the prefix is evaluated per request. Call `Fortify::ignoreRoutes()` in FortifyServiceProvider::register(), then require Fortify routes inside the locale group so auth is under `/{locale}/login`, etc. SetLocalizedFortifyRedirects sets Fortify redirect config from `app()->getLocale()` so login/logout stay in the current locale. EnsureAuthFeaturesEnabled returns 404 for login/register routes when the Pennant `login` or `registration` feature is inactive.
 
-**config/laravellocalization urlsIgnored:** Only `/skipped` and `/admin`, `/admin/*`. Do not ignore login/register so they stay under the locale prefix.
+**config/laravellocalization urlsIgnored:** `/skipped`, `/admin`, `/admin/*`, `/horizon`, `/horizon/*`, `/translations`, `/translations/*`. Do not ignore login/register so they stay under the locale prefix.
+
+**Supported locales at boot:** AppServiceProvider injects supported locales from the DB via **SupportedLocalesService** (cached; only enabled languages when `is_enabled` exists). If the DB or cache is unavailable (e.g. CI before migrations, PHPStan bootstrap), injection is skipped and config file defaults are used so the app boots successfully.
 
 - Language is detected from URL, session, or browser headers.
 - **middleware layers** ensure locale persistence and correct redirection.
@@ -129,7 +131,7 @@ Use **mcamara/laravel‑localization** to prefix all routes with locale identifi
 - **Blog:** Row-per-locale: `BlogPost` has `language_id` (FK to `languages`). One row per locale per logical post; slug/title/excerpt/body/meta_description on `BlogPost`. Excerpt and meta_description are plain text (no HTML). Rich body in Filament (WYSIWYG). Media (images in `gallery`, videos in `videos`, files in `documents`, optional `audio`) via Spatie Media Library; **all blog media use the `public` disk** so conversion URLs are served under `/storage`. Conversions: `thumb`, `card` (640×400, listing/hero), `medium`, `full`. Public listing and show use `card` for thumbnails; show hero displays full image (whole photo). The public show page uses Yet Another React Lightbox (YARL) for gallery and video with plugins: Captions, Fullscreen, Slideshow, Thumbnails, Video, Zoom.
 - **Contact form:** `ContactSubmission` stores submissions (name, email, subject, message). No translation; optionally store `locale` for analytics.
 - **Landing page sections:** `LandingSection` (types: hero, features, testimonials, cta) and `LandingSectionItem` (for features/testimonials) use Spatie Translatable for titles, body, CTAs, and Spatie Media Library for section images and item icons. The public welcome page renders sections from the DB; when no hero section exists, fallback uses `Setting` and `lang` messages.
-- **Language model:** `languages` table keyed by code (e.g. `en`, `de`). Seed from `config('laravellocalization.supportedLocales')`. Used by `Page` (`language_id`) and anywhere an FK to a locale is needed.
+- **Language model:** `languages` table keyed by code (e.g. `en`, `de`). Each language has `is_enabled`; only enabled languages are included in `supportedLocales` (via SupportedLocalesService) and the app default locale is always an enabled language. Toggle in Filament Languages resource. Seed from `config('laravellocalization.supportedLocales')`. Used by `Page` (`language_id`) and anywhere an FK to a locale is needed.
 
 ### 🪝 Best Practices
 
@@ -216,7 +218,8 @@ app/
 ├── Pages/
 ├── Widgets/
 
-- Leverage policies & roles for admin access control.
+- Leverage policies & roles for admin access control. Admin panel at `/admin`, Horizon dashboard at `/horizon` (both in `urlsIgnored`).
+- **Languages** (CMS group): toggle **Enabled** per language; only enabled languages appear in supportedLocales and the language switcher; at least one must stay enabled; disabling the default reassigns default to another enabled language.
 - **Feature flags resource:** Under Settings, lists and edits feature flags (from `config/features.php`; seeded by `FeatureFlagSeeder`). Changes sync to Pennant. Access via “manage feature flags” permission.
 - **Translation Manager** (LanguageLineResource, Settings group): List shows a **missing keys summary** (locale buttons with language name and count); each links to **Fill missing translations** (`/admin/language-lines/fill-missing?locale=…`) where all missing keys for that locale can be filled in one form. Import/export lang files and CSV; locale filters; no scan-for-keys feature. See [docs/admin.md](docs/admin.md).
 - **Database notifications:** The admin panel enables `databaseNotifications()` so users receive Filament notifications (e.g. when a queued job like blog generation completes). Requires the Laravel `notifications` table; on PostgreSQL the `data` column must be `json`/`jsonb`. Notifications are sent via `Notification::make()->...->sendToDatabase($user)`.

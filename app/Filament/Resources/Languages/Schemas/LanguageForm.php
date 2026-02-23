@@ -29,6 +29,8 @@ class LanguageForm
                     ->default('ltr')
                     ->required(),
                 Toggle::make('is_default'),
+                Toggle::make('is_enabled')
+                    ->helperText('When disabled, this language is hidden from the site, language switcher, and all locale-dependent features.'),
                 TextInput::make('sort_order')
                     ->numeric()
                     ->default(0),
