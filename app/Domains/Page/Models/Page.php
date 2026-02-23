@@ -114,6 +114,17 @@ class Page extends Model implements HasMedia
     }
 
     /**
+     * Skip index update when only non-searchable attributes change (e.g. order, nav/footer flags).
+     * Reduces unnecessary Scout sync when editing page placement or meta in Filament.
+     */
+    public function searchIndexShouldBeUpdated(): bool
+    {
+        $searchable = ['slug', 'type', 'is_active', 'title', 'body'];
+
+        return $this->isDirty($searchable);
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function toSearchableArray(): array
@@ -125,6 +136,7 @@ class Page extends Model implements HasMedia
         return [
             'slug' => $this->slug,
             'type' => $this->type,
+            'is_active' => (bool) ($this->is_active ?? false),
             'title' => $titles,
             'content' => $content,
         ];

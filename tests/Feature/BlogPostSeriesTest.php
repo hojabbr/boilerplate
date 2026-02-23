@@ -69,6 +69,7 @@ test('blog:run-scheduled-series claims run before dispatching job', function ():
         'language_ids' => [1],
         'generate_image' => false,
         'publish_immediately' => false,
+        'is_active' => true,
     ]);
 
     $series->refresh();

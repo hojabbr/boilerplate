@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'queue' => env('SCOUT_QUEUE', false),
+    'queue' => env('SCOUT_QUEUE', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'after_commit' => false,
+    'after_commit' => env('SCOUT_AFTER_COMMIT', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -143,7 +143,9 @@ return [
             \App\Domains\Blog\Models\BlogPost::class => [
                 'filterableAttributes' => ['language_id'],
             ],
-            \App\Domains\Page\Models\Page::class => [],
+            \App\Domains\Page\Models\Page::class => [
+                'filterableAttributes' => ['is_active'],
+            ],
         ],
     ],
 

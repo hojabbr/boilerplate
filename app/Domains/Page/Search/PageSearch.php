@@ -14,11 +14,15 @@ class PageSearch
     public function search(string $query): Collection
     {
         try {
-            return Page::search($query)->take(10)->get();
+            return Page::search($query)
+                ->where('is_active', 1)
+                ->take(10)
+                ->get();
         } catch (\Throwable) {
             $pattern = '%'.Str::lower($query).'%';
 
             return Page::query()
+                ->active()
                 ->whereRaw('LOWER(slug) LIKE ?', [$pattern])
                 ->take(10)
                 ->get();

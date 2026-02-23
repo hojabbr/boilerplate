@@ -22,12 +22,10 @@ class RunScheduledBlogSeriesCommand extends Command
         $currentHour = (int) $now->format('G');
         $currentDayOfWeek = (int) $now->format('w'); // 0 = Sunday
 
-        $due = BlogPostSeries::query()
+        $candidates = BlogPostSeries::query()
             ->active()
-            ->where('start_date', '<=', $today)
-            ->where('end_date', '>=', $today)
-            ->whereJsonContains('days_of_week', $currentDayOfWeek)
-            ->whereJsonContains('run_at_hours', $currentHour)
+            ->whereDate('start_date', '<=', $today)
+            ->whereDate('end_date', '>=', $today)
             ->where(function ($q): void {
                 $q->whereNull('total_posts_limit')
                     ->orWhereColumn('posts_generated', '<', 'total_posts_limit');
@@ -37,6 +35,14 @@ class RunScheduledBlogSeriesCommand extends Command
                     ->orWhere('last_run_at', '<', $now->copy()->startOfHour());
             })
             ->get();
+
+        $due = $candidates->filter(function (BlogPostSeries $series) use ($currentDayOfWeek, $currentHour): bool {
+            $days = $series->days_of_week ?? [];
+            $hours = $series->run_at_hours ?? [];
+
+            return in_array($currentDayOfWeek, $days, true)
+                && in_array($currentHour, $hours, true);
+        });
 
         foreach ($due as $series) {
             // Claim the run before dispatching so overlapping cron runs cannot double-dispatch.

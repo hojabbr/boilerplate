@@ -164,7 +164,7 @@ MEILISEARCH_KEY=masterKey
 - Always flush and sync after changing searchable fields to avoid stale index states.  [oai_citation:5‡Reddit](https://www.reddit.com/r/laravel/comments/1b0271f)  
 - For large datasets, incremental indexing jobs are recommended.
 
-**To add a searchable model:** Add an entry to `config/scout.php` under `meilisearch.index-settings` (key = full model class name); implement `toSearchableArray()` on the model; run `scout:import` (or flush/sync) after schema changes.
+**To add a searchable model:** Add an entry to `config/scout.php` under `meilisearch.index-settings` (key = full model class name); implement `toSearchableArray()` on the model; run `scout:sync-index-settings` after changing filterable attributes; run `scout:import` (or flush/sync) after schema changes. After bulk updates that affect searchable state, run `scout:import` for the affected model. Full detail: [docs/search.md](docs/search.md) (migrations, seeding, commands).
 
 ---
 
