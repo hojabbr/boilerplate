@@ -106,6 +106,14 @@ class Page extends Model implements HasMedia
     }
 
     /**
+     * Only index active pages so inactive ones are not searchable.
+     */
+    public function shouldBeSearchable(): bool
+    {
+        return $this->is_active ?? false;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function toSearchableArray(): array

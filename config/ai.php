@@ -146,16 +146,14 @@ return [
     | Blog generation
     |--------------------------------------------------------------------------
     |
-    | use_pgvector: use similarity search (RAG) when PostgreSQL + blog_post_chunks exist.
     | failover_providers: optional comma-separated list (e.g. gemini,openai) to try
     |   providers in order on failure. When set, the SDK uses these instead of the
     |   wizard-selected provider. Blog generation uses the Laravel AI SDK provider
-    |   default model (no static model list).
+    |   default model (no static model list). Context comes from DB (titles/slugs only).
     |
     */
 
     'blog' => [
-        'use_pgvector' => env('AI_BLOG_USE_PGVECTOR', true),
         'failover_providers' => array_filter(array_map('trim', explode(',', env('AI_BLOG_FAILOVER_PROVIDERS', '')))),
     ],
 ];

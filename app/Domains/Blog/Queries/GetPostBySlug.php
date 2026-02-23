@@ -3,6 +3,7 @@
 namespace App\Domains\Blog\Queries;
 
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Blog\Support\ResolveInternalBlogLinks;
 use Laravel\Pennant\Feature;
 
 class GetPostBySlug
@@ -19,6 +20,7 @@ class GetPostBySlug
         $post = BlogPost::query()
             ->byLocale(app()->getLocale())
             ->published()
+            ->with('tags')
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -54,9 +56,14 @@ class GetPostBySlug
             'post' => [
                 'title' => $post->title,
                 'excerpt' => $post->excerpt,
-                'body' => $post->body,
+                'body' => ResolveInternalBlogLinks::resolve($post->body ?? ''),
                 'meta_description' => $post->meta_description,
                 'published_at' => $post->published_at instanceof \DateTimeInterface ? $post->published_at->format('c') : null,
+                'tags' => $post->tags->map(fn ($tag) => [
+                    'id' => $tag->id,
+                    'name' => $tag->name,
+                    'slug' => $tag->slug,
+                ])->values()->all(),
                 'gallery' => $gallery,
                 'videos' => $videos,
                 'documents' => $documents,

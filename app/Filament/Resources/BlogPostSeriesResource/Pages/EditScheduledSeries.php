@@ -4,6 +4,7 @@ namespace App\Filament\Resources\BlogPostSeriesResource\Pages;
 
 use App\Core\Models\Language;
 use App\Core\Services\Ai\Support\AiProviderOptions;
+use App\Domains\Blog\Support\ImageStyleOptions;
 use App\Filament\Resources\BlogPostSeriesResource;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
@@ -22,6 +23,26 @@ class EditScheduledSeries extends EditRecord
     protected function getHeaderActions(): array
     {
         return [];
+    }
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $styles = $data['image_styles'] ?? null;
+        if (($styles === null || $styles === []) && ! empty($data['image_style'] ?? null)) {
+            $data['image_styles'] = [$data['image_style']];
+        }
+
+        return $data;
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $styles = $data['image_styles'] ?? [];
+        if (is_array($styles) && $styles !== []) {
+            $data['image_style'] = $styles[0];
+        }
+
+        return $data;
     }
 
     public function form(Schema $schema): Schema
@@ -102,8 +123,15 @@ class EditScheduledSeries extends EditRecord
                             ->searchable()
                             ->preload()
                             ->native(false),
-                        Toggle::make('generate_image'),
-                        Toggle::make('generate_audio'),
+                        Toggle::make('generate_image')
+                            ->live(),
+                        CheckboxList::make('image_styles')
+                            ->label('Image styles (one per post, in order)')
+                            ->options(ImageStyleOptions::labels())
+                            ->helperText('Styles rotate per generated post: 1st post uses 1st style, 2nd post uses 2nd, etc. Select at least one.')
+                            ->minItems(1)
+                            ->columns(2)
+                            ->visible(fn ($get) => $get('generate_image') === true),
                         Toggle::make('publish_immediately'),
                         Toggle::make('is_active')
                             ->label('Series active (runs at scheduled times)'),

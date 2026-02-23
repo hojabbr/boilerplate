@@ -28,7 +28,6 @@ test('BlogPostSeries stores and retrieves array casts correctly', function (): v
         'length' => 'short',
         'language_ids' => [1, 2],
         'generate_image' => false,
-        'generate_audio' => false,
         'publish_immediately' => false,
     ]);
 
@@ -43,6 +42,39 @@ test('blog:run-scheduled-series command runs successfully when no series are due
     $exitCode = Artisan::call('blog:run-scheduled-series');
 
     expect($exitCode)->toBe(0);
+});
+
+test('blog:run-scheduled-series claims run before dispatching job', function (): void {
+    $user = User::factory()->create();
+    $user->givePermissionTo('manage blog');
+
+    $series = BlogPostSeries::create([
+        'user_id' => $user->id,
+        'name' => 'Claim test',
+        'purpose' => 'Purpose',
+        'objective' => 'Objective',
+        'topics' => 'Topics',
+        'start_date' => now(),
+        'end_date' => now()->addWeek(),
+        'days_of_week' => [(int) now()->format('w')],
+        'run_at_hours' => [(int) now()->format('G')],
+        'posts_per_run' => 1,
+        'total_posts_limit' => 2,
+        'provider' => 'openai',
+        'length' => 'short',
+        'language_ids' => [1],
+        'generate_image' => false,
+        'publish_immediately' => false,
+    ]);
+
+    $series->refresh();
+    $initialCount = (int) $series->posts_generated;
+
+    Artisan::call('blog:run-scheduled-series');
+
+    $series->refresh();
+    expect($series->last_run_at)->not->toBeNull()
+        ->and((int) $series->posts_generated)->toBe($initialCount + 1);
 });
 
 test('BlogPostSeriesPolicy allows viewAny only when user can manage blog', function (): void {

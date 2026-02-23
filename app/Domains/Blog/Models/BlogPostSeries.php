@@ -25,7 +25,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $length
  * @property array<int, int> $language_ids
  * @property bool $generate_image
- * @property bool $generate_audio
+ * @property string $image_style
+ * @property array<int, string>|null $image_styles
  * @property bool $publish_immediately
  * @property \Carbon\Carbon|null $last_run_at
  * @property int $posts_generated
@@ -56,7 +57,8 @@ class BlogPostSeries extends Model
         'length',
         'language_ids',
         'generate_image',
-        'generate_audio',
+        'image_style',
+        'image_styles',
         'publish_immediately',
         'last_run_at',
         'posts_generated',
@@ -75,7 +77,7 @@ class BlogPostSeries extends Model
             'run_at_hours' => 'array',
             'language_ids' => 'array',
             'generate_image' => 'boolean',
-            'generate_audio' => 'boolean',
+            'image_styles' => 'array',
             'publish_immediately' => 'boolean',
             'last_run_at' => 'datetime',
             'is_active' => 'boolean',

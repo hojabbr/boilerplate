@@ -2,17 +2,17 @@
 
 namespace App\Domains\Blog\Jobs;
 
+use App\Core\Models\Language;
 use App\Domains\Auth\Models\User;
-use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Blog\Services\BlogPostGenerationService;
-use App\Filament\Resources\BlogPosts\BlogPostResource;
-use Filament\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Bus\Batch;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Cache;
 
 class GenerateBlogPostsJob implements ShouldQueue
 {
@@ -20,8 +20,9 @@ class GenerateBlogPostsJob implements ShouldQueue
 
     /**
      * The number of seconds the job can run before timing out.
+     * Only generates the source post; translations run in separate jobs.
      */
-    public int $timeout = 600;
+    public int $timeout = 300;
 
     /**
      * @param  array<string, mixed>  $data
@@ -41,42 +42,81 @@ class GenerateBlogPostsJob implements ShouldQueue
         }
 
         try {
-            $posts = $service->run($this->data);
-            $this->sendSuccessNotification($user, $posts);
+            $result = $service->generateSourceOnly($this->data);
+            $sourcePost = $result['post'];
+            $sourceStructured = $result['structured'];
+
+            if ($sourcePost === null || $sourceStructured === []) {
+                $this->clearUserGenerationFlag();
+
+                Notification::make()
+                    ->title('Blog post generation produced no content.')
+                    ->danger()
+                    ->sendToDatabase($user);
+
+                return;
+            }
+
+            $languageIds = $this->data['language_ids'] ?? [];
+            $languages = Language::query()
+                ->whereIn('id', $languageIds)
+                ->orderBy('sort_order')
+                ->get();
+            $sourceLanguage = $languages->firstWhere('code', 'en') ?? $languages->first();
+            $remainingLanguages = $languages->filter(fn ($l) => $l->id !== $sourceLanguage->id)->values();
+
+            if ($remainingLanguages->isEmpty()) {
+                FinalizeBlogPostGenerationJob::dispatch(
+                    $sourcePost->id,
+                    $sourceStructured,
+                    [
+                        'generate_image' => $this->data['generate_image'] ?? false,
+                        'image_style' => $this->data['image_style'] ?? 'editorial',
+                        'provider' => $this->data['provider'] ?? config('ai.default'),
+                    ],
+                    $this->userId
+                );
+
+                return;
+            }
+
+            $translationJobs = $remainingLanguages->map(
+                fn ($language) => new TranslateBlogPostToLanguageJob($sourcePost->id, $language->id, $this->data)
+            )->all();
+
+            $userId = $this->userId;
+            $sourcePostId = $sourcePost->id;
+            $finalizeOptions = [
+                'generate_image' => $this->data['generate_image'] ?? false,
+                'image_style' => $this->data['image_style'] ?? 'editorial',
+                'provider' => $this->data['provider'] ?? config('ai.default'),
+            ];
+
+            Bus::batch($translationJobs)
+                ->name('blog-post-translations-'.$sourcePostId)
+                ->allowFailures()
+                ->then(function (Batch $batch) use ($sourcePostId, $sourceStructured, $finalizeOptions, $userId): void {
+                    FinalizeBlogPostGenerationJob::dispatch($sourcePostId, $sourceStructured, $finalizeOptions, $userId);
+                })
+                ->finally(function () use ($userId): void {
+                    Cache::forget('blog_generate_'.$userId);
+                })
+                ->dispatch();
         } catch (\Throwable $e) {
             report($e);
+            $this->clearUserGenerationFlag();
             $this->sendFailureNotification($user, $e->getMessage());
         }
     }
 
-    /**
-     * @param  Collection<int, BlogPost>  $posts
-     */
-    private function sendSuccessNotification(User $user, Collection $posts): void
+    public function failed(?\Throwable $exception = null): void
     {
-        if ($posts->isEmpty()) {
-            Notification::make()
-                ->title('Blog post generation produced no content.')
-                ->danger()
-                ->sendToDatabase($user);
+        $this->clearUserGenerationFlag();
+    }
 
-            return;
-        }
-
-        $first = $posts->first();
-        $editUrl = BlogPostResource::getUrl('edit', ['record' => $first]);
-        $count = $posts->count();
-
-        Notification::make()
-            ->title($count === 1 ? 'Blog post created as draft.' : "{$count} blog posts created as draft.")
-            ->body('You can edit and publish them from the blog posts list.')
-            ->success()
-            ->actions([
-                Action::make('view')
-                    ->label('View first post')
-                    ->url($editUrl),
-            ])
-            ->sendToDatabase($user);
+    private function clearUserGenerationFlag(): void
+    {
+        Cache::forget('blog_generate_'.$this->userId);
     }
 
     private function sendFailureNotification(User $user, string $message): void

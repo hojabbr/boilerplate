@@ -84,7 +84,7 @@ return [
     |
     */
 
-    'soft_delete' => false,
+    'soft_delete' => env('SCOUT_SOFT_DELETE', true),
 
     /*
     |--------------------------------------------------------------------------

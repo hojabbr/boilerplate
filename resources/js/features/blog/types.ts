@@ -1,14 +1,22 @@
+export interface BlogTag {
+    id: number;
+    name: string;
+    slug: string;
+}
+
 export interface BlogPost {
     slug: string;
     title: string;
     excerpt: string;
     published_at: string | null;
     thumbnail_url?: string | null;
+    tags?: BlogTag[];
 }
 
 export interface BlogPostDetail extends BlogPost {
     body?: string;
     meta_description?: string | null;
+    tags?: BlogTag[];
     gallery?: MediaItem[];
     videos?: MediaItem[];
     documents?: DocumentItem[];

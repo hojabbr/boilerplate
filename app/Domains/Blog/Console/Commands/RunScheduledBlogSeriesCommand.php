@@ -4,6 +4,7 @@ namespace App\Domains\Blog\Console\Commands;
 
 use App\Domains\Blog\Jobs\GenerateBlogPostsJob;
 use App\Domains\Blog\Models\BlogPostSeries;
+use App\Domains\Blog\Support\ImageStyleOptions;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -37,6 +38,17 @@ class RunScheduledBlogSeriesCommand extends Command
             ->get();
 
         foreach ($due as $series) {
+            // Claim the run before dispatching so overlapping cron runs cannot double-dispatch.
+            $series->increment('posts_generated');
+            $series->update(['last_run_at' => $now]);
+            $series->refresh();
+
+            if ($series->total_posts_limit !== null && $series->posts_generated >= $series->total_posts_limit) {
+                $series->update(['is_active' => false]);
+            }
+
+            $imageStyle = self::imageStyleForRun($series);
+
             $data = [
                 'topic_source' => 'series',
                 'series_id' => $series->id,
@@ -47,21 +59,30 @@ class RunScheduledBlogSeriesCommand extends Command
                 'provider' => $series->provider,
                 'language_ids' => $series->language_ids,
                 'generate_image' => $series->generate_image,
-                'generate_audio' => $series->generate_audio,
+                'image_style' => $imageStyle,
                 'publish_immediately' => $series->publish_immediately,
             ];
 
             GenerateBlogPostsJob::dispatch($data, $series->user_id);
-
-            $series->increment('posts_generated');
-            $series->update(['last_run_at' => $now]);
-            $series->refresh();
-
-            if ($series->total_posts_limit !== null && $series->posts_generated >= $series->total_posts_limit) {
-                $series->update(['is_active' => false]);
-            }
         }
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Pick one image style for this run: cycles through image_styles by post index, or falls back to image_style.
+     */
+    private static function imageStyleForRun(BlogPostSeries $series): string
+    {
+        $styles = $series->image_styles;
+        if (is_array($styles) && $styles !== []) {
+            $index = ($series->posts_generated - 1) % count($styles);
+            $style = $styles[$index] ?? null;
+            if (is_string($style) && $style !== '') {
+                return $style;
+            }
+        }
+
+        return $series->image_style ?? ImageStyleOptions::default();
     }
 }

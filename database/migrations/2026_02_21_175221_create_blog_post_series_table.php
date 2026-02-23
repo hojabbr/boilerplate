@@ -28,12 +28,13 @@ return new class extends Migration
             $table->string('length')->default('medium');
             $table->json('language_ids');
             $table->boolean('generate_image')->default(false);
-            $table->boolean('generate_audio')->default(false);
+            $table->string('image_style')->default('editorial');
             $table->boolean('publish_immediately')->default(false);
             $table->timestamp('last_run_at')->nullable();
             $table->unsignedInteger('posts_generated')->default(0);
             $table->boolean('is_active')->default(true);
             $table->foreignId('blog_post_series_id')->nullable()->constrained('blog_post_series')->nullOnDelete();
+            $table->json('image_styles')->nullable()->after('image_style');
             $table->timestamps();
         });
     }

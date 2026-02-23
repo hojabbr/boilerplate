@@ -16,8 +16,6 @@ use App\Core\Observers\SettingObserver;
 use App\Core\Services\PagePropsService as CorePagePropsService;
 use App\Core\Services\SupportedLocalesService;
 use App\Domains\Auth\Models\User;
-use App\Domains\Blog\Models\BlogPost;
-use App\Domains\Blog\Observers\BlogPostObserver;
 use App\Domains\Landing\Models\LandingSection;
 use App\Domains\Landing\Models\LandingSectionItem;
 use App\Domains\Landing\Observers\LandingSectionItemObserver;
@@ -65,7 +63,6 @@ class AppServiceProvider extends ServiceProvider
         Language::observe(LanguageObserver::class);
         Setting::observe(SettingObserver::class);
         Page::observe(PageObserver::class);
-        BlogPost::observe(BlogPostObserver::class);
         LandingSection::observe(LandingSectionObserver::class);
         LandingSectionItem::observe(LandingSectionItemObserver::class);
         $this->registerPolicies();

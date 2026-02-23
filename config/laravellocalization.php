@@ -347,6 +347,8 @@ return [
         '/skipped',
         '/admin',
         '/admin/*',
+        '/horizon',
+        '/horizon/*',
         '/translations',
         '/translations/*',
     ],

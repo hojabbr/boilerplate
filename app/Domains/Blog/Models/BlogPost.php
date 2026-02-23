@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 use Spatie\Image\Enums\Fit;
@@ -69,11 +69,11 @@ class BlogPost extends Model implements HasMedia
     }
 
     /**
-     * @return HasMany<BlogPostChunk, $this>
+     * @return BelongsToMany<Tag, $this>
      */
-    public function chunks(): HasMany
+    public function tags(): BelongsToMany
     {
-        return $this->hasMany(BlogPostChunk::class);
+        return $this->belongsToMany(Tag::class, 'blog_post_tag');
     }
 
     /**
@@ -135,6 +135,18 @@ class BlogPost extends Model implements HasMedia
             ->performOnCollections('gallery')
             ->fit(Fit::Max, 1920, 1920)
             ->nonQueued();
+    }
+
+    /**
+     * Only index published posts so drafts and future-dated posts are not searchable.
+     */
+    public function shouldBeSearchable(): bool
+    {
+        if ($this->published_at === null) {
+            return false;
+        }
+
+        return $this->published_at->getTimestamp() <= time();
     }
 
     /**

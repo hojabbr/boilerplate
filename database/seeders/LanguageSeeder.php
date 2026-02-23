@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Core\Models\Language;
+use App\Core\Services\SupportedLocalesService;
 use Illuminate\Database\Seeder;
 
 /**
@@ -42,7 +43,10 @@ class LanguageSeeder extends Seeder
     public function run(): void
     {
         $fromConfig = config('laravellocalization.supportedLocales', []);
-        $supportedLocales = (count($fromConfig) <= 1) ? self::defaultLocales() : $fromConfig;
+        // When the table is empty (e.g. after db:fresh), always use defaultLocales() so cached config
+        // from a previous run (e.g. with Portuguese added via Filament) does not re-seed unwanted languages.
+        $tableEmpty = Language::query()->doesntExist();
+        $supportedLocales = ($tableEmpty || count($fromConfig) <= 1) ? self::defaultLocales() : $fromConfig;
         $defaultCode = config('app.locale', 'en');
         $sortOrder = 0;
 
@@ -60,6 +64,8 @@ class LanguageSeeder extends Seeder
                 ]
             );
         }
+
+        app(SupportedLocalesService::class)->clearCache();
     }
 
     private function directionFromScript(?string $script): string

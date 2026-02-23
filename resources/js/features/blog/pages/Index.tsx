@@ -3,6 +3,7 @@ import { m } from 'motion/react';
 import { fadeInUpView } from '@/components/common/motion-presets';
 import { PaginatorLinks } from '@/components/common/PaginatorLinks';
 import { SeoHead } from '@/components/common/SeoHead';
+import { Badge } from '@/components/ui/badge';
 import {
     Card,
     CardDescription,
@@ -18,12 +19,19 @@ import PublicLayout, {
 import { home } from '@/routes';
 import blog from '@/routes/blog';
 
+interface BlogTag {
+    id: number;
+    name: string;
+    slug: string;
+}
+
 interface Post {
     slug: string;
     title: string;
     excerpt: string;
     published_at: string | null;
     thumbnail_url?: string | null;
+    tags?: BlogTag[];
 }
 
 interface PaginatorLinkItem {
@@ -122,13 +130,30 @@ export default function BlogIndex({
                                     )}
                                     <CardHeader className="py-6">
                                         <CardTitle>{post.title}</CardTitle>
+                                        {post.tags && post.tags.length > 0 && (
+                                            <ul
+                                                className="mb-2 flex flex-wrap gap-1.5"
+                                                aria-label="Tags"
+                                            >
+                                                {post.tags.map((tag) => (
+                                                    <li key={tag.id}>
+                                                        <Badge
+                                                            variant="secondary"
+                                                            className="font-normal"
+                                                        >
+                                                            {tag.name}
+                                                        </Badge>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
                                         {post.excerpt && (
                                             <CardDescription>
                                                 {post.excerpt}
                                             </CardDescription>
                                         )}
                                         {post.published_at && (
-                                            <p className="text-xs text-muted-foreground">
+                                            <p className="mt-2 text-xs text-muted-foreground">
                                                 {new Date(
                                                     post.published_at,
                                                 ).toLocaleDateString()}

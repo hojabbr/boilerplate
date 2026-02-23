@@ -46,6 +46,16 @@ class BlogPostForm
                     ->columnSpanFull(),
                 TextInput::make('meta_description')
                     ->maxLength(255),
+                Select::make('tags')
+                    ->relationship('tags', 'name')
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                    ]),
                 DateTimePicker::make('published_at'),
                 Section::make('Media')
                     ->schema([

@@ -7,10 +7,12 @@ use App\Core\Services\Ai\Support\AiProviderOptions;
 use App\Domains\Blog\Jobs\GenerateBlogPostsJob;
 use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Blog\Models\BlogPostSeries;
+use App\Domains\Blog\Support\ImageStyleOptions;
 use App\Filament\Resources\BlogPosts\BlogPostResource;
 use App\Filament\Resources\BlogPostSeriesResource;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -23,6 +25,8 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\HtmlString;
 use Livewire\Attributes\Locked;
 
 class GenerateBlogPost extends Page
@@ -55,7 +59,8 @@ class GenerateBlogPost extends Page
             'provider' => null,
             'language_ids' => [],
             'generate_image' => false,
-            'generate_audio' => false,
+            'image_style' => 'editorial',
+            'image_styles' => [],
             'publish_immediately' => false,
             'purpose' => '',
             'objective' => '',
@@ -71,6 +76,16 @@ class GenerateBlogPost extends Page
     protected function authorizeAccess(): void
     {
         $this->authorize('create', BlogPost::class);
+    }
+
+    public function selectAllLanguages(): void
+    {
+        $this->data['language_ids'] = Language::query()->orderBy('sort_order')->pluck('id')->values()->all();
+    }
+
+    public function clearLanguages(): void
+    {
+        $this->data['language_ids'] = [];
     }
 
     public function content(Schema $schema): Schema
@@ -126,6 +141,11 @@ class GenerateBlogPost extends Page
                                 ->default('one_time')
                                 ->required()
                                 ->live(),
+                            Placeholder::make('generation_type_help')
+                                ->label('')
+                                ->content(fn ($get) => ($get('generation_type') ?? 'one_time') === 'scheduled_series'
+                                    ? 'A recurring series will be created. Posts are generated automatically at the times you set below; you will be notified after each run.'
+                                    : 'One post will be generated now; you will be notified when it is ready.'),
                         ]),
                     Step::make('Topic')
                         ->description('Choose how to define the blog topic')
@@ -237,6 +257,11 @@ class GenerateBlogPost extends Page
                     Step::make('Options & languages')
                         ->description('Languages and optional image/audio')
                         ->schema([
+                            Placeholder::make('language_select_actions')
+                                ->label('')
+                                ->content(fn () => new HtmlString(
+                                    view('filament.resources.blog-posts.pages.language-select-actions')->render()
+                                )),
                             CheckboxList::make('language_ids')
                                 ->label('Languages')
                                 ->options(
@@ -244,15 +269,25 @@ class GenerateBlogPost extends Page
                                 )
                                 ->required()
                                 ->minItems(1)
+                                ->helperText('Post is generated in one language (English if selected, otherwise the first), then translated to all others.')
                                 ->columns(2),
                             Toggle::make('generate_image')
                                 ->label('Generate featured image')
                                 ->visible(fn ($get) => AiProviderOptions::providerSupportsImages((string) $get('provider')))
-                                ->default(false),
-                            Toggle::make('generate_audio')
-                                ->label('Generate audio (TTS)')
-                                ->visible(fn ($get) => AiProviderOptions::providerSupportsTts((string) $get('provider')))
-                                ->default(false),
+                                ->default(false)
+                                ->live(),
+                            Select::make('image_style')
+                                ->label('Image style')
+                                ->options(ImageStyleOptions::labels())
+                                ->default(ImageStyleOptions::default())
+                                ->visible(fn ($get) => AiProviderOptions::providerSupportsImages((string) $get('provider')) && ($get('generate_image') === true) && ($get('generation_type') ?? 'one_time') === 'one_time'),
+                            CheckboxList::make('image_styles')
+                                ->label('Image styles (one per post, in order)')
+                                ->options(ImageStyleOptions::labels())
+                                ->helperText('Styles rotate per generated post. Select at least one.')
+                                ->minItems(1)
+                                ->columns(2)
+                                ->visible(fn ($get) => AiProviderOptions::providerSupportsImages((string) $get('provider')) && ($get('generate_image') === true) && ($get('generation_type') ?? 'one_time') === 'scheduled_series'),
                             Toggle::make('publish_immediately')
                                 ->label('Publish immediately')
                                 ->helperText('If off, posts are created as drafts.')
@@ -283,7 +318,7 @@ class GenerateBlogPost extends Page
         $provider = $d['provider'] ?? '—';
         $langCount = is_array($d['language_ids'] ?? null) ? count($d['language_ids']) : 0;
         $img = ($d['generate_image'] ?? false) ? 'Yes' : 'No';
-        $audio = ($d['generate_audio'] ?? false) ? 'Yes' : 'No';
+        $imgStyle = $this->getSummaryImageStyle($d, $isSeries);
         $publish = ($d['publish_immediately'] ?? false) ? 'Yes' : 'No';
 
         if ($isSeries) {
@@ -291,13 +326,32 @@ class GenerateBlogPost extends Page
             $hours = is_array($d['run_at_hours'] ?? null) ? implode(', ', array_map(fn ($h) => sprintf('%02d:00', $h), $d['run_at_hours'])) : '—';
             $cap = isset($d['total_posts_limit']) && $d['total_posts_limit'] !== '' ? (string) $d['total_posts_limit'] : 'No limit';
 
-            return "Type: Scheduled series\nPurpose: ".($d['purpose'] ?? '—')."\nObjective: ".($d['objective'] ?? '—')."\nTopics: ".($d['topics'] ?? '—')."\nStart: ".($d['start_date'] ?? '—').' End: '.($d['end_date'] ?? '—')."\nDays: {$days}\nHours: {$hours}\nCap: {$cap}\nLength: {$length}\nProvider: {$provider}\nLanguages: {$langCount}\nImage: {$img} Audio: {$audio}\nPublish immediately: {$publish}";
+            return "A new scheduled series will be created. No post is generated immediately. The system will generate one post per run at the selected days and hours (UTC) until the end date or total cap. You will receive a notification after each run.\n\n"
+                .'Purpose: '.($d['purpose'] ?? '—')."\nObjective: ".($d['objective'] ?? '—')."\nTopics: ".($d['topics'] ?? '—')."\nStart: ".($d['start_date'] ?? '—').' End: '.($d['end_date'] ?? '—')."\nDays: {$days}\nHours: {$hours}\nCap: {$cap}\nLength: {$length}\nProvider: {$provider}\nLanguages: {$langCount}\nImage: {$img} (styles in order: {$imgStyle})\nPublish immediately: {$publish}";
         }
 
         $topicMode = ($d['topic_source'] ?? '') === 'specific' ? 'Specific topic' : 'AI chooses topic';
         $topic = ($d['topic_source'] ?? '') === 'specific' ? ($d['topic'] ?? '') : ($d['hint'] ?? '—');
 
-        return "Type: One-time\nTopic mode: {$topicMode}\nTopic/hint: {$topic}\nLength: {$length}\nProvider: {$provider}\nLanguages: {$langCount}\nImage: {$img} Audio: {$audio}\nPublish immediately: {$publish}";
+        return "Type: One-time\nTopic mode: {$topicMode}\nTopic/hint: {$topic}\nLength: {$length}\nProvider: {$provider}\nLanguages: {$langCount}\nImage: {$img} (style: {$imgStyle})\nPublish immediately: {$publish}";
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function getSummaryImageStyle(array $data, bool $isSeries): string
+    {
+        $labels = ImageStyleOptions::labels();
+        if ($isSeries) {
+            $styles = $data['image_styles'] ?? [];
+            if (! is_array($styles) || $styles === []) {
+                return '—';
+            }
+
+            return implode(', ', array_map(fn ($k) => $labels[$k] ?? $k, $styles));
+        }
+
+        return $labels[$data['image_style'] ?? 'editorial'] ?? 'Editorial';
     }
 
     public function generate(): void
@@ -332,6 +386,12 @@ class GenerateBlogPost extends Page
                 return;
             }
 
+            $imageStyles = $data['image_styles'] ?? [];
+            if (! is_array($imageStyles) || $imageStyles === []) {
+                $imageStyles = [$data['image_style'] ?? ImageStyleOptions::default()];
+            }
+            $imageStyles = array_values(array_filter($imageStyles, fn ($s) => is_string($s) && $s !== ''));
+
             $this->isGenerating = true;
             BlogPostSeries::create([
                 'user_id' => auth()->id(),
@@ -349,20 +409,33 @@ class GenerateBlogPost extends Page
                 'length' => $data['length'] ?? 'medium',
                 'language_ids' => array_map('intval', $languageIds),
                 'generate_image' => (bool) ($data['generate_image'] ?? false),
-                'generate_audio' => (bool) ($data['generate_audio'] ?? false),
+                'image_style' => $imageStyles[0] ?? ImageStyleOptions::default(),
+                'image_styles' => $imageStyles,
                 'publish_immediately' => (bool) ($data['publish_immediately'] ?? false),
             ]);
             $this->isGenerating = false;
             Notification::make()
                 ->title('Scheduled series created.')
-                ->body('Posts will be generated automatically at the chosen times. You can view or delete the series from the Scheduled series page.')
+                ->body('You can view and edit the series in Scheduled series. The first run will occur at the next matching day and hour (UTC). Posts will be generated automatically at the chosen times; you will receive a notification after each run.')
                 ->success()
                 ->send();
 
             $this->redirect(BlogPostSeriesResource::getUrl('index'));
         } else {
+            $userId = (int) auth()->id();
+            if (Cache::has('blog_generate_'.$userId)) {
+                Notification::make()
+                    ->title('A blog post generation is already in progress.')
+                    ->body('Wait for it to finish or check your notifications.')
+                    ->warning()
+                    ->send();
+
+                return;
+            }
+
             $this->isGenerating = true;
-            GenerateBlogPostsJob::dispatch($data, (int) auth()->id());
+            Cache::put('blog_generate_'.$userId, true, 7200);
+            GenerateBlogPostsJob::dispatch($data, $userId);
             $this->isGenerating = false;
             Notification::make()
                 ->title('Generation started.')

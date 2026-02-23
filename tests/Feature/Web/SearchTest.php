@@ -37,6 +37,7 @@ test('search returns matching pages and published blog posts via scout', functio
     $page = Page::create([
         'slug' => 'scout-search-test-page',
         'type' => 'custom',
+        'is_active' => true,
     ]);
     $page->setTranslation('title', 'en', 'ScoutSearchTest Page Title');
     $page->setTranslation('body', 'en', '<p>Body</p>');

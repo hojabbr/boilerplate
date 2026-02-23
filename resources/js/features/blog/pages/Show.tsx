@@ -14,6 +14,7 @@ import 'yet-another-react-lightbox/plugins/captions.css';
 import { BackButton } from '@/components/common/BackButton';
 import { fadeInUpView } from '@/components/common/motion-presets';
 import { SeoHead } from '@/components/common/SeoHead';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Carousel,
@@ -57,12 +58,19 @@ interface DocumentItem {
     type: 'file';
 }
 
+interface BlogTag {
+    id: number;
+    name: string;
+    slug: string;
+}
+
 interface Post {
     title: string;
     excerpt: string;
     body: string;
     meta_description: string | null;
     published_at: string | null;
+    tags?: BlogTag[];
     gallery: GalleryItem[];
     videos: VideoItem[];
     documents: DocumentItem[];
@@ -179,6 +187,23 @@ export default function BlogShow({
                     <h1 className="mb-2 text-2xl font-semibold text-foreground">
                         {post.title}
                     </h1>
+                    {post.tags && post.tags.length > 0 && (
+                        <ul
+                            className="mb-3 flex flex-wrap gap-1.5"
+                            aria-label="Tags"
+                        >
+                            {post.tags.map((tag) => (
+                                <li key={tag.id}>
+                                    <Badge
+                                        variant="secondary"
+                                        className="font-normal"
+                                    >
+                                        {tag.name}
+                                    </Badge>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                     {post.published_at && (
                         <p className="mb-4 text-sm text-muted-foreground">
                             {new Date(post.published_at).toLocaleDateString()}
@@ -194,7 +219,7 @@ export default function BlogShow({
                     )}
                     {post.body != null && post.body !== '' && (
                         <div
-                            className="prose max-w-none prose-neutral dark:prose-invert"
+                            className="prose max-w-none prose-neutral dark:prose-invert [&_.blog-internal-link]:font-medium [&_.blog-internal-link]:text-foreground [&_.blog-internal-link]:italic [&_.blog-internal-link]:underline [&_.blog-internal-link]:underline-offset-2"
                             dangerouslySetInnerHTML={{
                                 __html: decodeHtml(post.body),
                             }}

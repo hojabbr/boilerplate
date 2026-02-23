@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->json('social_links')->nullable();
+            $table->unsignedInteger('blog_posts_per_page')->nullable()->after('social_links');
+            $table->unsignedInteger('blog_translation_body_chunk_size')->nullable()->after('blog_posts_per_page');
             $table->timestamps();
         });
     }
