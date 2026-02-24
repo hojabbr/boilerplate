@@ -115,6 +115,16 @@ export default function PublicLayout({
             href: `${prefix}${contact.show.url()}`,
             show: showContact,
         },
+        {
+            label: t['nav.faq'] ?? 'FAQ',
+            href: `${prefix}${faq.show.url()}`,
+            show: showFaq,
+        },
+        {
+            label: t['nav.testimonials'] ?? 'Testimonials',
+            href: `${prefix}${testimonials.show.url()}`,
+            show: showTestimonials,
+        },
     ];
 
     return (

@@ -2,7 +2,10 @@
 
 use App\Core\Models\Language;
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Faq\Models\Faq;
 use App\Domains\Page\Models\Page;
+use App\Domains\Testimonial\Models\Testimonial;
+use Laravel\Pennant\Feature;
 
 beforeEach(function () {
     $this->locale = 'en';
@@ -144,4 +147,51 @@ test('search does not return soft-deleted pages or posts', function () {
     $postIds = collect($data['blog_posts'])->pluck('id')->all();
     expect($pageIds)->not->toContain($deletedPage->id);
     expect($postIds)->not->toContain($deletedPost->id);
+});
+
+test('search returns matching faqs when faq feature is active', function () {
+    Feature::activate('faq');
+
+    $language = Language::firstOrCreate(
+        ['code' => 'en'],
+        ['name' => 'English', 'sort_order' => 0]
+    );
+    $faq = Faq::factory()->create([
+        'language_id' => $language->id,
+        'question' => 'Where is the ScoutFaqSearchTerm answer?',
+        'answer' => 'You can find it here.',
+        'sort_order' => 0,
+    ]);
+
+    $response = $this->get("/{$this->locale}/search?q=ScoutFaqSearchTerm");
+
+    $response->assertOk();
+    $data = $response->json();
+    expect($data['faqs'])->toBeArray();
+    $faqIds = collect($data['faqs'])->pluck('id')->all();
+    expect($faqIds)->toContain($faq->id);
+});
+
+test('search returns matching testimonials when testimonials feature is active', function () {
+    Feature::activate('testimonials');
+
+    $language = Language::firstOrCreate(
+        ['code' => 'en'],
+        ['name' => 'English', 'sort_order' => 0]
+    );
+    $testimonial = Testimonial::factory()->create([
+        'language_id' => $language->id,
+        'quote' => 'ScoutTestimonialSearchTerm made all the difference.',
+        'author' => 'Jane Doe',
+        'role' => 'CTO',
+        'sort_order' => 0,
+    ]);
+
+    $response = $this->get("/{$this->locale}/search?q=ScoutTestimonialSearchTerm");
+
+    $response->assertOk();
+    $data = $response->json();
+    expect($data['testimonials'])->toBeArray();
+    $testimonialIds = collect($data['testimonials'])->pluck('id')->all();
+    expect($testimonialIds)->toContain($testimonial->id);
 });

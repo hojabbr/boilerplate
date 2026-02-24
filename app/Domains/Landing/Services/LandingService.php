@@ -76,7 +76,7 @@ class LandingService
         return Testimonial::query()
             ->byLocale($locale)
             ->orderBy('sort_order')
-            ->orderByDesc('id')
+            ->orderBy('id')
             ->limit($limit)
             ->get()
             ->map(fn (Testimonial $t): array => [

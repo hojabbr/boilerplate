@@ -48,12 +48,13 @@ export default function TestimonialsShow({
                             className="size-8 shrink-0 text-primary/60"
                             aria-hidden
                         />
-                        What our customers say
+                        {seo?.title ?? 'Testimonials'}
                     </h1>
-                    <p className="display-subtitle mx-auto max-w-xl text-muted-foreground">
-                        Read what our customers and partners have to say about
-                        working with us.
-                    </p>
+                    {seo?.description && (
+                        <p className="display-subtitle mx-auto max-w-xl text-muted-foreground">
+                            {seo.description}
+                        </p>
+                    )}
                 </div>
                 <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {items.map((item, j) => (

@@ -52,12 +52,13 @@ export default function FaqShow({
                             className="size-8 shrink-0 text-primary/60"
                             aria-hidden
                         />
-                        Frequently asked questions
+                        {seo?.title ?? 'FAQ'}
                     </h1>
-                    <p className="display-subtitle text-muted-foreground">
-                        Find answers to common questions about our product and
-                        services.
-                    </p>
+                    {seo?.description && (
+                        <p className="display-subtitle text-muted-foreground">
+                            {seo.description}
+                        </p>
+                    )}
                 </div>
                 <Accordion
                     type="single"

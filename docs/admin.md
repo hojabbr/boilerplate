@@ -39,11 +39,15 @@ From the same wizard you can create a **scheduled series** (recurring generation
 
 The admin panel enables Filament database notifications (`databaseNotifications()`). Users see notifications in the panel (e.g. when a queued job like blog generation completes). Requires the Laravel `notifications` table; on PostgreSQL the `data` column must be `json`/`jsonb`.
 
+## Content group resources
+
+Under the **Content** navigation group: Pages, Blog (Blog posts, Series), Contact submissions, **FAQs** (`manage faq`), **Testimonials** (`manage testimonials`). Each resource uses the corresponding domain model and policy.
+
 ## Adding a resource
 
 1. `php artisan make:filament-resource ModelName --generate --soft-deletes` (omit `--soft-deletes` if the model does not use it).
 2. Place the resource under `app/Filament/Resources/` and point it at the correct model class.
-3. Add a permission (e.g. `manage blog`) in `database/seeders/RoleAndPermissionSeeder.php` and assign it to the admin role.
+3. Add a permission (e.g. `manage blog`, `manage faq`, `manage testimonials`) in `database/seeders/RoleAndPermissionSeeder.php` and assign it to the admin role.
 
 ## Translatable models (Lara Zeus)
 

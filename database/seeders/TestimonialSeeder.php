@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Core\Models\Language;
 use App\Domains\Testimonial\Models\Testimonial;
 use Illuminate\Database\Seeder;
 
@@ -52,17 +51,5 @@ class TestimonialSeeder extends Seeder
         }
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Collection<int, Language>
-     */
-    protected function languages()
-    {
-        $query = Language::query()->orderBy('sort_order');
-
-        if (\Illuminate\Support\Facades\Schema::hasColumn((new Language)->getTable(), 'is_enabled')) {
-            $query->where('is_enabled', true);
-        }
-
-        return $query->get();
-    }
+    use SeedsByLocale;
 }

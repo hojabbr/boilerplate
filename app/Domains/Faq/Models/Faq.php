@@ -3,7 +3,10 @@
 namespace App\Domains\Faq\Models;
 
 use App\Core\Models\Language;
+use Database\Factories\FaqFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +19,8 @@ use Laravel\Scout\Searchable;
  */
 class Faq extends Model
 {
-    use Searchable, SoftDeletes;
+    /** @use HasFactory<Faq> */
+    use HasFactory, Searchable, SoftDeletes;
 
     /**
      * @var list<string>
@@ -81,5 +85,13 @@ class Faq extends Model
     public static function listCacheKey(string $locale): string
     {
         return 'faq_list.'.$locale;
+    }
+
+    /**
+     * @return Factory<Faq>
+     */
+    protected static function newFactory(): Factory
+    {
+        return FaqFactory::new();
     }
 }

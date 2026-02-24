@@ -19,7 +19,9 @@ import PublicLayout, {
 import { register } from '@/routes';
 import blog from '@/routes/blog';
 import contact from '@/routes/contact';
+import faq from '@/routes/faq';
 import page from '@/routes/page';
+import testimonials from '@/routes/testimonials';
 
 interface Seo {
     title: string;
@@ -38,7 +40,10 @@ interface WelcomeMessages {
     blog_description?: string;
     contact_title?: string;
     contact_description?: string;
+    faq_title?: string;
+    faq_description?: string;
     testimonials_title?: string;
+    testimonials_description?: string;
 }
 
 interface SectionItem {
@@ -422,6 +427,8 @@ function WelcomeExploreSection({
     showPages,
     showBlog,
     showContact,
+    showFaq,
+    showTestimonials,
     nav_pages,
     messages,
     prefix,
@@ -429,11 +436,19 @@ function WelcomeExploreSection({
     showPages: boolean;
     showBlog: boolean;
     showContact: boolean;
+    showFaq: boolean;
+    showTestimonials: boolean;
     nav_pages: Array<{ slug: string; title: string }>;
     messages: WelcomeMessages;
     prefix: string;
 }) {
-    if (!showPages && !showBlog && !showContact) {
+    if (
+        !showPages &&
+        !showBlog &&
+        !showContact &&
+        !showFaq &&
+        !showTestimonials
+    ) {
         return null;
     }
     return (
@@ -508,6 +523,47 @@ function WelcomeExploreSection({
                         </Link>
                     </m.div>
                 )}
+                {showFaq && (
+                    <m.div {...fadeInUpView} className="flex h-full flex-col">
+                        <Link
+                            href={`${prefix}${faq.show.url()}`}
+                            className="flex h-full flex-col transition hover:opacity-90"
+                        >
+                            <Card className="flex h-full flex-col">
+                                <CardHeader>
+                                    <CardTitle>
+                                        {messages.faq_title ?? 'FAQ'}
+                                    </CardTitle>
+                                    <CardDescription>
+                                        {messages.faq_description ??
+                                            'Find answers to common questions.'}
+                                    </CardDescription>
+                                </CardHeader>
+                            </Card>
+                        </Link>
+                    </m.div>
+                )}
+                {showTestimonials && (
+                    <m.div {...fadeInUpView} className="flex h-full flex-col">
+                        <Link
+                            href={`${prefix}${testimonials.show.url()}`}
+                            className="flex h-full flex-col transition hover:opacity-90"
+                        >
+                            <Card className="flex h-full flex-col">
+                                <CardHeader>
+                                    <CardTitle>
+                                        {messages.testimonials_title ??
+                                            'Testimonials'}
+                                    </CardTitle>
+                                    <CardDescription>
+                                        {messages.testimonials_description ??
+                                            'Read testimonials from our customers and partners.'}
+                                    </CardDescription>
+                                </CardHeader>
+                            </Card>
+                        </Link>
+                    </m.div>
+                )}
             </div>
         </section>
     );
@@ -531,6 +587,8 @@ export default function Welcome({
     const showPages = features.page ?? false;
     const showBlog = features.blog ?? false;
     const showContact = features.contactForm ?? false;
+    const showFaq = features.faq ?? false;
+    const showTestimonials = features.testimonials ?? false;
     const tagline =
         settings.tagline ||
         (messages.tagline_fallback ?? 'Build something great.');
@@ -613,6 +671,8 @@ export default function Welcome({
                     showPages={showPages}
                     showBlog={showBlog}
                     showContact={showContact}
+                    showFaq={showFaq}
+                    showTestimonials={showTestimonials}
                     nav_pages={nav_pages}
                     messages={messages}
                     prefix={prefix}

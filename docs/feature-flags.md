@@ -16,7 +16,7 @@ Feature flags are defined in `app/Core/Features/` and registered with `Feature::
 
 The **Feature flags** resource (Filament → Settings) lists **blog**, **page**, **contact-form**, **faq**, **testimonials**, **login**, and **registration**. These are in `config/features.php` under `toggleable`; seed with `FeatureFlagSeeder`. Adding a new toggleable feature: (1) feature class in `app/Core/Features/`, (2) register in AppServiceProvider, (3) add key and label to `config/features.php`, (4) run FeatureFlagSeeder, (5) gate with `Feature::active()`.
 
-When **login** or **registration** is inactive, the corresponding routes return 404 (middleware `authFeatures`). The shared Inertia `features` object includes `login` and `registration` so the nav can hide or show the links.
+When **login** or **registration** is inactive, the corresponding routes return 404 (middleware `authFeatures`). The shared Inertia `features` object includes `login` and `registration` so the nav can hide or show the links. The **faq** and **testimonials** flags gate the public FAQ and Testimonials pages (controllers return 404 when inactive), nav/footer links, welcome testimonials block, and search results for those models.
 
 ## Two-factor authentication
 
