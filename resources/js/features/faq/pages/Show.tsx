@@ -65,7 +65,7 @@ export default function FaqShow({
                 <Accordion
                     type="single"
                     collapsible
-                    className="w-full rounded-2xl border border-border bg-card p-2 shadow-sm"
+                    className="w-full rounded-2xl bg-card p-2 shadow-sm"
                 >
                     {items.map((item) => (
                         <AccordionItem

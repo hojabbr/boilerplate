@@ -21,7 +21,7 @@ React 19, Inertia 2, Vite, TypeScript, Tailwind CSS v4, Shadcn/Radix, i18next, Z
 
 - **Layouts** — `resources/js/layouts/` (auth, app, settings, public).
 - **components/ui/** — Shadcn primitives (Button, Input, Card, etc.). Prefer these for all interactive UI.
-- **components/common/** — Shared compositions (NavSearch, language switcher, SeoHead, motion presets). Feature-specific UI in `features/<name>/components/`.
+- **components/common/** — Shared compositions (NavSearch, language switcher, SeoHead, motion presets). **NavSearch** shows results for pages, blog, FAQ, and testimonials (each only when its feature flag is active). Feature-specific UI in `features/<name>/components/`.
 
 ## Theme and i18n
 

@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import { Menu } from 'lucide-react';
 import { m } from 'motion/react';
+import { useEffect, useState } from 'react';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { pageEnter } from '@/components/common/motion-presets';
 import NavSearch from '@/components/common/NavSearch';
@@ -9,6 +10,7 @@ import LanguageSwitcher from '@/components/language-switcher';
 import ThemeSwitcher from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
 import { dashboard, home, login, register } from '@/routes';
 import blog from '@/routes/blog';
 import contact from '@/routes/contact';
@@ -52,6 +54,7 @@ type NavItem = {
     label: string;
     href: string;
     show: boolean;
+    isActive?: boolean;
     desktopClass?: string;
 };
 
@@ -73,7 +76,7 @@ function PublicHeader({
     siteName: string;
 }) {
     return (
-        <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
+        <header className="sticky top-0 z-10 border-t-2 border-b border-border border-t-primary bg-background/95 backdrop-blur">
             <div className="mx-auto flex h-14 max-w-6xl flex-shrink-0 flex-nowrap items-center justify-between gap-2 px-4 sm:gap-4 lg:px-0">
                 <Link
                     href={prefix ? prefix : home.url()}
@@ -93,7 +96,12 @@ function PublicHeader({
                                     key={item.href}
                                     variant="ghost"
                                     size="sm"
-                                    className={item.desktopClass ?? undefined}
+                                    className={cn(
+                                        'border-b-2 border-b-transparent',
+                                        item.isActive &&
+                                            'border-b-primary font-medium',
+                                        item.desktopClass,
+                                    )}
                                     asChild
                                 >
                                     <Link href={item.href}>{item.label}</Link>
@@ -174,7 +182,11 @@ function PublicHeader({
                                                 key={item.href}
                                                 variant="ghost"
                                                 size="sm"
-                                                className="w-full justify-start"
+                                                className={cn(
+                                                    'w-full justify-start border-s-2 border-s-transparent ps-3',
+                                                    item.isActive &&
+                                                        'border-s-primary font-medium',
+                                                )}
                                                 asChild
                                             >
                                                 <Link href={item.href}>
@@ -316,7 +328,7 @@ function PublicFooter({
                             className="mt-4"
                         />
                     )}
-                <p className="mt-4 text-center text-sm text-muted-foreground">
+                <p className="mt-4 text-center text-sm text-ancillary-foreground">
                     © {new Date().getFullYear()} {siteName}. All rights
                     reserved.
                 </p>
@@ -331,7 +343,8 @@ export default function PublicLayout({
     settings = EMPTY_PUBLIC_SETTINGS,
     features = EMPTY_PUBLIC_FEATURES,
 }: PublicLayoutProps) {
-    const pageProps = usePage().props as {
+    const inertiaPage = usePage();
+    const pageProps = inertiaPage.props as {
         auth: { user: unknown };
         locale: string;
         translations?: Record<string, string>;
@@ -360,40 +373,66 @@ export default function PublicLayout({
     const siteName =
         settings.company_name || (t['common.app_fallback'] ?? 'App');
 
+    const [currentPath, setCurrentPath] = useState('');
+    useEffect(() => {
+        const path = window.location.pathname;
+        queueMicrotask(() => setCurrentPath(path));
+    }, []);
+
+    const isActive = (href: string) => {
+        if (href === prefix || href === '/') {
+            return (
+                currentPath === href ||
+                currentPath === prefix ||
+                currentPath === '/'
+            );
+        }
+        return (
+            currentPath === href ||
+            (href !== '/' && currentPath.startsWith(href + '/'))
+        );
+    };
     const mainNavItems: NavItem[] = [
         {
             label: t['nav.home'] ?? 'Home',
             href: prefix ? prefix : home.url(),
             show: true,
+            isActive: isActive(prefix ? prefix : home.url()),
         },
         ...(showPages
-            ? (nav_pages as Array<{ slug: string; title: string }>).map(
-                  (p) => ({
+            ? (nav_pages as Array<{ slug: string; title: string }>).map((p) => {
+                  const href = `${prefix}${page.show.url({ slug: p.slug })}`;
+                  return {
                       label: p.title,
-                      href: `${prefix}${page.show.url({ slug: p.slug })}`,
+                      href,
                       show: true,
-                  }),
-              )
+                      isActive: isActive(href),
+                  };
+              })
             : []),
         {
             label: t['nav.blog'] ?? 'Blog',
             href: `${prefix}${blog.index.url()}`,
             show: showBlog,
+            isActive: isActive(`${prefix}${blog.index.url()}`),
         },
         {
             label: t['nav.contact'] ?? 'Contact',
             href: `${prefix}${contact.show.url()}`,
             show: showContact,
+            isActive: isActive(`${prefix}${contact.show.url()}`),
         },
         {
             label: t['nav.faq'] ?? 'FAQ',
             href: `${prefix}${faq.show.url()}`,
             show: showFaq,
+            isActive: isActive(`${prefix}${faq.show.url()}`),
         },
         {
             label: t['nav.testimonials'] ?? 'Testimonials',
             href: `${prefix}${testimonials.show.url()}`,
             show: showTestimonials,
+            isActive: isActive(`${prefix}${testimonials.show.url()}`),
         },
     ];
 
@@ -409,7 +448,11 @@ export default function PublicLayout({
                 siteName={siteName}
             />
             <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-                <m.div className="mx-auto max-w-6xl" {...pageEnter}>
+                <m.div
+                    className="mx-auto max-w-6xl"
+                    {...pageEnter}
+                    initial={false}
+                >
                     {breadcrumbs && breadcrumbs.length > 0 && (
                         <div className="mb-4">
                             <Breadcrumbs breadcrumbs={breadcrumbs} />

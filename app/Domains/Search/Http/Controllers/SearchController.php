@@ -39,8 +39,8 @@ class SearchController extends Controller
         $locale = app()->getLocale();
         $prefix = $locale ? "/{$locale}" : '';
 
-        $pages = $pageSearch->searchAndFormat($q, $locale, $prefix);
-        $blogPosts = $blogSearch->search($q, $locale, $prefix)->all();
+        $pages = Feature::active('page') ? $pageSearch->searchAndFormat($q, $locale, $prefix) : [];
+        $blogPosts = Feature::active('blog') ? $blogSearch->search($q, $locale, $prefix)->all() : [];
         $faqs = Feature::active('faq') ? $faqSearch->searchAndFormat($q, $locale, $prefix) : [];
         $testimonials = Feature::active('testimonials') ? $testimonialSearch->searchAndFormat($q, $locale, $prefix) : [];
 

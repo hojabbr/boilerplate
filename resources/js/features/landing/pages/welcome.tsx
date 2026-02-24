@@ -151,13 +151,24 @@ function WelcomeHero({
                 {...fadeInUp}
             >
                 <h1 className="flex flex-wrap items-center justify-center gap-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-                    <Sparkles
-                        className="size-9 shrink-0 text-primary/60"
+                    <span
+                        className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary/10 p-3"
                         aria-hidden
-                    />
+                    >
+                        <Sparkles
+                            className="size-6 text-primary/70"
+                            aria-hidden
+                        />
+                    </span>
                     {heroHeading}
                 </h1>
-                <p className="mt-4 text-lg text-muted-foreground sm:text-xl">
+                <p
+                    className={
+                        heroSection?.image_url
+                            ? 'mt-4 text-lg text-foreground/80 sm:text-xl'
+                            : 'mt-4 text-lg text-muted-foreground sm:text-xl'
+                    }
+                >
                     {heroSubtitle}
                 </p>
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
@@ -184,10 +195,15 @@ function WelcomeFeaturesSection({ section }: { section: Section }) {
         <section className="pt-12 lg:pt-16">
             {section.title && (
                 <h2 className="mb-2 flex items-center justify-center gap-3 text-center text-2xl font-semibold text-foreground">
-                    <Layers
-                        className="size-8 shrink-0 text-primary/60"
+                    <span
+                        className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary/10 p-3"
                         aria-hidden
-                    />
+                    >
+                        <Layers
+                            className="size-6 text-primary/70"
+                            aria-hidden
+                        />
+                    </span>
                     {section.title}
                 </h2>
             )}
@@ -246,10 +262,12 @@ function WelcomeDbTestimonialsSection({
     return (
         <section className="pt-12 lg:pt-16">
             <h2 className="mb-8 flex items-center justify-center gap-3 text-center text-2xl font-semibold text-foreground">
-                <Quote
-                    className="size-8 shrink-0 text-primary/60"
+                <span
+                    className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary/10 p-3"
                     aria-hidden
-                />
+                >
+                    <Quote className="size-6 text-primary/70" aria-hidden />
+                </span>
                 {title}
             </h2>
             <div className="mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -262,7 +280,7 @@ function WelcomeDbTestimonialsSection({
                             ease: 'easeOut' as const,
                             delay: j * 0.06,
                         }}
-                        className="rounded-lg border border-border bg-muted/30 p-6"
+                        className="rounded-lg bg-muted/30 p-6"
                     >
                         <p className="text-foreground">{t.quote}</p>
                         <footer className="mt-3 text-sm text-muted-foreground">
@@ -293,10 +311,15 @@ function WelcomeLatestPostsSection({
         <section className="pt-12 lg:pt-16">
             {section.title && (
                 <h2 className="mb-2 flex items-center justify-center gap-3 text-center text-2xl font-semibold text-foreground">
-                    <BookOpen
-                        className="size-8 shrink-0 text-primary/60"
+                    <span
+                        className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary/10 p-3"
                         aria-hidden
-                    />
+                    >
+                        <BookOpen
+                            className="size-6 text-primary/70"
+                            aria-hidden
+                        />
+                    </span>
                     {section.title}
                 </h2>
             )}
@@ -390,10 +413,15 @@ function WelcomeCtaSection({
                 >
                     {section.title && (
                         <h2 className="flex items-center gap-3 text-xl font-semibold text-foreground sm:text-2xl">
-                            <Zap
-                                className="size-7 shrink-0 text-primary/60"
+                            <span
+                                className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary/10 p-2.5"
                                 aria-hidden
-                            />
+                            >
+                                <Zap
+                                    className="size-5 text-primary/70"
+                                    aria-hidden
+                                />
+                            </span>
                             {section.title}
                         </h2>
                     )}
@@ -454,10 +482,12 @@ function WelcomeExploreSection({
     return (
         <section className="pt-12 lg:pt-16">
             <h2 className="mb-6 flex items-center justify-center gap-3 text-center text-sm font-medium tracking-wider text-muted-foreground uppercase">
-                <Compass
-                    className="size-6 shrink-0 text-primary/60"
+                <span
+                    className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary/10 p-2"
                     aria-hidden
-                />
+                >
+                    <Compass className="size-4 text-primary/70" aria-hidden />
+                </span>
                 {messages.explore ?? 'Explore'}
             </h2>
             <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">

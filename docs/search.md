@@ -17,6 +17,10 @@ description: 'Laravel Scout and Meilisearch.'
     - `SCOUT_AFTER_COMMIT=true` — Index sync runs only after the database transaction commits, so rolled-back data is never indexed.
 - Mark searchable models with the Scout `Searchable` trait and implement `toSearchableArray()` (and optionally `shouldBeSearchable()`).
 
+## Nav search (top bar)
+
+The **Search** domain (`app/Domains/Search/`) exposes a JSON endpoint consumed by the **NavSearch** component in the public header. Results include **pages**, **blog posts**, **FAQ** (question snippet + link to `/faq`), and **testimonials** (quote snippet + link to `/testimonials`). Each result set is gated by its Pennant feature flag: `page`, `blog`, `faq`, and `testimonials`. When a feature is inactive, that type is omitted from the response and from the nav search UI. Search uses Scout (Meilisearch or fallback) per model; see `PageSearch`, `BlogSearch`, `FaqSearch`, and `TestimonialSearch` in their respective domains.
+
 ## Adding a searchable model
 
 1. Add an entry to `config/scout.php` under `meilisearch.index-settings` with **key = full model class name** (e.g. `\App\Domains\Blog\Models\BlogPost::class`). Value is an array of Meilisearch options (e.g. `filterableAttributes`).

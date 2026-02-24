@@ -15,14 +15,16 @@ import { cn } from '@/lib/utils';
 interface SearchResult {
     id: number;
     title: string;
-    slug: string;
-    type: 'page' | 'post';
+    slug?: string;
+    type: 'page' | 'post' | 'faq' | 'testimonial';
     url: string;
 }
 
 interface SearchResponse {
     pages: SearchResult[];
     blog_posts: SearchResult[];
+    faqs: SearchResult[];
+    testimonials: SearchResult[];
 }
 
 export default function NavSearch() {
@@ -58,7 +60,11 @@ export default function NavSearch() {
             const blog_posts = Array.isArray(data?.blog_posts)
                 ? data.blog_posts
                 : [];
-            setResults({ pages, blog_posts });
+            const faqs = Array.isArray(data?.faqs) ? data.faqs : [];
+            const testimonials = Array.isArray(data?.testimonials)
+                ? data.testimonials
+                : [];
+            setResults({ pages, blog_posts, faqs, testimonials });
         },
         [searchUrl],
     );
@@ -74,7 +80,9 @@ export default function NavSearch() {
     const hasResults =
         results &&
         ((results.pages?.length ?? 0) > 0 ||
-            (results.blog_posts?.length ?? 0) > 0);
+            (results.blog_posts?.length ?? 0) > 0 ||
+            (results.faqs?.length ?? 0) > 0 ||
+            (results.testimonials?.length ?? 0) > 0);
     const emptyQuery = !query.trim();
 
     return (
@@ -97,7 +105,7 @@ export default function NavSearch() {
                 <div className="flex items-center border-b px-2">
                     <Search className="size-4 shrink-0 text-muted-foreground" />
                     <Input
-                        placeholder="Search pages and blog..."
+                        placeholder="Search pages, blog, FAQ..."
                         value={query}
                         onChange={(e) => {
                             const next = e.target.value;
@@ -155,6 +163,44 @@ export default function NavSearch() {
                                     {results!.blog_posts.map((item) => (
                                         <Link
                                             key={`post-${item.id}`}
+                                            href={item.url}
+                                            className={cn(
+                                                'block rounded-sm px-2 py-2 text-sm hover:bg-accent',
+                                            )}
+                                            onClick={() => setOpen(false)}
+                                        >
+                                            {item.title}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                            {results!.faqs.length > 0 && (
+                                <div className="px-2 py-1">
+                                    <p className="mb-1 px-2 text-xs font-medium text-muted-foreground">
+                                        FAQ
+                                    </p>
+                                    {results!.faqs.map((item) => (
+                                        <Link
+                                            key={`faq-${item.id}`}
+                                            href={item.url}
+                                            className={cn(
+                                                'block rounded-sm px-2 py-2 text-sm hover:bg-accent',
+                                            )}
+                                            onClick={() => setOpen(false)}
+                                        >
+                                            {item.title}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                            {results!.testimonials.length > 0 && (
+                                <div className="px-2 py-1">
+                                    <p className="mb-1 px-2 text-xs font-medium text-muted-foreground">
+                                        Testimonials
+                                    </p>
+                                    {results!.testimonials.map((item) => (
+                                        <Link
+                                            key={`testimonial-${item.id}`}
                                             href={item.url}
                                             className={cn(
                                                 'block rounded-sm px-2 py-2 text-sm hover:bg-accent',

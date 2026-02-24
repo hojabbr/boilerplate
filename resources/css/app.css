@@ -47,6 +47,7 @@ html.dark {
     --secondary-foreground: oklch(0.4461 0.0263 256.8018);
     --muted: oklch(0.9846 0.0017 247.8389);
     --muted-foreground: oklch(0.551 0.0234 264.3637);
+    --ancillary-foreground: oklch(0.62 0.015 264.3637);
     --accent: oklch(0.9869 0.0214 95.2774);
     --accent-foreground: oklch(0.4732 0.1247 46.2007);
     --destructive: oklch(0.6368 0.2078 25.3313);
@@ -113,6 +114,7 @@ html.dark {
     --secondary-foreground: oklch(0.9219 0 0);
     --muted: oklch(0.2686 0 0);
     --muted-foreground: oklch(0.7155 0 0);
+    --ancillary-foreground: oklch(0.55 0 0);
     --accent: oklch(0.4271 0.0614 51.1885);
     --accent-foreground: oklch(0.9243 0.1151 95.7459);
     --destructive: oklch(0.6368 0.2078 25.3313);
@@ -170,6 +172,7 @@ html.dark {
     --color-secondary-foreground: var(--secondary-foreground);
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
+    --color-ancillary-foreground: var(--ancillary-foreground);
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
     --color-destructive: var(--destructive);
@@ -222,6 +225,25 @@ html.dark {
             'Vazirmatn', 'Inter', ui-sans-serif, system-ui, sans-serif,
             'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
             'Noto Color Emoji';
+    }
+
+    /* Highlight pseudo-elements: accessible contrast (theme-aware) */
+    ::selection {
+        background: oklch(from var(--primary) l c h / 0.3);
+        color: var(--foreground);
+    }
+    ::target-text {
+        background: oklch(from var(--primary) l c h / 0.25);
+        color: var(--foreground);
+    }
+    /* ::search-text (find-in-page, Chrome 144+) omitted: CSS optimizer doesn't recognize it yet.
+       Add when tooling supports it: background/color same pattern as above. */
+
+    /* Trim underline to text (Firefox 146+); progressive enhancement */
+    @supports (text-decoration-inset: 0.046em 0.009em) {
+        a[href] {
+            text-decoration-inset: 0.046em 0.009em;
+        }
     }
 }
 
