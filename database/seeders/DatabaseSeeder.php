@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             LandingSectionSeeder::class,
             BlogPostSeeder::class,
+            FaqSeeder::class,
+            TestimonialSeeder::class,
         ]);
     }
 }

@@ -8,13 +8,15 @@ beforeEach(function () {
     $this->locale = 'en';
 });
 
-test('search returns json with pages and blog_posts keys', function () {
+test('search returns json with pages blog_posts faqs and testimonials keys', function () {
     $response = $this->get("/{$this->locale}/search?q=anything");
 
     $response->assertOk();
     $response->assertJsonStructure([
         'pages' => [],
         'blog_posts' => [],
+        'faqs' => [],
+        'testimonials' => [],
     ]);
 });
 
@@ -25,6 +27,8 @@ test('search returns empty arrays when query is empty', function () {
     $response->assertExactJson([
         'pages' => [],
         'blog_posts' => [],
+        'faqs' => [],
+        'testimonials' => [],
     ]);
 });
 

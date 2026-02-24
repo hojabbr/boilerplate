@@ -1,4 +1,5 @@
 import { usePage } from '@inertiajs/react';
+import { BookOpen } from 'lucide-react';
 import { m } from 'motion/react';
 import { useState } from 'react';
 import Lightbox from 'yet-another-react-lightbox';
@@ -184,7 +185,11 @@ export default function BlogShow({
                             />
                         </div>
                     )}
-                    <h1 className="mb-2 text-2xl font-semibold text-foreground">
+                    <h1 className="mb-2 flex items-center gap-3 text-2xl font-semibold text-foreground">
+                        <BookOpen
+                            className="size-7 shrink-0 text-primary/60"
+                            aria-hidden
+                        />
                         {post.title}
                     </h1>
                     {post.tags && post.tags.length > 0 && (

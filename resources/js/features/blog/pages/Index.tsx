@@ -1,4 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
+import { BookOpen } from 'lucide-react';
 import { m } from 'motion/react';
 import { fadeInUpView } from '@/components/common/motion-presets';
 import { PaginatorLinks } from '@/components/common/PaginatorLinks';
@@ -102,7 +103,11 @@ export default function BlogIndex({
                 description={seo?.description}
             />
             <div className="mx-auto max-w-3xl space-y-8">
-                <h1 className="mb-6 text-2xl font-semibold text-foreground">
+                <h1 className="mb-6 flex items-center gap-3 text-2xl font-semibold text-foreground">
+                    <BookOpen
+                        className="size-8 shrink-0 text-primary/60"
+                        aria-hidden
+                    />
                     {messages.title ?? 'Blog'}
                 </h1>
                 <ul className="space-y-4">

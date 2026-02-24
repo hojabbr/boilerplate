@@ -93,6 +93,9 @@ namespace App\Core\Models{
  * @property int|null $blog_translation_body_chunk_size
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property string|null $sales_email
+ * @property string|null $press_email
+ * @property string|null $map_url
  * @property-read mixed $translations
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting newQuery()
@@ -109,7 +112,10 @@ namespace App\Core\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereKey($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereLocale(string $column, string $locale)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereLocales(string $column, array $locales)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereMapUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting wherePressEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereSalesEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereSocialLinks($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereTagline($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Setting whereUpdatedAt($value)
@@ -338,6 +344,39 @@ namespace App\Domains\Contact\Models{
 	class IdeHelperContactSubmission {}
 }
 
+namespace App\Domains\Faq\Models{
+/**
+ * @extends Model<Faq>
+ * @property int $id
+ * @property int $language_id
+ * @property string $question
+ * @property string $answer
+ * @property int $sort_order
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property \Carbon\CarbonImmutable|null $deleted_at
+ * @property-read \App\Core\Models\Language $language
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq byLocale(string $code)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq whereAnswer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq whereLanguageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq whereQuestion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Faq withoutTrashed()
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperFaq {}
+}
+
 namespace App\Domains\Landing\Models{
 /**
  * @property int $id
@@ -442,6 +481,12 @@ namespace App\Domains\Page\Models{
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property \Carbon\CarbonImmutable|null $deleted_at
+ * @property string|null $footer_group
+ * @property string|null $about_stats
+ * @property string|null $about_values
+ * @property string|null $about_team
+ * @property string|null $about_cta_text
+ * @property string|null $about_cta_url
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
  * @property-read int|null $media_count
  * @property-read mixed $translations
@@ -451,9 +496,15 @@ namespace App\Domains\Page\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereAboutCtaText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereAboutCtaUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereAboutStats($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereAboutTeam($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereAboutValues($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereBody($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereFooterGroup($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereJsonContainsLocale(string $column, string $locale, ?mixed $value, string $operand = '=')
@@ -475,5 +526,40 @@ namespace App\Domains\Page\Models{
  */
 	#[\AllowDynamicProperties]
 	class IdeHelperPage {}
+}
+
+namespace App\Domains\Testimonial\Models{
+/**
+ * @extends Model<Testimonial>
+ * @property int $id
+ * @property int $language_id
+ * @property string $quote
+ * @property string $author
+ * @property string|null $role
+ * @property int $sort_order
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property \Carbon\CarbonImmutable|null $deleted_at
+ * @property-read \App\Core\Models\Language $language
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial byLocale(string $code)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial whereAuthor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial whereLanguageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial whereQuote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Testimonial withoutTrashed()
+ * @mixin \Eloquent
+ */
+	#[\AllowDynamicProperties]
+	class IdeHelperTestimonial {}
 }
 

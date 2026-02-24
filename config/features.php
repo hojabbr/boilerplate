@@ -16,6 +16,8 @@ return [
         'blog' => 'Blog',
         'page' => 'Static pages',
         'contact-form' => 'Contact form',
+        'faq' => 'FAQ',
+        'testimonials' => 'Testimonials',
         'login' => 'Login',
         'registration' => 'Registration',
     ],

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Domains\Blog\Models\BlogPostSeries;
+use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\BlogPostSeriesResource\Pages\EditScheduledSeries;
 use App\Filament\Resources\BlogPostSeriesResource\Pages\ListScheduledSeries;
 use App\Filament\Resources\BlogPostSeriesResource\Pages\ViewScheduledSeries;
@@ -21,7 +22,7 @@ class BlogPostSeriesResource extends Resource
 {
     protected static ?string $model = BlogPostSeries::class;
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Blog';
+    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Blog;
 
     protected static ?int $navigationSort = 2;
 

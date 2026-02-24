@@ -143,8 +143,14 @@ return [
             \App\Domains\Blog\Models\BlogPost::class => [
                 'filterableAttributes' => ['language_id'],
             ],
+            \App\Domains\Faq\Models\Faq::class => [
+                'filterableAttributes' => ['language_id'],
+            ],
             \App\Domains\Page\Models\Page::class => [
                 'filterableAttributes' => ['is_active'],
+            ],
+            \App\Domains\Testimonial\Models\Testimonial::class => [
+                'filterableAttributes' => ['language_id'],
             ],
         ],
     ],

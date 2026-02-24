@@ -1,0 +1,85 @@
+import { HelpCircle } from 'lucide-react';
+import { m } from 'motion/react';
+import { pageEnter } from '@/components/common/motion-presets';
+import { SeoHead } from '@/components/common/SeoHead';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from '@/components/ui/accordion';
+import PublicLayout, {
+    EMPTY_PUBLIC_FEATURES,
+    EMPTY_PUBLIC_SETTINGS,
+    type PublicFeatures,
+    type PublicSettings,
+} from '@/layouts/public-layout';
+
+interface FaqItem {
+    question: string;
+    answer: string;
+}
+
+interface Seo {
+    title: string;
+    description?: string;
+}
+
+export default function FaqShow({
+    settings = EMPTY_PUBLIC_SETTINGS,
+    features = EMPTY_PUBLIC_FEATURES,
+    seo,
+    items = [],
+}: {
+    settings?: PublicSettings;
+    features?: PublicFeatures;
+    seo?: Seo;
+    items: FaqItem[];
+}) {
+    return (
+        <PublicLayout settings={settings} features={features}>
+            <SeoHead
+                title={seo?.title ?? 'FAQ'}
+                description={seo?.description}
+            />
+            <m.div
+                className="section-spacing mx-auto max-w-3xl px-4 pt-16 sm:px-6"
+                {...pageEnter}
+            >
+                <div className="mb-12">
+                    <h1 className="display-title mb-4 flex items-center gap-3 text-foreground">
+                        <HelpCircle
+                            className="size-8 shrink-0 text-primary/60"
+                            aria-hidden
+                        />
+                        Frequently asked questions
+                    </h1>
+                    <p className="display-subtitle text-muted-foreground">
+                        Find answers to common questions about our product and
+                        services.
+                    </p>
+                </div>
+                <Accordion
+                    type="single"
+                    collapsible
+                    className="w-full rounded-2xl border border-border bg-card p-2 shadow-sm"
+                >
+                    {items.map((item, i) => (
+                        <AccordionItem
+                            key={i}
+                            value={`faq-${i}`}
+                            className="rounded-xl px-4 data-[state=open]:bg-muted/50"
+                        >
+                            <AccordionTrigger className="text-start font-semibold hover:no-underline">
+                                {item.question}
+                            </AccordionTrigger>
+                            <AccordionContent className="text-muted-foreground">
+                                {item.answer}
+                            </AccordionContent>
+                        </AccordionItem>
+                    ))}
+                </Accordion>
+            </m.div>
+        </PublicLayout>
+    );
+}

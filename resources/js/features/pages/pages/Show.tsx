@@ -1,4 +1,5 @@
 import { usePage } from '@inertiajs/react';
+import { FileText } from 'lucide-react';
 import { m } from 'motion/react';
 import { useState } from 'react';
 import Lightbox from 'yet-another-react-lightbox';
@@ -108,7 +109,11 @@ export default function PageShow({
                             />
                         </div>
                     )}
-                    <h1 className="mb-4 text-2xl font-semibold text-foreground">
+                    <h1 className="mb-4 flex items-center gap-3 text-2xl font-semibold text-foreground">
+                        <FileText
+                            className="size-8 shrink-0 text-primary/60"
+                            aria-hidden
+                        />
                         {page.title}
                     </h1>
                     {page.body != null && page.body !== '' && (

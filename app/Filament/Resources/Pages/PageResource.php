@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Pages;
 
 use App\Domains\Page\Models\Page;
+use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\Pages\Pages\CreatePage;
 use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ListPages;
@@ -23,9 +24,9 @@ class PageResource extends Resource
 
     protected static ?string $model = Page::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'CMS';
+    protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Content;
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 

@@ -1,4 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
+import { BookOpen, Compass, Layers, Quote, Sparkles, Zap } from 'lucide-react';
 import { m } from 'motion/react';
 import { fadeInUp, fadeInUpView } from '@/components/common/motion-presets';
 import { SeoHead } from '@/components/common/SeoHead';
@@ -37,6 +38,7 @@ interface WelcomeMessages {
     blog_description?: string;
     contact_title?: string;
     contact_description?: string;
+    testimonials_title?: string;
 }
 
 interface SectionItem {
@@ -75,6 +77,12 @@ interface LatestPost {
     thumbnail_url?: string | null;
 }
 
+interface TestimonialItem {
+    quote: string;
+    author: string;
+    role?: string | null;
+}
+
 interface WelcomeProps {
     canRegister?: boolean;
     settings?: PublicSettings;
@@ -83,11 +91,13 @@ interface WelcomeProps {
     messages?: WelcomeMessages;
     sections?: Section[];
     latest_posts?: LatestPost[];
+    testimonials?: TestimonialItem[];
 }
 
 const EMPTY_WELCOME_MESSAGES: WelcomeMessages = {};
 const EMPTY_SECTIONS: Section[] = [];
 const EMPTY_LATEST_POSTS: LatestPost[] = [];
+const EMPTY_TESTIMONIALS: TestimonialItem[] = [];
 
 function WelcomeHero({
     heroSection,
@@ -135,7 +145,11 @@ function WelcomeHero({
                 }
                 {...fadeInUp}
             >
-                <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+                <h1 className="flex flex-wrap items-center justify-center gap-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+                    <Sparkles
+                        className="size-9 shrink-0 text-primary/60"
+                        aria-hidden
+                    />
                     {heroHeading}
                 </h1>
                 <p className="mt-4 text-lg text-muted-foreground sm:text-xl">
@@ -143,30 +157,16 @@ function WelcomeHero({
                 </p>
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                     {canRegister && (
-                        <m.span
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <Button size="lg" asChild>
-                                <Link href={heroPrimaryUrl}>
-                                    {heroPrimaryCta}
-                                </Link>
-                            </Button>
-                        </m.span>
+                        <Button size="lg" asChild>
+                            <Link href={heroPrimaryUrl}>{heroPrimaryCta}</Link>
+                        </Button>
                     )}
                     {showContact && (
-                        <m.span
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <Button variant="outline" size="lg" asChild>
-                                <Link href={`${prefix}${contact.show.url()}`}>
-                                    {heroSecondaryCta}
-                                </Link>
-                            </Button>
-                        </m.span>
+                        <Button variant="outline" size="lg" asChild>
+                            <Link href={`${prefix}${contact.show.url()}`}>
+                                {heroSecondaryCta}
+                            </Link>
+                        </Button>
                     )}
                 </div>
             </m.div>
@@ -178,7 +178,11 @@ function WelcomeFeaturesSection({ section }: { section: Section }) {
     return (
         <section className="pt-12 lg:pt-16">
             {section.title && (
-                <h2 className="mb-2 text-center text-2xl font-semibold text-foreground">
+                <h2 className="mb-2 flex items-center justify-center gap-3 text-center text-2xl font-semibold text-foreground">
+                    <Layers
+                        className="size-8 shrink-0 text-primary/60"
+                        aria-hidden
+                    />
                     {section.title}
                 </h2>
             )}
@@ -224,33 +228,43 @@ function WelcomeFeaturesSection({ section }: { section: Section }) {
     );
 }
 
-function WelcomeTestimonialsSection({ section }: { section: Section }) {
+function WelcomeDbTestimonialsSection({
+    testimonials,
+    title,
+}: {
+    testimonials: TestimonialItem[];
+    title: string;
+}) {
+    if (testimonials.length === 0) {
+        return null;
+    }
     return (
         <section className="pt-12 lg:pt-16">
-            {section.title && (
-                <h2 className="mb-8 text-center text-2xl font-semibold text-foreground">
-                    {section.title}
-                </h2>
-            )}
-            <div className="mx-auto grid gap-6 sm:grid-cols-2">
-                {(section.items ?? []).map((item, j) => (
-                    <blockquote
-                        key={
-                            item.title ?? item.description ?? `testimonial-${j}`
-                        }
+            <h2 className="mb-8 flex items-center justify-center gap-3 text-center text-2xl font-semibold text-foreground">
+                <Quote
+                    className="size-8 shrink-0 text-primary/60"
+                    aria-hidden
+                />
+                {title}
+            </h2>
+            <div className="mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {testimonials.map((t, j) => (
+                    <m.blockquote
+                        key={`${t.author}-${j}`}
+                        {...fadeInUpView}
+                        transition={{
+                            duration: 0.4,
+                            ease: 'easeOut' as const,
+                            delay: j * 0.06,
+                        }}
                         className="rounded-lg border border-border bg-muted/30 p-6"
                     >
-                        {item.description && (
-                            <p className="text-foreground">
-                                {item.description}
-                            </p>
-                        )}
-                        {item.title && (
-                            <footer className="mt-3 text-sm text-muted-foreground">
-                                — {item.title}
-                            </footer>
-                        )}
-                    </blockquote>
+                        <p className="text-foreground">{t.quote}</p>
+                        <footer className="mt-3 text-sm text-muted-foreground">
+                            — {t.author}
+                            {t.role ? `, ${t.role}` : ''}
+                        </footer>
+                    </m.blockquote>
                 ))}
             </div>
         </section>
@@ -273,7 +287,11 @@ function WelcomeLatestPostsSection({
     return (
         <section className="pt-12 lg:pt-16">
             {section.title && (
-                <h2 className="mb-2 text-center text-2xl font-semibold text-foreground">
+                <h2 className="mb-2 flex items-center justify-center gap-3 text-center text-2xl font-semibold text-foreground">
+                    <BookOpen
+                        className="size-8 shrink-0 text-primary/60"
+                        aria-hidden
+                    />
                     {section.title}
                 </h2>
             )}
@@ -366,7 +384,11 @@ function WelcomeCtaSection({
                     }
                 >
                     {section.title && (
-                        <h2 className="text-xl font-semibold text-foreground sm:text-2xl">
+                        <h2 className="flex items-center gap-3 text-xl font-semibold text-foreground sm:text-2xl">
+                            <Zap
+                                className="size-7 shrink-0 text-primary/60"
+                                aria-hidden
+                            />
                             {section.title}
                         </h2>
                     )}
@@ -416,7 +438,11 @@ function WelcomeExploreSection({
     }
     return (
         <section className="pt-12 lg:pt-16">
-            <h2 className="mb-6 text-center text-sm font-medium tracking-wider text-muted-foreground uppercase">
+            <h2 className="mb-6 flex items-center justify-center gap-3 text-center text-sm font-medium tracking-wider text-muted-foreground uppercase">
+                <Compass
+                    className="size-6 shrink-0 text-primary/60"
+                    aria-hidden
+                />
                 {messages.explore ?? 'Explore'}
             </h2>
             <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -495,6 +521,7 @@ export default function Welcome({
     messages = EMPTY_WELCOME_MESSAGES,
     sections = EMPTY_SECTIONS,
     latest_posts = EMPTY_LATEST_POSTS,
+    testimonials = EMPTY_TESTIMONIALS,
 }: WelcomeProps) {
     const { locale, nav_pages = [] } = usePage().props as {
         locale: string;
@@ -511,9 +538,6 @@ export default function Welcome({
 
     const heroSection = sections.find((s) => s.type === 'hero');
     const featuresSections = sections.filter((s) => s.type === 'features');
-    const testimonialsSections = sections.filter(
-        (s) => s.type === 'testimonials',
-    );
     const latestPostsSections = sections.filter(
         (s) => s.type === 'latest_posts',
     );
@@ -559,12 +583,15 @@ export default function Welcome({
                         section={sec}
                     />
                 ))}
-                {testimonialsSections.map((sec) => (
-                    <WelcomeTestimonialsSection
-                        key={sectionKey(sec)}
-                        section={sec}
+                {features.testimonials && (
+                    <WelcomeDbTestimonialsSection
+                        testimonials={testimonials}
+                        title={
+                            messages.testimonials_title ??
+                            'What our customers say'
+                        }
                     />
-                ))}
+                )}
                 {latestPostsSections.map((sec) => (
                     <WelcomeLatestPostsSection
                         key={sectionKey(sec)}

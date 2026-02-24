@@ -5,6 +5,7 @@ namespace App\Domains\Landing\Services;
 use App\Domains\Blog\Models\BlogPost;
 use App\Domains\Landing\DTOs\LandingSectionDto;
 use App\Domains\Landing\Models\LandingSection;
+use App\Domains\Testimonial\Models\Testimonial;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Pennant\Feature;
 
@@ -57,6 +58,32 @@ class LandingService
                     'thumbnail_url' => $firstImage?->getUrl('card'),
                 ];
             })
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Latest testimonials for the given locale (from Testimonial model).
+     *
+     * @return array<int, array{quote: string, author: string, role: string|null}>
+     */
+    public function getLatestTestimonials(string $locale, int $limit = 3): array
+    {
+        if (! Feature::active('testimonials')) {
+            return [];
+        }
+
+        return Testimonial::query()
+            ->byLocale($locale)
+            ->orderBy('sort_order')
+            ->orderByDesc('id')
+            ->limit($limit)
+            ->get()
+            ->map(fn (Testimonial $t): array => [
+                'quote' => $t->quote,
+                'author' => $t->author,
+                'role' => $t->role,
+            ])
             ->values()
             ->all();
     }

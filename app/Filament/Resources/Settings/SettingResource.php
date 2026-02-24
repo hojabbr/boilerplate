@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Settings;
 
 use App\Core\Models\Setting;
+use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\Settings\Pages\CreateSetting;
 use App\Filament\Resources\Settings\Pages\EditSetting;
 use App\Filament\Resources\Settings\Pages\ListSettings;
@@ -21,7 +22,7 @@ class SettingResource extends Resource
 
     protected static ?string $model = Setting::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'CMS';
+    protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Content;
 
     protected static ?int $navigationSort = 3;
 

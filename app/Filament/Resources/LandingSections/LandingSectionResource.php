@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\LandingSections;
 
 use App\Domains\Landing\Models\LandingSection;
+use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\LandingSections\Pages\CreateLandingSection;
 use App\Filament\Resources\LandingSections\Pages\EditLandingSection;
 use App\Filament\Resources\LandingSections\Pages\ListLandingSections;
@@ -24,9 +25,9 @@ class LandingSectionResource extends Resource
 
     protected static ?string $model = LandingSection::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'CMS';
+    protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Content;
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 2;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 

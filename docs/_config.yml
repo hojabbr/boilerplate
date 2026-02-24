@@ -1,7 +1,7 @@
 # Laravel React Boilerplate — Documentation (Just the Docs)
 # GitHub Pages: set Source to "Deploy from a branch", branch main, folder /docs
 
-title: Laravel React Boilerplate
+title: Laravel Boilerplate
 description: Production-ready starter for Laravel 12, Inertia 2, and React 19 — localization, Filament admin, feature flags, full-text search, real-time. Use as template or clone.
 # Project site: https://hojabbr.github.io/boilerplate/ — baseurl must be the repo path so theme assets load
 baseurl: "/boilerplate"

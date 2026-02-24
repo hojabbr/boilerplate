@@ -21,6 +21,7 @@ class LandingController extends Controller
 
         $sections = $landingService->getSectionsForLocale($locale);
         $latestPosts = $landingService->getLatestPosts($locale, 3);
+        $testimonials = $landingService->getLatestTestimonials($locale, 3);
 
         $settings = $pageProps->settingsSlice($setting);
 
@@ -44,9 +45,11 @@ class LandingController extends Controller
                 'blog_description' => __('welcome.blog_description'),
                 'contact_title' => __('welcome.contact_title'),
                 'contact_description' => __('welcome.contact_description'),
+                'testimonials_title' => __('welcome.testimonials_title'),
             ],
             'sections' => $sections,
             'latest_posts' => $latestPosts,
+            'testimonials' => $testimonials,
         ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ContactSubmissions;
 
 use App\Domains\Contact\Models\ContactSubmission;
+use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\ContactSubmissions\Pages\EditContactSubmission;
 use App\Filament\Resources\ContactSubmissions\Pages\ListContactSubmissions;
 use App\Filament\Resources\ContactSubmissions\Schemas\ContactSubmissionForm;
@@ -19,9 +20,9 @@ class ContactSubmissionResource extends Resource
 {
     protected static ?string $model = ContactSubmission::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'CMS';
+    protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Content;
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 4;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
 

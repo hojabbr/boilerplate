@@ -20,7 +20,6 @@ class LandingSectionForm
                     ->options([
                         'hero' => 'Hero',
                         'features' => 'Features',
-                        'testimonials' => 'Testimonials',
                         'latest_posts' => 'Latest blog posts',
                         'cta' => 'CTA',
                     ])

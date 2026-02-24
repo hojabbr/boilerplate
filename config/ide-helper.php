@@ -143,8 +143,10 @@ return [
         'app/Domains/Auth/Models',
         'app/Domains/Blog/Models',
         'app/Domains/Contact/Models',
+        'app/Domains/Faq/Models',
         'app/Domains/Landing/Models',
         'app/Domains/Page/Models',
+        'app/Domains/Testimonial/Models',
     ],
 
     /*

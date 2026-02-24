@@ -4,9 +4,11 @@ use App\Core\Http\Controllers\TranslationsCsvController;
 use App\Domains\Blog\Http\Controllers\BlogController;
 use App\Domains\Contact\Http\Controllers\ContactController;
 use App\Domains\Dashboard\Http\Controllers\DashboardController;
+use App\Domains\Faq\Http\Controllers\FaqController;
 use App\Domains\Landing\Http\Controllers\LandingController;
 use App\Domains\Page\Http\Controllers\PageController;
 use App\Domains\Search\Http\Controllers\SearchController;
+use App\Domains\Testimonial\Http\Controllers\TestimonialController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -39,6 +41,8 @@ Route::group(
         Route::get('blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
         Route::get('contact', [ContactController::class, 'show'])->name('contact.show');
         Route::post('contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:5,1');
+        Route::get('faq', [FaqController::class, 'show'])->name('faq.show');
+        Route::get('testimonials', [TestimonialController::class, 'show'])->name('testimonials.show');
 
         require __DIR__.'/settings.php';
     });

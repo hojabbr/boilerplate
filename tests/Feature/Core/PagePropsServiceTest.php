@@ -16,20 +16,24 @@ test('page props service settings slice returns company name and tagline from se
     expect($slice['social_links'])->toBeArray();
 });
 
-test('page props service features array returns boolean flags for page blog contactForm login registration', function () {
+test('page props service features array returns boolean flags for page blog contactForm faq testimonials login registration', function () {
     Feature::activate('blog');
     Feature::deactivate('page');
     Feature::deactivate('contact-form');
+    Feature::activate('faq');
+    Feature::deactivate('testimonials');
     Feature::activate('login');
     Feature::deactivate('registration');
 
     $service = app(PagePropsService::class);
     $features = $service->featuresArray();
 
-    expect($features)->toHaveKeys(['page', 'blog', 'contactForm', 'login', 'registration']);
+    expect($features)->toHaveKeys(['page', 'blog', 'contactForm', 'faq', 'testimonials', 'login', 'registration']);
     expect($features['blog'])->toBeTrue();
     expect($features['page'])->toBeFalse();
     expect($features['contactForm'])->toBeFalse();
+    expect($features['faq'])->toBeTrue();
+    expect($features['testimonials'])->toBeFalse();
     expect($features['login'])->toBeTrue();
     expect($features['registration'])->toBeFalse();
 });

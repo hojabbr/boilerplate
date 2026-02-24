@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\BlogPosts;
 
 use App\Domains\Blog\Models\BlogPost;
+use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\BlogPosts\Pages\CreateBlogPost;
 use App\Filament\Resources\BlogPosts\Pages\EditBlogPost;
 use App\Filament\Resources\BlogPosts\Pages\GenerateBlogPost;
@@ -21,7 +22,7 @@ class BlogPostResource extends Resource
 {
     protected static ?string $model = BlogPost::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Blog';
+    protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Blog;
 
     protected static ?int $navigationSort = 1;
 

@@ -22,7 +22,7 @@ class ItemsRelationManager extends RelationManager
 
     public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
     {
-        return in_array($ownerRecord->type ?? '', ['features', 'testimonials'], true);
+        return ($ownerRecord->type ?? '') === 'features';
     }
 
     public function form(Schema $schema): Schema

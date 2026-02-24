@@ -133,6 +133,8 @@ class HandleInertiaRequests extends Middleware
             'nav.privacy',
             'nav.blog',
             'nav.contact',
+            'nav.faq',
+            'nav.testimonials',
             'nav.dashboard',
             'nav.login',
             'nav.register',

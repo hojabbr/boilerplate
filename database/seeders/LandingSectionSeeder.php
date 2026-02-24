@@ -45,7 +45,6 @@ class LandingSectionSeeder extends Seeder
 
         $this->seedHero($locales, $fallback);
         $this->seedFeatures($locales, $fallback);
-        $this->seedTestimonials($locales, $fallback);
         $this->seedLatestPosts($locales, $fallback);
         $this->seedCta($locales, $fallback);
     }
@@ -254,101 +253,6 @@ class LandingSectionSeeder extends Seeder
             } catch (Throwable $e) {
                 $this->command?->warn("Could not attach feature item {$index} icon: ".$e->getMessage());
             }
-        }
-    }
-
-    /**
-     * @param  list<string>  $locales
-     */
-    protected function seedTestimonials(array $locales, string $fallback): void
-    {
-        $sectionTranslations = [
-            'en' => ['title' => 'What our customers say'],
-            'de' => ['title' => 'Was unsere Kunden sagen'],
-            'es' => ['title' => 'Lo que dicen nuestros clientes'],
-            'fr' => ['title' => 'Ce que disent nos clients'],
-            'it' => ['title' => 'Cosa dicono i nostri clienti'],
-            'ru' => ['title' => 'Что говорят наши клиенты'],
-            'ro' => ['title' => 'Ce spun clienții noștri'],
-            'tr' => ['title' => 'Müşterilerimiz ne diyor'],
-            'ur' => ['title' => 'ہمارے گاہک کیا کہتے ہیں'],
-            'ar' => ['title' => 'ما يقوله عملاؤنا'],
-            'fa' => ['title' => 'نظر مشتریان ما'],
-            'ja' => ['title' => 'お客様の声'],
-            'zh' => ['title' => '客户评价'],
-            'ko' => ['title' => '고객 후기'],
-            'hi' => ['title' => 'हमारे ग्राहक क्या कहते हैं'],
-        ];
-
-        $section = LandingSection::updateOrCreate(
-            ['type' => 'testimonials'],
-            ['sort_order' => 2]
-        );
-
-        foreach ($locales as $locale) {
-            $t = $sectionTranslations[$locale] ?? $sectionTranslations[$fallback] ?? $sectionTranslations['en'];
-            $section->setTranslation('title', $locale, $t['title']);
-        }
-        $section->save();
-
-        $appName = config('app.name');
-        $itemsData = [
-            [
-                'sort_order' => 0,
-                'translations' => [
-                    'en' => ['title' => 'Jane Doe, CTO at TechCo', 'description' => "{$appName} helped us ship faster and with less friction. Our team loves it."],
-                    'de' => ['title' => 'Jane Doe, CTO bei TechCo', 'description' => "{$appName} hat uns geholfen, schneller und mit weniger Reibung zu liefern."],
-                    'es' => ['title' => 'Jane Doe, CTO en TechCo', 'description' => "{$appName} nos ayudó a lanzar más rápido y con menos fricción."],
-                    'fr' => ['title' => 'Jane Doe, CTO chez TechCo', 'description' => "{$appName} nous a aidés à livrer plus vite et avec moins de friction."],
-                    'it' => ['title' => 'Jane Doe, CTO da TechCo', 'description' => "{$appName} ci ha aiutato a spedire più velocemente e con meno attrito."],
-                    'ru' => ['title' => 'Джейн Доу, CTO в TechCo', 'description' => "{$appName} помог нам выходить на рынок быстрее и проще."],
-                    'ro' => ['title' => 'Jane Doe, CTO la TechCo', 'description' => "{$appName} ne-a ajutat să livrăm mai rapid și cu mai puține fricțiuni."],
-                    'tr' => ['title' => 'Jane Doe, TechCo CTO', 'description' => "{$appName} daha hızlı ve daha az sürtünmeyle teslim etmemize yardımcı oldu."],
-                    'ur' => ['title' => 'جین ڈو، TechCo میں CTO', 'description' => "{$appName} نے ہمیں تیزی سے اور کم رگڑ کے ساتھ شپ کرنے میں مدد کی۔"],
-                    'ar' => ['title' => 'جين دو، مديرة تقنية في TechCo', 'description' => "ساعدنا {$appName} على الإطلاق بشكل أسرع وباحتكاك أقل."],
-                    'fa' => ['title' => 'جین دو، CTO در TechCo', 'description' => "{$appName} به ما کمک کرد سریع‌تر و با اصطکاک کمتر عرضه کنیم."],
-                    'ja' => ['title' => 'Jane Doe、TechCo CTO', 'description' => "{$appName}でより速く、スムーズにリリースできるようになりました。"],
-                    'zh' => ['title' => 'Jane Doe，TechCo 技术总监', 'description' => "{$appName} 帮助我们更快、更顺畅地交付产品。"],
-                    'ko' => ['title' => 'Jane Doe, TechCo CTO', 'description' => "{$appName}로 더 빠르고 원활하게 출시할 수 있었어요."],
-                    'hi' => ['title' => 'Jane Doe, TechCo में CTO', 'description' => "{$appName} ने हमें तेज़ और आसानी से लॉन्च करने में मदद की।"],
-                ],
-            ],
-            [
-                'sort_order' => 1,
-                'translations' => [
-                    'en' => ['title' => 'John Smith, Founder at StartupXYZ', 'description' => "We switched to {$appName} last year. Best decision we made. Support is outstanding."],
-                    'de' => ['title' => 'John Smith, Gründer bei StartupXYZ', 'description' => "Wir sind letztes Jahr zu {$appName} gewechselt. Beste Entscheidung."],
-                    'es' => ['title' => 'John Smith, Fundador en StartupXYZ', 'description' => "Cambiamos a {$appName} el año pasado. La mejor decisión. Soporte excepcional."],
-                    'fr' => ['title' => 'John Smith, Fondateur chez StartupXYZ', 'description' => "Nous sommes passés à {$appName} l'année dernière. Meilleure décision."],
-                    'it' => ['title' => 'John Smith, Fondatore di StartupXYZ', 'description' => "Siamo passati ad {$appName} l'anno scorso. La migliore decisione."],
-                    'ru' => ['title' => 'Джон Смит, основатель StartupXYZ', 'description' => "Перешли на {$appName} в прошлом году. Лучшее решение."],
-                    'ro' => ['title' => 'John Smith, Fondator TechCo', 'description' => "Am trecut la {$appName} anul trecut. Cea mai bună decizie. Suportul e excelent."],
-                    'tr' => ['title' => 'John Smith, StartupXYZ Kurucusu', 'description' => "Geçen yıl {$appName}'a geçtik. Verdiğimiz en iyi karar. Destek mükemmel."],
-                    'ur' => ['title' => 'جان سمتھ، StartupXYZ کے بانی', 'description' => "ہم نے پچھلے سال {$appName} اپنایا۔ بہترین فیصلہ۔ سپورٹ بہترین۔"],
-                    'ar' => ['title' => 'جون سميث، المؤسس في StartupXYZ', 'description' => "انتقلنا إلى {$appName} العام الماضي. أفضل قرار. الدعم ممتاز."],
-                    'fa' => ['title' => 'جان اسمیت، بنیانگذار StartupXYZ', 'description' => "سال گذشته به {$appName} مهاجرت کردیم. بهترین تصمیم. پشتیبانی عالی."],
-                    'ja' => ['title' => 'John Smith、StartupXYZ創業者', 'description' => "昨年{$appName}に乗り換えました。最高の決断でした。サポートも抜群です。"],
-                    'zh' => ['title' => 'John Smith，StartupXYZ 创始人', 'description' => "去年我们换成了 {$appName}。这是我们做过最好的决定，支持也很棒。"],
-                    'ko' => ['title' => 'John Smith, StartupXYZ 설립자', 'description' => "작년에 {$appName}로 전환했어요. 최고의 결정이었고, 지원도 훌륭해요."],
-                    'hi' => ['title' => 'John Smith, StartupXYZ के संस्थापक', 'description' => "पिछले साल हमने {$appName} अपनाया। सबसे अच्छा फैसला। समर्थन शानदार है।"],
-                ],
-            ],
-        ];
-
-        foreach ($itemsData as $itemData) {
-            $item = LandingSectionItem::updateOrCreate(
-                [
-                    'landing_section_id' => $section->id,
-                    'sort_order' => $itemData['sort_order'],
-                ],
-                []
-            );
-            foreach ($locales as $locale) {
-                $t = $itemData['translations'][$locale] ?? $itemData['translations'][$fallback] ?? $itemData['translations']['en'];
-                $item->setTranslation('title', $locale, $t['title']);
-                $item->setTranslation('description', $locale, $t['description']);
-            }
-            $item->save();
         }
     }
 

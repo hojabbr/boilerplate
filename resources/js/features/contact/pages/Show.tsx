@@ -1,5 +1,5 @@
 import { Form, usePage } from '@inertiajs/react';
-import { Mail, Phone } from 'lucide-react';
+import { Mail, MessageCircle, Phone } from 'lucide-react';
 import { m } from 'motion/react';
 import { BackButton } from '@/components/common/BackButton';
 import { LabeledInputField } from '@/components/common/LabeledInputField';
@@ -96,7 +96,11 @@ export default function ContactShow({
                 />
             </div>
             <m.div className="mx-auto max-w-xl" {...pageEnter}>
-                <h1 className="mb-6 text-2xl font-semibold text-foreground">
+                <h1 className="mb-6 flex items-center gap-3 text-2xl font-semibold text-foreground">
+                    <MessageCircle
+                        className="size-8 shrink-0 text-primary/60"
+                        aria-hidden
+                    />
                     {messages.heading ?? 'Contact us'}
                 </h1>
                 {success && (

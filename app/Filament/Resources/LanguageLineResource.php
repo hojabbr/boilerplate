@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\LanguageLineResource\Pages\CreateLanguageLine;
 use App\Filament\Resources\LanguageLineResource\Pages\EditLanguageLine;
 use App\Filament\Resources\LanguageLineResource\Pages\FillMissingTranslations;
@@ -24,9 +25,9 @@ class LanguageLineResource extends Resource
 {
     protected static ?string $model = LanguageLine::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Settings';
+    protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Settings;
 
-    protected static ?int $navigationSort = 60;
+    protected static ?int $navigationSort = 2;
 
     protected static \BackedEnum|string|null $navigationIcon = Heroicon::OutlinedLanguage;
 

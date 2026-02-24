@@ -12,7 +12,9 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { dashboard, home, login, register } from '@/routes';
 import blog from '@/routes/blog';
 import contact from '@/routes/contact';
+import faq from '@/routes/faq';
 import page from '@/routes/page';
+import testimonials from '@/routes/testimonials';
 import type { BreadcrumbItem } from '@/types';
 
 export interface PublicSettings {
@@ -28,6 +30,8 @@ export interface PublicFeatures {
     page?: boolean;
     blog?: boolean;
     contactForm?: boolean;
+    faq?: boolean;
+    testimonials?: boolean;
     login?: boolean;
     registration?: boolean;
 }
@@ -79,6 +83,8 @@ export default function PublicLayout({
     const showPages = resolvedFeatures.page ?? false;
     const showBlog = resolvedFeatures.blog ?? false;
     const showContact = resolvedFeatures.contactForm ?? false;
+    const showFaq = resolvedFeatures.faq ?? false;
+    const showTestimonials = resolvedFeatures.testimonials ?? false;
     const showLogin = resolvedFeatures.login === true;
     const showRegister = resolvedFeatures.registration === true;
     const siteName =
@@ -331,6 +337,22 @@ export default function PublicLayout({
                                 className="hover:text-foreground"
                             >
                                 {t['nav.contact'] ?? 'Contact'}
+                            </Link>
+                        )}
+                        {showFaq && (
+                            <Link
+                                href={`${prefix}${faq.show.url()}`}
+                                className="hover:text-foreground"
+                            >
+                                {t['nav.faq'] ?? 'FAQ'}
+                            </Link>
+                        )}
+                        {showTestimonials && (
+                            <Link
+                                href={`${prefix}${testimonials.show.url()}`}
+                                className="hover:text-foreground"
+                            >
+                                {t['nav.testimonials'] ?? 'Testimonials'}
                             </Link>
                         )}
                     </nav>

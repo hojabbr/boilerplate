@@ -52,7 +52,7 @@ Flush and re-import after changing searchable fields to avoid stale index state.
 | `insert()` / `upsert()` / raw | No           | No                         | Run `scout:import` (or `scout:sync-all`)   |
 
 - **`migrate:fresh --seed`:** If seeders use only `create()`/`save()` and `SCOUT_QUEUE=false`, the index is in sync after the command. If seeders use `insert()`/`upsert()` or you use queued indexing, run `scout:import` (or `scout:sync-all`) after the command.
-- **New developer / fresh clone:** After `migrate --seed` or `migrate:fresh --seed`, run `scout:import` for Page and BlogPost (or `scout:sync-all`) unless seeders use only `create()`/`save()` with `SCOUT_QUEUE=false`.
+- **New developer / fresh clone:** After `migrate --seed` or `migrate:fresh --seed`, run `scout:import` for Page, BlogPost, Faq, and Testimonial (or `scout:sync-all`) unless seeders use only `create()`/`save()` with `SCOUT_QUEUE=false`.
 - **CI:** Use `SCOUT_DRIVER=collection` in tests so no Meilisearch is required and no post-seed import is needed; or run `scout:import` after seeding when using Meilisearch.
 
 ## Commands
