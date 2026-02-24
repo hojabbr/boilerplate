@@ -2,7 +2,6 @@ import { Link, usePage } from '@inertiajs/react';
 import { Menu } from 'lucide-react';
 import { m } from 'motion/react';
 import { useEffect, useState } from 'react';
-import { Breadcrumbs } from '@/components/breadcrumbs';
 import { pageEnter } from '@/components/common/motion-presets';
 import NavSearch from '@/components/common/NavSearch';
 import SocialLinks from '@/components/common/SocialLinks';
@@ -17,8 +16,6 @@ import contact from '@/routes/contact';
 import faq from '@/routes/faq';
 import page from '@/routes/page';
 import testimonials from '@/routes/testimonials';
-import type { BreadcrumbItem } from '@/types';
-
 export interface PublicSettings {
     company_name?: string;
     tagline?: string;
@@ -44,7 +41,8 @@ export const EMPTY_PUBLIC_FEATURES: PublicFeatures = {};
 
 interface PublicLayoutProps {
     children: React.ReactNode;
-    breadcrumbs?: BreadcrumbItem[];
+    /** When 'full-bleed', main has no top/side padding and inner wrapper is full width for hero-style pages. */
+    contentVariant?: 'default' | 'full-bleed';
     settings?: PublicSettings;
     features?: PublicFeatures;
     canRegister?: boolean;
@@ -76,7 +74,7 @@ function PublicHeader({
     siteName: string;
 }) {
     return (
-        <header className="sticky top-0 z-10 border-t-2 border-b border-border border-t-primary bg-background/95 backdrop-blur">
+        <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
             <div className="mx-auto flex h-14 max-w-6xl flex-shrink-0 flex-nowrap items-center justify-between gap-2 px-4 sm:gap-4 lg:px-0">
                 <Link
                     href={prefix ? prefix : home.url()}
@@ -339,7 +337,7 @@ function PublicFooter({
 
 export default function PublicLayout({
     children,
-    breadcrumbs,
+    contentVariant = 'default',
     settings = EMPTY_PUBLIC_SETTINGS,
     features = EMPTY_PUBLIC_FEATURES,
 }: PublicLayoutProps) {
@@ -447,17 +445,22 @@ export default function PublicLayout({
                 showRegister={showRegister}
                 siteName={siteName}
             />
-            <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+            <main
+                className={
+                    contentVariant === 'full-bleed'
+                        ? 'flex-1 pt-0 pb-6 sm:pb-8'
+                        : 'flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8'
+                }
+            >
                 <m.div
-                    className="mx-auto max-w-6xl"
+                    className={
+                        contentVariant === 'full-bleed'
+                            ? 'max-w-none'
+                            : 'mx-auto max-w-6xl'
+                    }
                     {...pageEnter}
                     initial={false}
                 >
-                    {breadcrumbs && breadcrumbs.length > 0 && (
-                        <div className="mb-4">
-                            <Breadcrumbs breadcrumbs={breadcrumbs} />
-                        </div>
-                    )}
                     {children}
                 </m.div>
             </main>

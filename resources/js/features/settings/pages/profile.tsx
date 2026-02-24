@@ -9,9 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
-import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
-import type { BreadcrumbItem } from '@/types';
 
 export default function Profile({
     mustVerifyEmail,
@@ -20,7 +18,7 @@ export default function Profile({
     mustVerifyEmail: boolean;
     status?: string;
 }) {
-    const { auth, translations, locale } = usePage().props as {
+    const { auth, translations } = usePage().props as {
         auth: {
             user: {
                 name: string;
@@ -29,19 +27,11 @@ export default function Profile({
             };
         };
         translations?: Record<string, string>;
-        locale?: string;
     };
     const t = translations ?? {};
-    const prefix = locale ? `/${locale}` : '';
-    const breadcrumbs: BreadcrumbItem[] = [
-        {
-            title: t['settings.profile_title'] ?? 'Profile settings',
-            href: edit().url,
-        },
-    ];
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout>
             <Head title={t['settings.profile_title'] ?? 'Profile settings'} />
 
             <h1 className="sr-only">

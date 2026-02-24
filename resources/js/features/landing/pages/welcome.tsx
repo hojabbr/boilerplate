@@ -1,11 +1,12 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Compass, Layers, Quote, Sparkles, Zap } from 'lucide-react';
+import { BookOpen, Layers, Quote, Sparkles, Zap } from 'lucide-react';
 import { m } from 'motion/react';
 import { fadeInUp, fadeInUpView } from '@/components/common/motion-presets';
 import { SeoHead } from '@/components/common/SeoHead';
 import { Button } from '@/components/ui/button';
 import {
     Card,
+    CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
@@ -16,12 +17,7 @@ import PublicLayout, {
     type PublicFeatures,
     type PublicSettings,
 } from '@/layouts/public-layout';
-import { register } from '@/routes';
 import blog from '@/routes/blog';
-import contact from '@/routes/contact';
-import faq from '@/routes/faq';
-import page from '@/routes/page';
-import testimonials from '@/routes/testimonials';
 
 interface Seo {
     title: string;
@@ -108,55 +104,61 @@ function WelcomeHero({
     heroSection,
     heroHeading,
     heroSubtitle,
-    heroPrimaryCta,
-    heroSecondaryCta,
-    heroPrimaryUrl,
-    canRegister,
-    showContact,
-    prefix,
 }: {
     heroSection?: Section | null;
     heroHeading: string;
     heroSubtitle: string;
-    heroPrimaryCta: string;
-    heroSecondaryCta: string;
-    heroPrimaryUrl: string;
-    canRegister: boolean;
-    showContact: boolean;
-    prefix: string;
 }) {
     return (
         <section
             className={
                 heroSection?.image_url
-                    ? 'relative mx-auto w-full overflow-hidden rounded-xl bg-muted/50'
-                    : 'mx-auto w-full max-w-3xl text-center'
+                    ? 'relative flex min-h-[50vh] w-full items-center justify-center overflow-hidden rounded-none bg-muted/50'
+                    : 'mx-auto w-full max-w-3xl px-4 text-center sm:px-6 lg:px-8'
             }
         >
             {heroSection?.image_url && (
-                <div className="absolute inset-0 flex items-center justify-center">
+                <>
                     <img
                         src={heroSection.image_url}
                         alt=""
-                        className="h-full w-full object-cover opacity-30"
+                        className="absolute inset-0 h-full w-full object-cover"
                     />
-                </div>
+                    <div
+                        className="absolute inset-0 bg-black/40 dark:bg-black/55"
+                        aria-hidden
+                    />
+                </>
             )}
             <m.div
                 className={
                     heroSection?.image_url
-                        ? 'relative mx-auto max-w-3xl px-6 py-12 text-center sm:py-16'
+                        ? 'relative z-0 mx-auto max-w-3xl px-6 py-12 text-center sm:py-16'
                         : ''
                 }
                 {...fadeInUp}
             >
-                <h1 className="flex flex-wrap items-center justify-center gap-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+                <h1
+                    className={
+                        heroSection?.image_url
+                            ? 'flex flex-wrap items-center justify-center gap-3 text-3xl font-semibold tracking-tight text-white drop-shadow-md sm:text-4xl lg:text-5xl'
+                            : 'flex flex-wrap items-center justify-center gap-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl'
+                    }
+                >
                     <span
-                        className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary/10 p-3"
+                        className={
+                            heroSection?.image_url
+                                ? 'inline-flex shrink-0 items-center justify-center rounded-full bg-white/20 p-3'
+                                : 'inline-flex shrink-0 items-center justify-center rounded-full bg-primary/10 p-3'
+                        }
                         aria-hidden
                     >
                         <Sparkles
-                            className="size-6 text-primary/70"
+                            className={
+                                heroSection?.image_url
+                                    ? 'size-6 text-white'
+                                    : 'size-6 text-primary/70'
+                            }
                             aria-hidden
                         />
                     </span>
@@ -165,26 +167,12 @@ function WelcomeHero({
                 <p
                     className={
                         heroSection?.image_url
-                            ? 'mt-4 text-lg text-foreground/80 sm:text-xl'
+                            ? 'mt-4 text-lg text-white/95 drop-shadow sm:text-xl'
                             : 'mt-4 text-lg text-muted-foreground sm:text-xl'
                     }
                 >
                     {heroSubtitle}
                 </p>
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                    {canRegister && (
-                        <Button size="lg" asChild>
-                            <Link href={heroPrimaryUrl}>{heroPrimaryCta}</Link>
-                        </Button>
-                    )}
-                    {showContact && (
-                        <Button variant="outline" size="lg" asChild>
-                            <Link href={`${prefix}${contact.show.url()}`}>
-                                {heroSecondaryCta}
-                            </Link>
-                        </Button>
-                    )}
-                </div>
             </m.div>
         </section>
     );
@@ -223,7 +211,7 @@ function WelcomeFeaturesSection({ section }: { section: Section }) {
                             delay: j * 0.06,
                         }}
                     >
-                        <Card className="flex h-full flex-col gap-0 overflow-hidden p-0">
+                        <Card className="flex h-full flex-col gap-0 overflow-hidden rounded-2xl border border-border p-0 shadow-sm">
                             {item.icon_url && (
                                 <img
                                     src={item.icon_url}
@@ -272,7 +260,7 @@ function WelcomeDbTestimonialsSection({
             </h2>
             <div className="mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {testimonials.map((t, j) => (
-                    <m.blockquote
+                    <m.div
                         key={`${t.author}-${j}`}
                         {...fadeInUpView}
                         transition={{
@@ -280,14 +268,29 @@ function WelcomeDbTestimonialsSection({
                             ease: 'easeOut' as const,
                             delay: j * 0.06,
                         }}
-                        className="rounded-lg bg-muted/30 p-6"
                     >
-                        <p className="text-foreground">{t.quote}</p>
-                        <footer className="mt-3 text-sm text-muted-foreground">
-                            — {t.author}
-                            {t.role ? `, ${t.role}` : ''}
-                        </footer>
-                    </m.blockquote>
+                        <Card className="flex h-full flex-col rounded-2xl border border-border p-6 shadow-sm">
+                            <Quote
+                                className="mb-4 size-8 text-primary/60"
+                                aria-hidden
+                            />
+                            <CardContent className="flex flex-1 flex-col p-0">
+                                <blockquote className="flex-1 text-lg leading-relaxed text-foreground/90">
+                                    "{t.quote}"
+                                </blockquote>
+                                <footer className="mt-6 shrink-0 border-t border-border/60 pt-4">
+                                    <cite className="font-semibold text-foreground not-italic">
+                                        {t.author}
+                                    </cite>
+                                    {t.role && (
+                                        <p className="mt-0.5 text-sm text-muted-foreground">
+                                            {t.role}
+                                        </p>
+                                    )}
+                                </footer>
+                            </CardContent>
+                        </Card>
+                    </m.div>
                 ))}
             </div>
         </section>
@@ -336,7 +339,7 @@ function WelcomeLatestPostsSection({
                             href={`${prefix}${blog.show.url({ slug: post.slug })}`}
                             className="block transition hover:opacity-90"
                         >
-                            <Card className="flex h-full flex-col gap-0 overflow-hidden p-0">
+                            <Card className="flex h-full flex-col gap-0 overflow-hidden rounded-2xl border border-border p-0 shadow-sm">
                                 {post.thumbnail_url && (
                                     <img
                                         src={post.thumbnail_url}
@@ -451,154 +454,6 @@ function WelcomeCtaSection({
     );
 }
 
-function WelcomeExploreSection({
-    showPages,
-    showBlog,
-    showContact,
-    showFaq,
-    showTestimonials,
-    nav_pages,
-    messages,
-    prefix,
-}: {
-    showPages: boolean;
-    showBlog: boolean;
-    showContact: boolean;
-    showFaq: boolean;
-    showTestimonials: boolean;
-    nav_pages: Array<{ slug: string; title: string }>;
-    messages: WelcomeMessages;
-    prefix: string;
-}) {
-    if (
-        !showPages &&
-        !showBlog &&
-        !showContact &&
-        !showFaq &&
-        !showTestimonials
-    ) {
-        return null;
-    }
-    return (
-        <section className="pt-12 lg:pt-16">
-            <h2 className="mb-6 flex items-center justify-center gap-3 text-center text-sm font-medium tracking-wider text-muted-foreground uppercase">
-                <span
-                    className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary/10 p-2"
-                    aria-hidden
-                >
-                    <Compass className="size-4 text-primary/70" aria-hidden />
-                </span>
-                {messages.explore ?? 'Explore'}
-            </h2>
-            <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {nav_pages.map((p) => (
-                    <m.div
-                        key={p.slug}
-                        {...fadeInUpView}
-                        className="flex h-full flex-col"
-                    >
-                        <Link
-                            href={`${prefix}${page.show.url({ slug: p.slug })}`}
-                            className="flex h-full flex-col transition hover:opacity-90"
-                        >
-                            <Card className="flex h-full flex-col">
-                                <CardHeader>
-                                    <CardTitle>{p.title}</CardTitle>
-                                    <CardDescription>
-                                        {messages.about_us_description ??
-                                            'Learn more.'}
-                                    </CardDescription>
-                                </CardHeader>
-                            </Card>
-                        </Link>
-                    </m.div>
-                ))}
-                {showBlog && (
-                    <m.div {...fadeInUpView} className="flex h-full flex-col">
-                        <Link
-                            href={`${prefix}${blog.index.url()}`}
-                            className="flex h-full flex-col transition hover:opacity-90"
-                        >
-                            <Card className="flex h-full flex-col">
-                                <CardHeader>
-                                    <CardTitle>
-                                        {messages.blog_title ?? 'Blog'}
-                                    </CardTitle>
-                                    <CardDescription>
-                                        {messages.blog_description ??
-                                            'Read our latest articles and updates.'}
-                                    </CardDescription>
-                                </CardHeader>
-                            </Card>
-                        </Link>
-                    </m.div>
-                )}
-                {showContact && (
-                    <m.div {...fadeInUpView} className="flex h-full flex-col">
-                        <Link
-                            href={`${prefix}${contact.show.url()}`}
-                            className="flex h-full flex-col transition hover:opacity-90"
-                        >
-                            <Card className="flex h-full flex-col">
-                                <CardHeader>
-                                    <CardTitle>
-                                        {messages.contact_title ?? 'Contact'}
-                                    </CardTitle>
-                                    <CardDescription>
-                                        {messages.contact_description ??
-                                            'Get in touch with our team.'}
-                                    </CardDescription>
-                                </CardHeader>
-                            </Card>
-                        </Link>
-                    </m.div>
-                )}
-                {showFaq && (
-                    <m.div {...fadeInUpView} className="flex h-full flex-col">
-                        <Link
-                            href={`${prefix}${faq.show.url()}`}
-                            className="flex h-full flex-col transition hover:opacity-90"
-                        >
-                            <Card className="flex h-full flex-col">
-                                <CardHeader>
-                                    <CardTitle>
-                                        {messages.faq_title ?? 'FAQ'}
-                                    </CardTitle>
-                                    <CardDescription>
-                                        {messages.faq_description ??
-                                            'Find answers to common questions.'}
-                                    </CardDescription>
-                                </CardHeader>
-                            </Card>
-                        </Link>
-                    </m.div>
-                )}
-                {showTestimonials && (
-                    <m.div {...fadeInUpView} className="flex h-full flex-col">
-                        <Link
-                            href={`${prefix}${testimonials.show.url()}`}
-                            className="flex h-full flex-col transition hover:opacity-90"
-                        >
-                            <Card className="flex h-full flex-col">
-                                <CardHeader>
-                                    <CardTitle>
-                                        {messages.testimonials_title ??
-                                            'Testimonials'}
-                                    </CardTitle>
-                                    <CardDescription>
-                                        {messages.testimonials_description ??
-                                            'Read testimonials from our customers and partners.'}
-                                    </CardDescription>
-                                </CardHeader>
-                            </Card>
-                        </Link>
-                    </m.div>
-                )}
-            </div>
-        </section>
-    );
-}
-
 export default function Welcome({
     canRegister = true,
     settings = EMPTY_PUBLIC_SETTINGS,
@@ -609,16 +464,9 @@ export default function Welcome({
     latest_posts = EMPTY_LATEST_POSTS,
     testimonials = EMPTY_TESTIMONIALS,
 }: WelcomeProps) {
-    const { locale, nav_pages = [] } = usePage().props as {
-        locale: string;
-        nav_pages?: Array<{ slug: string; title: string }>;
-    };
+    const { locale } = usePage().props as { locale: string };
     const prefix = locale ? `/${locale}` : '';
-    const showPages = features.page ?? false;
     const showBlog = features.blog ?? false;
-    const showContact = features.contactForm ?? false;
-    const showFaq = features.faq ?? false;
-    const showTestimonials = features.testimonials ?? false;
     const tagline =
         settings.tagline ||
         (messages.tagline_fallback ?? 'Build something great.');
@@ -634,17 +482,10 @@ export default function Welcome({
     const heroHeading =
         heroSection?.title ?? messages.heading ?? `Welcome to ${companyName}`;
     const heroSubtitle = heroSection?.subtitle ?? tagline;
-    const heroPrimaryCta =
-        heroSection?.cta_text ?? messages.cta_get_started ?? 'Get started';
-    const heroSecondaryCta = messages.cta_contact_us ?? 'Contact us';
-    const heroPrimaryUrl = heroSection?.cta_url
-        ? heroSection.cta_url.startsWith('http')
-            ? heroSection.cta_url
-            : `${prefix}${heroSection.cta_url}`
-        : `${prefix}${register.url()}`;
 
     return (
         <PublicLayout
+            contentVariant="full-bleed"
             settings={settings}
             features={features}
             canRegister={canRegister}
@@ -653,60 +494,46 @@ export default function Welcome({
                 title={seo?.title ?? 'Welcome'}
                 description={seo?.description}
             />
-            <article className="flex flex-col gap-12 py-8 sm:py-12 lg:gap-16 lg:py-16">
+            <article className="flex flex-col pt-0">
                 <WelcomeHero
                     heroSection={heroSection}
                     heroHeading={heroHeading}
                     heroSubtitle={heroSubtitle}
-                    heroPrimaryCta={heroPrimaryCta}
-                    heroSecondaryCta={heroSecondaryCta}
-                    heroPrimaryUrl={heroPrimaryUrl}
-                    canRegister={canRegister}
-                    showContact={showContact}
-                    prefix={prefix}
                 />
-                {featuresSections.map((sec) => (
-                    <WelcomeFeaturesSection
-                        key={sectionKey(sec)}
-                        section={sec}
-                    />
-                ))}
-                {features.testimonials && (
-                    <WelcomeDbTestimonialsSection
-                        testimonials={testimonials}
-                        title={
-                            messages.testimonials_title ??
-                            'What our customers say'
-                        }
-                    />
-                )}
-                {latestPostsSections.map((sec) => (
-                    <WelcomeLatestPostsSection
-                        key={sectionKey(sec)}
-                        section={sec}
-                        latest_posts={latest_posts}
-                        showBlog={showBlog}
-                        blogTitle={messages.blog_title ?? 'Blog'}
-                        prefix={prefix}
-                    />
-                ))}
-                {ctaSections.map((sec) => (
-                    <WelcomeCtaSection
-                        key={sectionKey(sec)}
-                        section={sec}
-                        prefix={prefix}
-                    />
-                ))}
-                <WelcomeExploreSection
-                    showPages={showPages}
-                    showBlog={showBlog}
-                    showContact={showContact}
-                    showFaq={showFaq}
-                    showTestimonials={showTestimonials}
-                    nav_pages={nav_pages}
-                    messages={messages}
-                    prefix={prefix}
-                />
+                <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pb-8 sm:px-6 sm:pb-12 lg:gap-16 lg:px-8 lg:pb-16">
+                    {featuresSections.map((sec) => (
+                        <WelcomeFeaturesSection
+                            key={sectionKey(sec)}
+                            section={sec}
+                        />
+                    ))}
+                    {features.testimonials && (
+                        <WelcomeDbTestimonialsSection
+                            testimonials={testimonials}
+                            title={
+                                messages.testimonials_title ??
+                                'What our customers say'
+                            }
+                        />
+                    )}
+                    {latestPostsSections.map((sec) => (
+                        <WelcomeLatestPostsSection
+                            key={sectionKey(sec)}
+                            section={sec}
+                            latest_posts={latest_posts}
+                            showBlog={showBlog}
+                            blogTitle={messages.blog_title ?? 'Blog'}
+                            prefix={prefix}
+                        />
+                    ))}
+                    {ctaSections.map((sec) => (
+                        <WelcomeCtaSection
+                            key={sectionKey(sec)}
+                            section={sec}
+                            prefix={prefix}
+                        />
+                    ))}
+                </div>
             </article>
         </PublicLayout>
     );

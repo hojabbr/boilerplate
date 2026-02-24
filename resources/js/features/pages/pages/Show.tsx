@@ -1,11 +1,9 @@
-import { usePage } from '@inertiajs/react';
 import { FileText } from 'lucide-react';
 import { m } from 'motion/react';
 import { useState } from 'react';
 import Lightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
-import { BackButton } from '@/components/common/BackButton';
 import { fadeInUpView } from '@/components/common/motion-presets';
 import { SeoHead } from '@/components/common/SeoHead';
 import { Button } from '@/components/ui/button';
@@ -23,7 +21,6 @@ import PublicLayout, {
     type PublicSettings,
 } from '@/layouts/public-layout';
 import { decodeHtml } from '@/lib/utils';
-import { home } from '@/routes';
 
 interface GalleryItem {
     id: number;
@@ -57,17 +54,6 @@ export default function PageShow({
     features?: PublicFeatures;
     seo?: Seo;
 }) {
-    const { locale, translations } = usePage().props as {
-        locale: string;
-        translations?: Record<string, string>;
-    };
-    const t = translations ?? {};
-    const prefix = locale ? `/${locale}` : '';
-    const breadcrumbs = [
-        { title: t['nav.home'] ?? 'Home', href: prefix ? prefix : home.url() },
-        { title: page.title, href: '#' },
-    ];
-
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(0);
     const gallery = page.gallery ?? [];
@@ -79,7 +65,7 @@ export default function PageShow({
 
     return (
         <PublicLayout
-            breadcrumbs={breadcrumbs}
+            contentVariant="full-bleed"
             settings={settings}
             features={features}
         >
@@ -88,27 +74,23 @@ export default function PageShow({
                 description={seo?.description ?? page.meta_description}
                 image={seo?.image}
             />
-            <div className="mb-4">
-                <BackButton
-                    href={prefix ? prefix : home.url()}
-                    label={
-                        t['nav.home']
-                            ? `Back to ${t['nav.home']}`
-                            : 'Back to Home'
-                    }
-                />
-            </div>
-            <article className="mx-auto max-w-3xl">
-                <m.div {...fadeInUpView}>
-                    {heroImage && (
-                        <div className="-mx-4 mb-6 overflow-hidden sm:mx-0 sm:rounded-xl">
-                            <img
-                                src={heroImage.full_url || heroImage.url}
-                                alt=""
-                                className="h-56 w-full object-cover sm:h-72"
-                            />
-                        </div>
-                    )}
+            {heroImage ? (
+                <div className="relative flex min-h-[50vh] w-full items-center justify-center overflow-hidden bg-muted">
+                    <img
+                        src={heroImage.full_url || heroImage.url}
+                        alt=""
+                        className="absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div
+                        className="absolute inset-0 bg-black/45 dark:bg-black/55"
+                        aria-hidden
+                    />
+                    <h1 className="relative z-10 max-w-4xl px-6 text-center text-3xl font-semibold tracking-tight text-white drop-shadow-md sm:text-4xl lg:text-5xl">
+                        {page.title}
+                    </h1>
+                </div>
+            ) : (
+                <div className="mx-auto w-full max-w-3xl px-4 pt-16 sm:px-6">
                     <h1 className="mb-4 flex items-center gap-3 text-2xl font-semibold text-foreground">
                         <FileText
                             className="size-8 shrink-0 text-primary/60"
@@ -116,6 +98,11 @@ export default function PageShow({
                         />
                         {page.title}
                     </h1>
+                </div>
+            )}
+            <article className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
+                <m.div {...fadeInUpView}>
+                    {heroImage && <div className="mt-6" />}
                     {page.body != null && page.body !== '' && (
                         <div
                             className="prose max-w-none prose-neutral dark:prose-invert"

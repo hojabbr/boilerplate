@@ -9,8 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/hooks/use-two-factor-auth';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
-import { disable, enable, show } from '@/routes/two-factor';
-import type { BreadcrumbItem } from '@/types';
+import { disable, enable } from '@/routes/two-factor';
 
 type Props = {
     requiresConfirmation?: boolean;
@@ -25,13 +24,6 @@ export default function TwoFactor({
         translations?: Record<string, string>;
     };
     const t = translations ?? {};
-    const breadcrumbs: BreadcrumbItem[] = [
-        {
-            title:
-                t['settings.two_factor_title'] ?? 'Two-Factor Authentication',
-            href: show.url(),
-        },
-    ];
     const {
         qrCodeSvg,
         hasSetupData,
@@ -45,7 +37,7 @@ export default function TwoFactor({
     const [showSetupModal, setShowSetupModal] = useState<boolean>(false);
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout>
             <Head
                 title={
                     t['settings.two_factor_title'] ??

@@ -3,27 +3,17 @@ import { m } from 'motion/react';
 import { fadeInUpView } from '@/components/common/motion-presets';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
-import type { BreadcrumbItem } from '@/types';
 
 export default function Dashboard() {
-    const { translations, messages, locale } = usePage().props as {
+    const { translations, messages } = usePage().props as {
         translations?: Record<string, string>;
         messages?: { title?: string };
-        locale?: string;
     };
-    const prefix = locale ? `/${locale}` : '';
     const title =
         messages?.title ?? translations?.['common.dashboard'] ?? 'Dashboard';
-    const breadcrumbs: BreadcrumbItem[] = [
-        {
-            title,
-            href: `${prefix}${dashboard.url()}`,
-        },
-    ];
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout>
             <Head title={title} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">

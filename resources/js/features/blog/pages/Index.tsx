@@ -17,7 +17,6 @@ import PublicLayout, {
     type PublicFeatures,
     type PublicSettings,
 } from '@/layouts/public-layout';
-import { home } from '@/routes';
 import blog from '@/routes/blog';
 
 interface BlogTag {
@@ -74,35 +73,17 @@ export default function BlogIndex({
     seo?: Seo;
     messages?: BlogIndexMessages;
 }) {
-    const { locale, translations } = usePage().props as {
-        locale: string;
-        translations?: Record<string, string>;
-    };
-    const t = translations ?? {};
+    const { locale } = usePage().props as { locale: string };
     const prefix = locale ? `/${locale}` : '';
     const items = posts.data;
-    const breadcrumbs = [
-        {
-            title: t['nav.home'] ?? 'Home',
-            href: prefix ? prefix : home.url(),
-        },
-        {
-            title: messages.title ?? t['nav.blog'] ?? 'Blog',
-            href: `${prefix}${blog.index.url()}`,
-        },
-    ];
 
     return (
-        <PublicLayout
-            breadcrumbs={breadcrumbs}
-            settings={settings}
-            features={features}
-        >
+        <PublicLayout settings={settings} features={features}>
             <SeoHead
                 title={seo?.title ?? 'Blog'}
                 description={seo?.description}
             />
-            <div className="mx-auto max-w-3xl space-y-8">
+            <div className="section-spacing mx-auto w-full max-w-3xl space-y-8 px-4 pt-16 sm:px-6">
                 <h1 className="mb-6 flex items-center gap-3 text-2xl font-semibold text-foreground">
                     <BookOpen
                         className="size-8 shrink-0 text-primary/60"
@@ -125,7 +106,7 @@ export default function BlogIndex({
                                 href={`${prefix}${blog.show.url({ slug: post.slug })}`}
                                 className="block transition hover:opacity-90"
                             >
-                                <Card className="flex flex-col gap-0 overflow-hidden p-0">
+                                <Card className="flex flex-col gap-0 overflow-hidden rounded-2xl border border-border p-0 shadow-sm">
                                     {post.thumbnail_url && (
                                         <img
                                             src={post.thumbnail_url}

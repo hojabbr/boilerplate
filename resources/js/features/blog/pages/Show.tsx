@@ -1,4 +1,3 @@
-import { usePage } from '@inertiajs/react';
 import { BookOpen } from 'lucide-react';
 import { m } from 'motion/react';
 import { useState } from 'react';
@@ -12,7 +11,6 @@ import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
 import 'yet-another-react-lightbox/plugins/thumbnails.css';
 import 'yet-another-react-lightbox/plugins/captions.css';
-import { BackButton } from '@/components/common/BackButton';
 import { fadeInUpView } from '@/components/common/motion-presets';
 import { SeoHead } from '@/components/common/SeoHead';
 import { Badge } from '@/components/ui/badge';
@@ -31,8 +29,6 @@ import PublicLayout, {
     type PublicSettings,
 } from '@/layouts/public-layout';
 import { decodeHtml } from '@/lib/utils';
-import { home } from '@/routes';
-import blog from '@/routes/blog';
 
 interface GalleryItem {
     id: number;
@@ -124,21 +120,6 @@ export default function BlogShow({
     seo?: Seo;
     messages?: BlogShowMessages;
 }) {
-    const { locale, translations } = usePage().props as {
-        locale: string;
-        translations?: Record<string, string>;
-    };
-    const t = translations ?? {};
-    const prefix = locale ? `/${locale}` : '';
-    const breadcrumbs = [
-        { title: t['nav.home'] ?? 'Home', href: prefix ? prefix : home.url() },
-        {
-            title: t['nav.blog'] ?? 'Blog',
-            href: `${prefix}${blog.index.url()}`,
-        },
-        { title: post.title, href: '#' },
-    ];
-
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState(0);
 
@@ -154,7 +135,7 @@ export default function BlogShow({
 
     return (
         <PublicLayout
-            breadcrumbs={breadcrumbs}
+            contentVariant="full-bleed"
             settings={settings}
             features={features}
         >
@@ -164,27 +145,23 @@ export default function BlogShow({
                 image={seo?.image}
                 type={seo?.type ?? 'article'}
             />
-            <div className="mb-4">
-                <BackButton
-                    href={`${prefix}${blog.index.url()}`}
-                    label={
-                        t['nav.blog']
-                            ? `Back to ${t['nav.blog']}`
-                            : 'Back to Blog'
-                    }
-                />
-            </div>
-            <article className="mx-auto max-w-3xl">
-                <m.div {...fadeInUpView}>
-                    {heroImage && (
-                        <div className="-mx-4 mb-6 overflow-hidden sm:mx-0 sm:rounded-xl">
-                            <img
-                                src={heroImage.full_url || heroImage.url}
-                                alt={heroImage.alt ?? heroImage.title ?? ''}
-                                className="w-full object-contain"
-                            />
-                        </div>
-                    )}
+            {heroImage ? (
+                <div className="relative flex min-h-[50vh] w-full items-center justify-center overflow-hidden bg-muted">
+                    <img
+                        src={heroImage.full_url || heroImage.url}
+                        alt={heroImage.alt ?? heroImage.title ?? ''}
+                        className="absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div
+                        className="absolute inset-0 bg-black/45 dark:bg-black/55"
+                        aria-hidden
+                    />
+                    <h1 className="relative z-10 max-w-4xl px-6 text-center text-3xl font-semibold tracking-tight text-white drop-shadow-md sm:text-4xl lg:text-5xl">
+                        {post.title}
+                    </h1>
+                </div>
+            ) : (
+                <div className="mx-auto w-full max-w-3xl px-4 pt-16 sm:px-6">
                     <h1 className="mb-2 flex items-center gap-3 text-2xl font-semibold text-foreground">
                         <BookOpen
                             className="size-7 shrink-0 text-primary/60"
@@ -192,27 +169,65 @@ export default function BlogShow({
                         />
                         {post.title}
                     </h1>
-                    {post.tags && post.tags.length > 0 && (
-                        <ul
-                            className="mb-3 flex flex-wrap gap-1.5"
-                            aria-label="Tags"
-                        >
-                            {post.tags.map((tag) => (
-                                <li key={tag.id}>
-                                    <Badge
-                                        variant="secondary"
-                                        className="font-normal"
-                                    >
-                                        {tag.name}
-                                    </Badge>
-                                </li>
-                            ))}
-                        </ul>
+                </div>
+            )}
+            <article className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
+                <m.div {...fadeInUpView}>
+                    {heroImage && (
+                        <div className="mt-6 flex flex-wrap items-center gap-3">
+                            {post.tags && post.tags.length > 0 && (
+                                <ul
+                                    className="flex flex-wrap gap-1.5"
+                                    aria-label="Tags"
+                                >
+                                    {post.tags.map((tag) => (
+                                        <li key={tag.id}>
+                                            <Badge
+                                                variant="secondary"
+                                                className="font-normal"
+                                            >
+                                                {tag.name}
+                                            </Badge>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                            {post.published_at && (
+                                <p className="text-sm text-muted-foreground">
+                                    {new Date(
+                                        post.published_at,
+                                    ).toLocaleDateString()}
+                                </p>
+                            )}
+                        </div>
                     )}
-                    {post.published_at && (
-                        <p className="mb-4 text-sm text-muted-foreground">
-                            {new Date(post.published_at).toLocaleDateString()}
-                        </p>
+                    {!heroImage && (
+                        <>
+                            {post.tags && post.tags.length > 0 && (
+                                <ul
+                                    className="mb-3 flex flex-wrap gap-1.5"
+                                    aria-label="Tags"
+                                >
+                                    {post.tags.map((tag) => (
+                                        <li key={tag.id}>
+                                            <Badge
+                                                variant="secondary"
+                                                className="font-normal"
+                                            >
+                                                {tag.name}
+                                            </Badge>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                            {post.published_at && (
+                                <p className="mb-4 text-sm text-muted-foreground">
+                                    {new Date(
+                                        post.published_at,
+                                    ).toLocaleDateString()}
+                                </p>
+                            )}
+                        </>
                     )}
                     {post.excerpt && (
                         <div

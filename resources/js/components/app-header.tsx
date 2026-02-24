@@ -1,6 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
-import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,13 +31,9 @@ import { useCurrentUrl } from '@/hooks/use-current-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
-import type { BreadcrumbItem, NavItem, User } from '@/types';
+import type { NavItem, User } from '@/types';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
-
-type Props = {
-    breadcrumbs?: BreadcrumbItem[];
-};
 
 const rightNavItems: NavItem[] = [
     {
@@ -55,9 +50,7 @@ const rightNavItems: NavItem[] = [
 
 const activeItemStyles = 'text-foreground bg-muted';
 
-const EMPTY_BREADCRUMBS: Props['breadcrumbs'] = [];
-
-export function AppHeader({ breadcrumbs = EMPTY_BREADCRUMBS }: Props) {
+export function AppHeader() {
     const page = usePage();
     const { auth, locale } = page.props as {
         auth: { user: User };
@@ -247,13 +240,6 @@ export function AppHeader({ breadcrumbs = EMPTY_BREADCRUMBS }: Props) {
                     </div>
                 </div>
             </div>
-            {breadcrumbs && breadcrumbs.length > 1 && (
-                <div className="flex w-full border-b border-sidebar-border/70">
-                    <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-muted-foreground md:max-w-7xl">
-                        <Breadcrumbs breadcrumbs={breadcrumbs} />
-                    </div>
-                </div>
-            )}
         </>
     );
 }

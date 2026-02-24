@@ -3,23 +3,14 @@ import AppearanceToggleTabs from '@/components/appearance-toggle-tabs';
 import Heading from '@/components/heading';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
-import { edit as editAppearance } from '@/routes/appearance';
-import type { BreadcrumbItem } from '@/types';
-
 export default function Appearance() {
     const { translations } = usePage().props as {
         translations?: Record<string, string>;
     };
     const t = translations ?? {};
-    const breadcrumbs: BreadcrumbItem[] = [
-        {
-            title: t['settings.appearance_title'] ?? 'Appearance settings',
-            href: editAppearance().url,
-        },
-    ];
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout>
             <Head
                 title={t['settings.appearance_title'] ?? 'Appearance settings'}
             />
