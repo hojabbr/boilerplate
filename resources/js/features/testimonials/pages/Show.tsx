@@ -21,11 +21,18 @@ interface Seo {
     description?: string;
 }
 
+const EMPTY_TESTIMONIAL_ITEMS: TestimonialItem[] = [];
+
+/** Stable key for a testimonial (no array index) so React keys are safe on reorder/filter. */
+function testimonialKey(item: TestimonialItem): string {
+    return `${item.author}:${item.quote.slice(0, 60)}`;
+}
+
 export default function TestimonialsShow({
     settings = EMPTY_PUBLIC_SETTINGS,
     features = EMPTY_PUBLIC_FEATURES,
     seo,
-    items = [],
+    items = EMPTY_TESTIMONIAL_ITEMS,
 }: {
     settings?: PublicSettings;
     features?: PublicFeatures;
@@ -59,7 +66,7 @@ export default function TestimonialsShow({
                 <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {items.map((item, j) => (
                         <m.div
-                            key={j}
+                            key={testimonialKey(item)}
                             {...fadeInUpView}
                             transition={{
                                 delay: j * 0.08,

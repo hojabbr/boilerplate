@@ -25,11 +25,13 @@ interface Seo {
     description?: string;
 }
 
+const EMPTY_FAQ_ITEMS: FaqItem[] = [];
+
 export default function FaqShow({
     settings = EMPTY_PUBLIC_SETTINGS,
     features = EMPTY_PUBLIC_FEATURES,
     seo,
-    items = [],
+    items = EMPTY_FAQ_ITEMS,
 }: {
     settings?: PublicSettings;
     features?: PublicFeatures;
@@ -65,10 +67,10 @@ export default function FaqShow({
                     collapsible
                     className="w-full rounded-2xl border border-border bg-card p-2 shadow-sm"
                 >
-                    {items.map((item, i) => (
+                    {items.map((item) => (
                         <AccordionItem
-                            key={i}
-                            value={`faq-${i}`}
+                            key={item.question}
+                            value={item.question}
                             className="rounded-xl px-4 data-[state=open]:bg-muted/50"
                         >
                             <AccordionTrigger className="text-start font-semibold hover:no-underline">
