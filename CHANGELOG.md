@@ -1,3 +1,9 @@
+## [1.10.0](https://github.com/hojabbr/boilerplate/compare/v1.9.0...v1.10.0) (2026-02-27)
+
+### Features
+
+- Enhance SEO support by adding dynamic meta tags for per-page SEO data and sharing Twitter handle ([339ff97](https://github.com/hojabbr/boilerplate/commit/339ff973e53cd36185a52f1db9f5117c87b0b54e))
+
 ## [1.9.0](https://github.com/hojabbr/boilerplate/compare/v1.8.0...v1.9.0) (2026-02-27)
 
 ### Features
