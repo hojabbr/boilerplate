@@ -38,11 +38,28 @@ export default function FaqShow({
     seo?: Seo;
     items: FaqItem[];
 }) {
+    const faqSchema: Record<string, unknown> | undefined =
+        items.length > 0
+            ? {
+                  '@context': 'https://schema.org',
+                  '@type': 'FAQPage',
+                  mainEntity: items.map((item) => ({
+                      '@type': 'Question',
+                      name: item.question,
+                      acceptedAnswer: {
+                          '@type': 'Answer',
+                          text: item.answer,
+                      },
+                  })),
+              }
+            : undefined;
+
     return (
         <PublicLayout settings={settings} features={features}>
             <SeoHead
                 title={seo?.title ?? 'FAQ'}
                 description={seo?.description}
+                jsonLd={faqSchema}
             />
             <m.div
                 className="section-spacing mx-auto max-w-3xl px-4 pt-16 sm:px-6"

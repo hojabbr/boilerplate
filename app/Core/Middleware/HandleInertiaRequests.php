@@ -33,6 +33,38 @@ class HandleInertiaRequests extends Middleware
     }
 
     /**
+     * Extract a Twitter/X @handle from the social_links array (checks both key and URL value).
+     */
+    private function extractTwitterHandle(mixed $socialLinks): ?string
+    {
+        if (! is_array($socialLinks)) {
+            return null;
+        }
+
+        foreach ($socialLinks as $key => $url) {
+            if (! is_string($url)) {
+                continue;
+            }
+
+            $lowerKey = strtolower((string) $key);
+            $lowerUrl = strtolower($url);
+
+            if (str_contains($lowerKey, 'twitter') || str_contains($lowerKey, 'x.com') ||
+                str_contains($lowerUrl, 'twitter.com/') || str_contains($lowerUrl, 'x.com/')) {
+                $path = parse_url($url, PHP_URL_PATH);
+                if ($path) {
+                    $handle = explode('/', trim($path, '/'))[0];
+                    if ($handle !== '') {
+                        return '@'.ltrim($handle, '@');
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @return array<int, array{code: string, name: string, native: string, url: string}>
      */
     private function localeSwitchUrls(): array
@@ -286,6 +318,10 @@ class HandleInertiaRequests extends Middleware
         $siteName = $setting->company_name ?: config('app.name');
         $siteTagline = $setting->tagline ?: config('app.description');
         $logoUrl = $setting->getFirstMediaUrl('app_logo') ?: null;
+        $defaultOgImage = $setting->getFirstMediaUrl('manifest_icon_512')
+            ?: ($setting->getFirstMediaUrl('manifest_icon_192')
+            ?: ($setting->getFirstMediaUrl('app_logo') ?: null));
+        $twitterHandle = $this->extractTwitterHandle($setting->getAttribute('social_links'));
         View::share('siteName', $siteName);
         View::share('siteTagline', $siteTagline);
 
@@ -294,6 +330,8 @@ class HandleInertiaRequests extends Middleware
             'name' => $siteName,
             'site_tagline' => $siteTagline,
             'logo_url' => $logoUrl,
+            'default_og_image' => $defaultOgImage,
+            'twitter_handle' => $twitterHandle,
             'auth' => [
                 'user' => $request->user(),
             ],

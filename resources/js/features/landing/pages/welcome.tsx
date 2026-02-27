@@ -464,7 +464,10 @@ export default function Welcome({
     latest_posts = EMPTY_LATEST_POSTS,
     testimonials = EMPTY_TESTIMONIALS,
 }: WelcomeProps) {
-    const { locale } = usePage().props as { locale: string };
+    const { locale, canonical_url: canonicalUrl } = usePage().props as {
+        locale: string;
+        canonical_url?: string;
+    };
     const prefix = locale ? `/${locale}` : '';
     const showBlog = features.blog ?? false;
     const tagline =
@@ -483,6 +486,24 @@ export default function Welcome({
         heroSection?.title ?? messages.heading ?? `Welcome to ${companyName}`;
     const heroSubtitle = heroSection?.subtitle ?? tagline;
 
+    const websiteSchema: Record<string, unknown> = {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: companyName,
+        description: tagline,
+        ...(canonicalUrl ? { url: canonicalUrl } : {}),
+    };
+
+    const organizationSchema: Record<string, unknown> = {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: companyName,
+        description: tagline,
+        ...(canonicalUrl ? { url: canonicalUrl } : {}),
+        ...(settings.email ? { email: settings.email } : {}),
+        ...(settings.phone ? { telephone: settings.phone } : {}),
+    };
+
     return (
         <PublicLayout
             contentVariant="full-bleed"
@@ -492,7 +513,8 @@ export default function Welcome({
         >
             <SeoHead
                 title={seo?.title ?? companyName}
-                description={seo?.description}
+                description={seo?.description ?? tagline}
+                jsonLd={[websiteSchema, organizationSchema]}
             />
             <article className="flex flex-col pt-0">
                 <WelcomeHero

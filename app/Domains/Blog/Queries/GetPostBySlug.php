@@ -59,6 +59,7 @@ class GetPostBySlug
                 'body' => ResolveInternalBlogLinks::resolve($post->body ?? ''),
                 'meta_description' => $post->meta_description,
                 'published_at' => $post->published_at instanceof \DateTimeInterface ? $post->published_at->format('c') : null,
+                'updated_at' => $post->updated_at instanceof \DateTimeInterface ? $post->updated_at->format('c') : null,
                 'tags' => $post->tags->map(fn ($tag) => [
                     'id' => $tag->id,
                     'name' => $tag->name,
