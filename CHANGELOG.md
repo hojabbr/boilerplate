@@ -1,3 +1,9 @@
+## [1.11.0](https://github.com/hojabbr/boilerplate/compare/v1.10.0...v1.11.0) (2026-02-27)
+
+### Features
+
+- Suppress i18next promotional messages in production and enhance SEO meta tags handling for SSR ([40c847b](https://github.com/hojabbr/boilerplate/commit/40c847bffbaae132af5b276a806be0f778160e57))
+
 ## [1.10.0](https://github.com/hojabbr/boilerplate/compare/v1.9.0...v1.10.0) (2026-02-27)
 
 ### Features
