@@ -10,6 +10,19 @@ import { initReactI18next } from 'react-i18next';
  */
 const supportedLngsFallback = ['en'] as const;
 
+// Suppress i18next's promotional Locize console messages in production.
+// The logger plugin must be registered before .init() is called.
+if (import.meta.env.PROD) {
+    i18n.use({
+        type: 'logger' as const,
+        log(): void {},
+        warn(): void {},
+        error(args: unknown[]): void {
+            console.error(...args);
+        },
+    });
+}
+
 void i18n
     .use(LanguageDetector)
     .use(initReactI18next)
