@@ -324,6 +324,8 @@ class HandleInertiaRequests extends Middleware
         $twitterHandle = $this->extractTwitterHandle($setting->getAttribute('social_links'));
         View::share('siteName', $siteName);
         View::share('siteTagline', $siteTagline);
+        View::share('defaultOgImage', $defaultOgImage);
+        View::share('twitterHandle', $twitterHandle);
 
         return [
             ...parent::share($request),
