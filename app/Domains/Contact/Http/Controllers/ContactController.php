@@ -31,7 +31,7 @@ class ContactController extends Controller
             'contactStoreUrl' => route('contact.store'),
             'success' => session('success'),
             'seo' => [
-                'title' => __('Contact').' - '.$settings['company_name'],
+                'title' => __('Contact'),
                 'description' => $settings['tagline'] ?: __('Get in touch with us.'),
             ],
             'messages' => [

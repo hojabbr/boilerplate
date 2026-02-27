@@ -26,7 +26,7 @@ class BlogController extends Controller
             'settings' => $settings,
             'features' => $pageProps->featuresArray(),
             'seo' => [
-                'title' => __('Blog').' - '.$settings['company_name'],
+                'title' => __('Blog'),
                 'description' => $settings['tagline'] ?: __('Our latest news and articles.'),
             ],
             'messages' => [
@@ -50,7 +50,7 @@ class BlogController extends Controller
         return Inertia::render('blog/Show', [
             'post' => $result['post'],
             'seo' => [
-                'title' => $result['post']['title'].' - '.$settings['company_name'],
+                'title' => $result['post']['title'],
                 'description' => $result['post']['meta_description'] ?: $result['post']['excerpt'],
                 'image' => $result['og_image'],
                 'type' => 'article',

@@ -46,7 +46,8 @@ test('admin panel translation manager list returns 403 for user without manage t
     $this->seed(\Database\Seeders\RoleAndPermissionSeeder::class);
     $user = User::factory()->create();
     $user->assignRole('admin');
-    $user->revokePermissionTo('manage translations');
+    Role::findByName('admin')->revokePermissionTo('manage translations');
+    app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
     $this->actingAs($user);
 
     $response = $this->get('/admin/language-lines');

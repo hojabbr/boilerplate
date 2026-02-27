@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { Menu } from 'lucide-react';
 import { m } from 'motion/react';
 import { useEffect, useState } from 'react';
+import AppLogoIcon from '@/components/app-logo-icon';
 import { pageEnter } from '@/components/common/motion-presets';
 import NavSearch from '@/components/common/NavSearch';
 import SocialLinks from '@/components/common/SocialLinks';
@@ -64,6 +65,7 @@ function PublicHeader({
     showLogin,
     showRegister,
     siteName,
+    logo_url,
 }: {
     mainNavItems: NavItem[];
     prefix: string;
@@ -72,15 +74,23 @@ function PublicHeader({
     showLogin: boolean;
     showRegister: boolean;
     siteName: string;
+    logo_url?: string | null;
 }) {
     return (
         <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
             <div className="mx-auto flex h-14 max-w-6xl flex-shrink-0 flex-nowrap items-center justify-between gap-2 px-4 sm:gap-4 lg:px-0">
                 <Link
                     href={prefix ? prefix : home.url()}
-                    className="min-w-0 shrink-0 truncate text-lg font-semibold text-foreground"
+                    className="flex min-w-0 shrink-0 items-center gap-2"
                 >
-                    {siteName}
+                    <AppLogoIcon
+                        src={logo_url}
+                        alt={siteName}
+                        className="h-7 w-auto"
+                    />
+                    <span className="truncate text-lg font-semibold text-foreground">
+                        {siteName}
+                    </span>
                 </Link>
 
                 <nav
@@ -349,6 +359,7 @@ export default function PublicLayout({
         nav_pages?: Array<{ slug: string; title: string }>;
         footer_pages?: Array<{ slug: string; title: string }>;
         features?: PublicFeatures;
+        logo_url?: string | null;
     };
     const {
         auth,
@@ -356,6 +367,7 @@ export default function PublicLayout({
         translations,
         nav_pages = [],
         footer_pages = [],
+        logo_url,
     } = pageProps;
     const t = translations ?? {};
     const prefix = locale ? `/${locale}` : '';
@@ -444,6 +456,7 @@ export default function PublicLayout({
                 showLogin={showLogin}
                 showRegister={showRegister}
                 siteName={siteName}
+                logo_url={logo_url}
             />
             <main
                 className={

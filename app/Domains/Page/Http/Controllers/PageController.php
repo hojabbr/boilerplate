@@ -31,7 +31,7 @@ class PageController extends Controller
         return Inertia::render('pages/Show', [
             'page' => $result['page'],
             'seo' => [
-                'title' => ($result['page']['meta_title'] ?: $result['page']['title']).' - '.$settings['company_name'],
+                'title' => $result['page']['meta_title'] ?: $result['page']['title'],
                 'description' => $result['page']['meta_description'] ?: $settings['tagline'],
                 'image' => $result['og_image'],
             ],
