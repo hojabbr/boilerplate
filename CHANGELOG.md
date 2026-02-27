@@ -1,3 +1,9 @@
+## [1.11.1](https://github.com/hojabbr/boilerplate/compare/v1.11.0...v1.11.1) (2026-02-27)
+
+### Bug Fixes
+
+- Update SSR server port and simplify title rendering logic ([7d195d8](https://github.com/hojabbr/boilerplate/commit/7d195d8b077f7cbee3d98488aa1d65638754c9de))
+
 ## [1.11.0](https://github.com/hojabbr/boilerplate/compare/v1.10.0...v1.11.0) (2026-02-27)
 
 ### Features
