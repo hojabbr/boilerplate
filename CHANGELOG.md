@@ -1,3 +1,9 @@
+## [1.7.0](https://github.com/hojabbr/boilerplate/compare/v1.6.0...v1.7.0) (2026-02-27)
+
+### Features
+
+- Add Laravel Permission and Media Library skills documentation ([6d04845](https://github.com/hojabbr/boilerplate/commit/6d04845885df0caf9c1d8727112c01861c4e8610))
+
 ## [1.6.0](https://github.com/hojabbr/boilerplate/compare/v1.5.0...v1.6.0) (2026-02-27)
 
 ### Features
