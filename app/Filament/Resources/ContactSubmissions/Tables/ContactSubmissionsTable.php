@@ -17,13 +17,15 @@ class ContactSubmissionsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->copyable(),
                 TextColumn::make('subject')
                     ->searchable()
                     ->sortable(),
@@ -32,6 +34,7 @@ class ContactSubmissionsTable
                 TextColumn::make('message')
                     ->limit(40)
                     ->toggleable(isToggledHiddenByDefault: true),
+                CommonColumns::deletedAtColumn(),
                 ...CommonColumns::timestampColumns(),
             ])
             ->filters([

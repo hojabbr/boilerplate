@@ -19,6 +19,7 @@ interface SharedSeoProps {
     canonical_url?: string;
     hreflang_urls?: HreflangUrl[];
     default_locale?: string;
+    name?: string;
 }
 
 export function SeoHead({
@@ -31,6 +32,7 @@ export function SeoHead({
 }: SeoProps) {
     const { props } = usePage();
     const shared = props as SharedSeoProps;
+    const siteName = shared.name;
     const canonicalUrl = canonical ?? shared.canonical_url ?? '';
     const hreflangUrls = shared.hreflang_urls ?? [];
     const defaultLocale = shared.default_locale;
@@ -45,6 +47,7 @@ export function SeoHead({
             {noindex && <meta name="robots" content="noindex, nofollow" />}
             {/* Open Graph */}
             <meta property="og:title" content={title} />
+            {siteName && <meta property="og:site_name" content={siteName} />}
             {description && (
                 <meta property="og:description" content={description} />
             )}

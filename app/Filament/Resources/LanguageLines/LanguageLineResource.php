@@ -9,6 +9,7 @@ use App\Filament\Resources\LanguageLines\Pages\FillMissingTranslations;
 use App\Filament\Resources\LanguageLines\Pages\ListLanguageLines;
 use App\Filament\Resources\LanguageLines\Schemas\LanguageLineForm;
 use App\Filament\Resources\LanguageLines\Tables\LanguageLinesTable;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -24,7 +25,7 @@ class LanguageLineResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
-    protected static \BackedEnum|string|null $navigationIcon = Heroicon::OutlinedLanguage;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLanguage;
 
     protected static ?string $recordTitleAttribute = 'key';
 
@@ -66,11 +67,6 @@ class LanguageLineResource extends Resource
     public static function canCreate(): bool
     {
         return true;
-    }
-
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
-    {
-        return parent::getEloquentQuery();
     }
 
     public static function canViewAny(): bool

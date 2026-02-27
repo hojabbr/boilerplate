@@ -12,6 +12,7 @@ class FeatureFlagsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('label')
             ->columns([
                 TextColumn::make('label')
                     ->searchable()

@@ -8,6 +8,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -19,14 +20,18 @@ class PagesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('order')
             ->columns([
                 TextColumn::make('slug')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->copyable(),
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('type'),
+                TextColumn::make('type')
+                    ->badge()
+                    ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean()
                     ->label('Active')
@@ -41,6 +46,7 @@ class PagesTable
                     ->sortable(),
                 TextColumn::make('order')
                     ->sortable(),
+                CommonColumns::deletedAtColumn(),
                 ...CommonColumns::timestampColumns(),
             ])
             ->filters([
@@ -54,6 +60,7 @@ class PagesTable
                     ->native(false),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

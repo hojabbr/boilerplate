@@ -7,10 +7,14 @@ use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\Pages\Pages\CreatePage;
 use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ListPages;
+use App\Filament\Resources\Pages\Pages\ViewPage;
 use App\Filament\Resources\Pages\Schemas\PageForm;
 use App\Filament\Resources\Pages\Tables\PagesTable;
 use BackedEnum;
+use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -43,6 +47,48 @@ class PageResource extends Resource
         return PagesTable::configure($table);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Section::make('Content')
+                    ->schema([
+                        TextEntry::make('slug')
+                            ->copyable(),
+                        TextEntry::make('title'),
+                        TextEntry::make('type')
+                            ->badge(),
+                        TextEntry::make('order'),
+                        TextEntry::make('meta_title')
+                            ->placeholder('—'),
+                        TextEntry::make('meta_description')
+                            ->placeholder('—'),
+                        TextEntry::make('body')
+                            ->html()
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+                Section::make('Settings')
+                    ->schema([
+                        IconEntry::make('is_active')
+                            ->label('Active')
+                            ->boolean(),
+                        IconEntry::make('show_in_navigation')
+                            ->label('Show in navigation')
+                            ->boolean(),
+                        IconEntry::make('show_in_footer')
+                            ->label('Show in footer')
+                            ->boolean(),
+                        TextEntry::make('created_at')->dateTime(),
+                        TextEntry::make('updated_at')->dateTime(),
+                        TextEntry::make('deleted_at')
+                            ->dateTime()
+                            ->placeholder('—'),
+                    ])
+                    ->columns(2),
+            ]);
+    }
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['title', 'slug'];
@@ -71,6 +117,7 @@ class PageResource extends Resource
         return [
             'index' => ListPages::route('/'),
             'create' => CreatePage::route('/create'),
+            'view' => ViewPage::route('/{record}'),
             'edit' => EditPage::route('/{record}/edit'),
         ];
     }

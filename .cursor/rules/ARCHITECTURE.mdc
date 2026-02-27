@@ -212,37 +212,130 @@ Use **Laravel Pennant** for all feature flagging: gradual rollouts, A/B tests, a
 
 ## 🧑‍💼 **7. Admin Dashboard — Filament**
 
-Filament manages administrative UIs, forms, tables, and resource pages.
+Filament manages administrative UIs, forms, tables, and resource pages. Admin panel at `/admin`, Horizon at `/horizon` (both in `urlsIgnored`). Leverage policies & roles for access control.
 
-app/
-└── Filament/
+```
+app/Filament/
+├── Concerns/
+│   └── HasSoftDeleteActions.php    # softDeleteHeaderActions() → Delete/ForceDelete/Restore
+├── Enums/
+│   └── NavigationGroup.php         # Content | Blog | Access | Settings
 ├── Resources/
-│   ├── FeatureFlags/
-│   │   └── FeatureFlagResource.php   # Feature flags: list and edit (syncs to Pennant)
-│   ├── UsersResource.php
-│   ├── RolesResource.php
-│   └── …
-├── Pages/
-├── Widgets/
+│   ├── BlogPosts/                  # One folder per resource (PluralName)
+│   │   ├── BlogPostResource.php    # Resource: model, policy, nav group, infolist(), pages()
+│   │   ├── Pages/                  # ListBlogPosts, CreateBlogPost, EditBlogPost, ViewBlogPost
+│   │   ├── Schemas/                # BlogPostForm.php
+│   │   ├── Tables/                 # BlogPostsTable.php
+│   │   └── RelationManagers/       # TagsRelationManager.php (optional)
+│   └── … (all resources follow this pattern)
+├── Support/
+│   ├── CommonColumns.php           # timestampColumns(), deletedAtColumn()
+│   └── CommonFilters.php           # languageFilter()
+├── Pages/                          # Custom Filament pages (non-resource)
+└── Widgets/                        # BlogPostStatsWidget, UserStatsWidget, etc.
+```
 
-- Leverage policies & roles for admin access control. Admin panel at `/admin`, Horizon dashboard at `/horizon` (both in `urlsIgnored`).
-- **Languages** (CMS group): toggle **Enabled** per language; only enabled languages appear in supportedLocales and the language switcher; at least one must stay enabled; disabling the default reassigns default to another enabled language.
-- **Feature flags resource:** Under Settings, lists and edits feature flags (from `config/features.php`; seeded by `FeatureFlagSeeder`). Changes sync to Pennant. Access via “manage feature flags” permission.
-- **Translation Manager** (LanguageLineResource, Settings group): List shows a **missing keys summary** (locale buttons with language name and count); each links to **Fill missing translations** (`/admin/language-lines/fill-missing?locale=…`) where all missing keys for that locale can be filled in one form. Import/export lang files and CSV; locale filters; no scan-for-keys feature. See [docs/admin.md](docs/admin.md).
-- **Database notifications:** The admin panel enables `databaseNotifications()` so users receive Filament notifications (e.g. when a queued job like blog generation completes). Requires the Laravel `notifications` table; on PostgreSQL the `data` column must be `json`/`jsonb`. Notifications are sent via `Notification::make()->...->sendToDatabase($user)`.
-- Extend Filament with custom tools, reports, and charts.
+**Resources by navigation group:**
+- **Content:** Pages, ContactSubmissions, Faqs, Testimonials, LandingSections
+- **Blog:** BlogPosts, BlogPostSeriesResource (Scheduled series)
+- **Access:** Users, Roles
+- **Settings:** Languages, LanguageLines (Translation Manager), FeatureFlags, Settings
 
-### Filament CLI (resources and widgets)
+### Resource folder structure (REQUIRED)
 
-- **Resources:** `php artisan make:filament-resource ModelName --generate --soft-deletes` when the model uses soft deletes. Use `--simple` for no dedicated List/Create/Edit/View when appropriate.
-- **Widgets:** `php artisan make:filament-widget WidgetName`; add `--stats-overview` or `--chart` as needed.
-- Resources, pages, and widgets are discovered from `app/Filament/Resources`, `app/Filament/Pages`, `app/Filament/Widgets`. See [Filament 5 Navigation](https://filamentphp.com/docs/5.x/navigation/overview) for navigation groups, labels, and icons: use `$navigationGroup`, `$navigationLabel`, `$navigationSort`, `$navigationIcon` on resources and pages.
+Every resource lives in `app/Filament/Resources/<PluralName>/` with these subfolders:
+- **`<PluralName>Resource.php`** — resource class; calls `<Name>Form::configure()` and `<Name>Table::configure()`; never defines schemas or tables inline
+- **`Pages/`** — List, Create, Edit, and View pages
+- **`Schemas/<SingularName>Form.php`** — `static configure(Schema $schema): Schema`
+- **`Tables/<PluralName>Table.php`** — `static configure(Table $table): Table`
+- **`RelationManagers/`** — optional; one class per relationship
 
-**To add a Filament resource:** Use `php artisan make:filament-resource ModelName --generate --soft-deletes` (if the model uses soft deletes); place under `app/Filament/Resources/`; add permission in RoleAndPermissionSeeder and assign to admin.
+### Support utilities (DRY)
+
+- **`CommonColumns`**: end soft-deletable table columns with `CommonColumns::deletedAtColumn(), ...CommonColumns::timestampColumns()`. Non-soft-deletable tables use only `...CommonColumns::timestampColumns()`.
+- **`CommonFilters`**: use `CommonFilters::languageFilter()` for any table that filters by `language_id` relationship.
+- **`NavigationGroup` enum**: always use `NavigationGroup::Content` etc. on `$navigationGroup` — never bare strings.
+
+### Soft-delete support
+
+All soft-deletable resources must:
+1. Include `TrashedFilter::make()` in table filters.
+2. Include `DeleteBulkAction`, `ForceDeleteBulkAction`, `RestoreBulkAction` in `toolbarActions`.
+3. Have a **View page** using the `HasSoftDeleteActions` trait:
+
+```php
+use App\Filament\Concerns\HasSoftDeleteActions;
+
+class ViewBlogPost extends ViewRecord
+{
+    use HasSoftDeleteActions;
+
+    protected function getHeaderActions(): array
+    {
+        return array_merge(
+            [EditAction::make()],
+            $this->softDeleteHeaderActions(), // Delete, ForceDelete, Restore
+        );
+    }
+}
+```
+
+### Form layout conventions (REQUIRED)
+
+- **No bare fields** at the top level of `configure(Schema $schema)`. Every field must be inside a `Section`.
+- **No `Grid::make(2)` wrappers** around sections — they make sections half-page wide.
+- Each `Section` uses `->columns(2)` internally for a 2-column field layout.
+- Fields spanning both columns use `->columnSpanFull()`.
+
+```php
+// CORRECT
+Section::make('Account')
+    ->schema([
+        TextInput::make('name'),
+        TextInput::make('email'),
+        Textarea::make('bio')->columnSpanFull(),
+    ])
+    ->columns(2),
+
+// WRONG — bare field at top level
+TextInput::make('name'),
+
+// WRONG — Grid wrapper makes sections half-page wide
+Grid::make(2)->schema([Section::make(...), Section::make(...)]),
+```
+
+### Infolist (View page) layout conventions
+
+- Max **2 sections** per infolist — consolidate into 2 well-named sections when a model has many fields.
+- **No `Grid::make(2)` wrappers** — sections stack full-width (same rule as forms).
+- Timestamps (created_at, updated_at, deleted_at) go in the second section or a “Timestamps” section.
+- Use `->copyable()` on identifier fields (email, code) and `->badge()` for enum/status fields.
+- `TextEntry::url()` **requires a callback**: `->url(fn (?string $state): ?string => $state)`. A bare `->url()` throws `ArgumentCountError`.
+
+### Table conventions
+
+- **`recordActions`**: always `ViewAction::make()` first, then `EditAction::make()`.
+- **`toolbarActions`**: always `toolbarActions([BulkActionGroup::make([...])])` — never use `bulkActions`.
+- Column order: primary columns → status/badge columns → optional toggleable columns → `CommonColumns::deletedAtColumn()` → `...CommonColumns::timestampColumns()`.
 
 ### Translatable resources (Lara Zeus)
 
 For models using **Spatie Laravel Translatable**, use **lara-zeus/spatie-translatable** in Filament: apply the resource/page `Translatable` trait and add `LocaleSwitcher::make()` in `getHeaderActions()` on List, Create, Edit (and View) pages. Configure translatable locales to match `config('laravellocalization.supportedLocales')` or override `getTranslatableLocales()` on the resource.
+
+### Key resources
+
+- **Languages** (Settings group): toggle **Enabled** per language; only enabled languages appear in supportedLocales and the switcher; at least one must stay enabled.
+- **Feature flags** (Settings group): lists/edits flags from `config/features.php` (seeded by `FeatureFlagSeeder`); changes sync to Pennant. Access via “manage feature flags”.
+- **Translation Manager / LanguageLines** (Settings group): missing keys summary at list top; fill-missing at `/admin/language-lines/fill-missing?locale=…`; import/export lang files and CSV. See [docs/admin.md](docs/admin.md).
+- **Database notifications**: `databaseNotifications()` enabled on panel; sent via `Notification::make()->...->sendToDatabase($user)`. Requires `notifications` table; PostgreSQL needs `json`/`jsonb` on `data`.
+
+### Filament CLI
+
+- **Resources:** `php artisan make:filament-resource ModelName --generate --soft-deletes`; after generation, extract form to `Schemas/<Name>Form.php` and table to `Tables/<Name>Table.php`.
+- **Widgets:** `php artisan make:filament-widget WidgetName`; add `--stats-overview` or `--chart` as needed.
+- Resources, pages, and widgets are auto-discovered from `app/Filament/Resources`, `app/Filament/Pages`, `app/Filament/Widgets`.
+
+**To add a Filament resource:** `make:filament-resource ModelName --generate --soft-deletes` → extract form/table to Schemas/Tables → add permission in `RoleAndPermissionSeeder` → assign to admin role.
 
 ---
 

@@ -19,9 +19,14 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             SettingSeeder::class,
             LandingSectionSeeder::class,
-            BlogPostSeeder::class,
-            FaqSeeder::class,
-            TestimonialSeeder::class,
         ]);
+
+        if (app()->isLocal()) {
+            $this->call([
+                BlogPostSeeder::class,
+                FaqSeeder::class,
+                TestimonialSeeder::class,
+            ]);
+        }
     }
 }

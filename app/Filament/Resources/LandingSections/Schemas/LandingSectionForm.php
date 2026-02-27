@@ -28,6 +28,7 @@ class LandingSectionForm
                             ->required()
                             ->native(false),
                         TextInput::make('sort_order')
+                            ->helperText('Lower numbers appear first.')
                             ->numeric()
                             ->default(0)
                             ->required(),

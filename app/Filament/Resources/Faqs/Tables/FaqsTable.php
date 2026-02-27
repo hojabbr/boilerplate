@@ -9,6 +9,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -26,6 +27,7 @@ class FaqsTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('sort_order')->sortable(),
+                CommonColumns::deletedAtColumn(),
                 ...CommonColumns::timestampColumns(),
             ])
             ->filters([
@@ -33,6 +35,7 @@ class FaqsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

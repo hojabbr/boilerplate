@@ -10,11 +10,6 @@ class EditLanguageLine extends EditRecord
 {
     protected static string $resource = LanguageLineResource::class;
 
-    public function mount(int|string $record): void
-    {
-        parent::mount($record);
-    }
-
     protected function mutateFormDataBeforeFill(array $data): array
     {
         $text = $this->record->text ?? [];

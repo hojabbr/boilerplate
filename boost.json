@@ -1,21 +1,26 @@
 {
-    "agents": [
-        "cursor"
-    ],
+    "agents": ["cursor", "claude_code"],
     "guidelines": true,
     "herd_mcp": false,
     "mcp": true,
     "nightwatch_mcp": false,
     "packages": [
-        "laravel/fortify"
+        "laravel/fortify",
+        "filament/filament",
+        "laravel/ai",
+        "spatie/laravel-medialibrary",
+        "spatie/laravel-permission"
     ],
-    "sail": false,
+    "sail": true,
     "skills": [
         "pennant-development",
         "wayfinder-development",
         "pest-testing",
         "inertia-react-development",
         "tailwindcss-development",
-        "developing-with-fortify"
+        "developing-with-ai-sdk",
+        "developing-with-fortify",
+        "medialibrary-development",
+        "laravel-permission-development"
     ]
 }

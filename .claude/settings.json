@@ -1,0 +1,31 @@
+{
+    "permissions": {
+        "allow": [
+            "Bash(php artisan *)",
+            "Bash(npm run *)",
+            "Bash(composer install*)",
+            "Bash(composer require*)",
+            "Bash(composer dump-autoload*)",
+            "Bash(./vendor/bin/sail *)",
+            "Bash(./vendor/bin/pest *)",
+            "Bash(./vendor/bin/phpstan *)",
+            "Bash(./vendor/bin/pint *)",
+            "Bash(git status)",
+            "Bash(git diff*)",
+            "Bash(git log*)",
+            "Bash(git add *)",
+            "Bash(git commit *)",
+            "Bash(git stash*)",
+            "Bash(mkdir -p *)",
+            "Bash(ls *)",
+            "Bash(cp *)"
+        ],
+        "deny": [
+            "Bash(git push --force*)",
+            "Bash(git reset --hard*)",
+            "Bash(rm -rf *)",
+            "Bash(DROP TABLE*)",
+            "Bash(php artisan db:wipe*)"
+        ]
+    }
+}

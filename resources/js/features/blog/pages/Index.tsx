@@ -80,7 +80,7 @@ export default function BlogIndex({
     return (
         <PublicLayout settings={settings} features={features}>
             <SeoHead
-                title={seo?.title ?? 'Blog'}
+                title={seo?.title ?? messages.title ?? 'Blog'}
                 description={seo?.description}
             />
             <div className="section-spacing mx-auto w-full max-w-3xl space-y-8 px-4 pt-16 sm:px-6">

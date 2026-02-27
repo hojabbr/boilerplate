@@ -14,11 +14,14 @@ class RolesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('name')
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('guard_name')
+                    ->label('Guard')
+                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 ...CommonColumns::timestampColumns(),
             ])

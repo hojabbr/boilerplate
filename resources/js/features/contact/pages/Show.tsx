@@ -62,7 +62,7 @@ export default function ContactShow({
     return (
         <PublicLayout settings={settings} features={features}>
             <SeoHead
-                title={seo?.title ?? 'Contact'}
+                title={seo?.title ?? messages.heading ?? 'Contact'}
                 description={seo?.description}
             />
             <m.div

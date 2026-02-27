@@ -11,6 +11,7 @@ use App\Filament\Resources\ContactSubmissions\Tables\ContactSubmissionsTable;
 use BackedEnum;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -48,15 +49,24 @@ class ContactSubmissionResource extends Resource
     {
         return $schema
             ->components([
-                TextEntry::make('name'),
-                TextEntry::make('email'),
-                TextEntry::make('subject'),
-                TextEntry::make('message')
-                    ->columnSpanFull(),
-                TextEntry::make('locale')
-                    ->badge(),
-                TextEntry::make('created_at')
-                    ->dateTime(),
+                Section::make('Submission')
+                    ->schema([
+                        TextEntry::make('name'),
+                        TextEntry::make('email')
+                            ->copyable(),
+                        TextEntry::make('subject')
+                            ->placeholder('—'),
+                        TextEntry::make('locale')
+                            ->badge(),
+                        TextEntry::make('created_at')->dateTime(),
+                        TextEntry::make('updated_at')->dateTime(),
+                        TextEntry::make('deleted_at')
+                            ->dateTime()
+                            ->placeholder('—'),
+                        TextEntry::make('message')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
             ]);
     }
 

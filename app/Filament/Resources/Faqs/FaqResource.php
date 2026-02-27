@@ -7,10 +7,13 @@ use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\Faqs\Pages\CreateFaq;
 use App\Filament\Resources\Faqs\Pages\EditFaq;
 use App\Filament\Resources\Faqs\Pages\ListFaqs;
+use App\Filament\Resources\Faqs\Pages\ViewFaq;
 use App\Filament\Resources\Faqs\Schemas\FaqForm;
 use App\Filament\Resources\Faqs\Tables\FaqsTable;
 use BackedEnum;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -40,6 +43,35 @@ class FaqResource extends Resource
         return FaqsTable::configure($table);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Section::make('FAQ')
+                    ->schema([
+                        TextEntry::make('language.name')
+                            ->label('Language')
+                            ->badge(),
+                        TextEntry::make('sort_order')
+                            ->label('Sort order'),
+                        TextEntry::make('question')
+                            ->columnSpanFull(),
+                        TextEntry::make('answer')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+                Section::make('Timestamps')
+                    ->schema([
+                        TextEntry::make('created_at')->dateTime(),
+                        TextEntry::make('updated_at')->dateTime(),
+                        TextEntry::make('deleted_at')
+                            ->dateTime()
+                            ->placeholder('—'),
+                    ])
+                    ->columns(2),
+            ]);
+    }
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['question'];
@@ -67,6 +99,7 @@ class FaqResource extends Resource
         return [
             'index' => ListFaqs::route('/'),
             'create' => CreateFaq::route('/create'),
+            'view' => ViewFaq::route('/{record}'),
             'edit' => EditFaq::route('/{record}/edit'),
         ];
     }

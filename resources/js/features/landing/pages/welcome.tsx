@@ -491,7 +491,7 @@ export default function Welcome({
             canRegister={canRegister}
         >
             <SeoHead
-                title={seo?.title ?? 'Welcome'}
+                title={seo?.title ?? companyName}
                 description={seo?.description}
             />
             <article className="flex flex-col pt-0">

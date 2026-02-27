@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\LanguageLines\Schemas;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class LanguageLineForm
@@ -11,24 +12,33 @@ class LanguageLineForm
     {
         $locales = array_keys(config('laravellocalization.supportedLocales', []));
 
-        $components = [
-            TextInput::make('group')
-                ->label(__('Group'))
-                ->required()
-                ->maxLength(255)
-                ->default('*'),
-            TextInput::make('key')
-                ->label(__('Key'))
-                ->required()
-                ->maxLength(255),
-        ];
+        $translationComponents = [];
 
         foreach ($locales as $locale) {
-            $components[] = TextInput::make('text.'.$locale)
+            $translationComponents[] = TextInput::make('text.'.$locale)
                 ->label(__('Translation').' ('.$locale.')')
                 ->maxLength(65535);
         }
 
-        return $schema->components($components);
+        return $schema->components([
+            Section::make('Key')
+                ->schema([
+                    TextInput::make('group')
+                        ->label(__('Group'))
+                        ->helperText('Use * for values stored in the database, or a PHP filename (e.g. auth, validation).')
+                        ->required()
+                        ->maxLength(255)
+                        ->default('*'),
+                    TextInput::make('key')
+                        ->label(__('Key'))
+                        ->helperText('Dot-notation key used to look up this translation (e.g. messages.welcome).')
+                        ->required()
+                        ->maxLength(255),
+                ])
+                ->columns(2),
+            Section::make('Translations')
+                ->schema($translationComponents)
+                ->columns(2),
+        ]);
     }
 }

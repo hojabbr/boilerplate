@@ -19,6 +19,7 @@ class TestimonialForm
                 Section::make('Testimonial')
                     ->schema([
                         Select::make('language_id')
+                            ->label('Language')
                             ->relationship(
                                 'language',
                                 'name',
@@ -31,6 +32,7 @@ class TestimonialForm
                             ->searchable()
                             ->preload(),
                         TextInput::make('sort_order')
+                            ->helperText('Lower numbers appear first.')
                             ->numeric()
                             ->default(0)
                             ->minValue(0),

@@ -9,6 +9,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
@@ -34,6 +35,7 @@ class BlogPostsTable
                 TextColumn::make('slug')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('published_at')->dateTime()->sortable(),
+                CommonColumns::deletedAtColumn(),
                 ...CommonColumns::timestampColumns(),
             ])
             ->filters([
@@ -46,6 +48,7 @@ class BlogPostsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

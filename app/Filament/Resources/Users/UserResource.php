@@ -14,7 +14,6 @@ use App\Filament\Resources\Users\Tables\UsersTable;
 use BackedEnum;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -49,35 +48,32 @@ class UserResource extends Resource
     {
         return $schema
             ->components([
-                Grid::make(2)
+                Section::make('Account')
                     ->schema([
-                        Section::make('Account')
-                            ->schema([
-                                TextEntry::make('name'),
-                                TextEntry::make('email')
-                                    ->label('Email address')
-                                    ->copyable(),
-                                TextEntry::make('email_verified_at')
-                                    ->label('Email verified')
-                                    ->dateTime()
-                                    ->placeholder('—'),
-                                TextEntry::make('two_factor_confirmed_at')
-                                    ->label('2FA confirmed')
-                                    ->dateTime()
-                                    ->placeholder('—'),
-                            ])
-                            ->columns(2),
-                        Section::make('Timestamps')
-                            ->schema([
-                                TextEntry::make('created_at')->dateTime(),
-                                TextEntry::make('updated_at')->dateTime(),
-                                TextEntry::make('deleted_at')
-                                    ->label('Deleted at')
-                                    ->dateTime()
-                                    ->placeholder('—'),
-                            ])
-                            ->columns(2),
-                    ]),
+                        TextEntry::make('name'),
+                        TextEntry::make('email')
+                            ->label('Email address')
+                            ->copyable(),
+                        TextEntry::make('email_verified_at')
+                            ->label('Email verified')
+                            ->dateTime()
+                            ->placeholder('—'),
+                        TextEntry::make('two_factor_confirmed_at')
+                            ->label('2FA confirmed')
+                            ->dateTime()
+                            ->placeholder('—'),
+                    ])
+                    ->columns(2),
+                Section::make('Timestamps')
+                    ->schema([
+                        TextEntry::make('created_at')->dateTime(),
+                        TextEntry::make('updated_at')->dateTime(),
+                        TextEntry::make('deleted_at')
+                            ->label('Deleted at')
+                            ->dateTime()
+                            ->placeholder('—'),
+                    ])
+                    ->columns(2),
             ]);
     }
 

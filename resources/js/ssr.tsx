@@ -26,7 +26,7 @@ createServer(
         createInertiaApp({
             page,
             render: ReactDOMServer.renderToString,
-            title: (title) => title || appName,
+            title: (title) => (title ? `${title} | ${appName}` : appName),
             resolve: (name) => resolvePageComponent(pagePath(name), pageGlob),
             setup: ({ App, props }) => {
                 const { dir } = (props.initialPage?.props ?? {}) as {

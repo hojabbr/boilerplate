@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\Languages\Tables;
 
+use App\Filament\Support\CommonColumns;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
@@ -18,12 +20,26 @@ class LanguagesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('sort_order')
             ->columns([
-                TextColumn::make('code'),
-                TextColumn::make('name'),
-                IconColumn::make('is_default')->boolean(),
-                IconColumn::make('is_enabled')->boolean(),
-                TextColumn::make('sort_order'),
+                TextColumn::make('code')
+                    ->searchable()
+                    ->sortable()
+                    ->copyable(),
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                IconColumn::make('is_default')
+                    ->label('Default')
+                    ->boolean(),
+                IconColumn::make('is_enabled')
+                    ->label('Enabled')
+                    ->boolean(),
+                TextColumn::make('sort_order')
+                    ->label('Order')
+                    ->sortable(),
+                CommonColumns::deletedAtColumn(),
+                ...CommonColumns::timestampColumns(),
             ])
             ->filters([
                 TrashedFilter::make(),
@@ -34,6 +50,7 @@ class LanguagesTable
                     ->falseLabel('Disabled only'),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

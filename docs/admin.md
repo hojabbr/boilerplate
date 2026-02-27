@@ -39,15 +39,69 @@ From the same wizard you can create a **scheduled series** (recurring generation
 
 The admin panel enables Filament database notifications (`databaseNotifications()`). Users see notifications in the panel (e.g. when a queued job like blog generation completes). Requires the Laravel `notifications` table; on PostgreSQL the `data` column must be `json`/`jsonb`.
 
-## Content group resources
+## Resources by navigation group
 
-Under the **Content** navigation group: Pages, Blog (Blog posts, Series), Contact submissions, **FAQs** (`manage faq`), **Testimonials** (`manage testimonials`). Each resource uses the corresponding domain model and policy.
+Resources are organized by the `NavigationGroup` enum (`app/Filament/Enums/NavigationGroup.php`):
+
+| Group        | Resources                                                      | Permission                                                                                        |
+| ------------ | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **Content**  | Pages, ContactSubmissions, Faqs, Testimonials, LandingSections | manage page, manage contact submissions, manage faq, manage testimonials, manage landing sections |
+| **Blog**     | BlogPosts, BlogPostSeriesResource (Scheduled series)           | manage blog                                                                                       |
+| **Access**   | Users, Roles                                                   | manage users, manage roles                                                                        |
+| **Settings** | Languages, LanguageLines, FeatureFlags, Settings               | manage languages, manage translations, manage feature flags, manage settings                      |
+
+## Resource folder structure (convention)
+
+Every resource lives in `app/Filament/Resources/<PluralName>/`:
+
+```
+app/Filament/Resources/<PluralName>/
+├── <PluralName>Resource.php      # Resource class; delegates to Form + Table classes
+├── Pages/
+│   ├── List<PluralName>.php
+│   ├── Create<SingularName>.php
+│   ├── Edit<SingularName>.php
+│   └── View<SingularName>.php    # Required for soft-deletable resources
+├── Schemas/
+│   └── <SingularName>Form.php    # static configure(Schema $schema): Schema
+├── Tables/
+│   └── <PluralName>Table.php     # static configure(Table $table): Table
+└── RelationManagers/             # Optional
+```
+
+Schemas and tables are **never defined inline** in the resource class.
+
+## Support utilities
+
+- **`app/Filament/Support/CommonColumns.php`** — `timestampColumns()` (created_at + updated_at, toggleable hidden) and `deletedAtColumn()` (deleted_at, toggleable hidden). Use at the end of every table's column list.
+- **`app/Filament/Support/CommonFilters.php`** — `languageFilter()` for tables that filter by `language_id`.
+- **`app/Filament/Concerns/HasSoftDeleteActions.php`** — `softDeleteHeaderActions()` returns Delete/ForceDelete/Restore actions. Used on all View pages for soft-deletable resources.
+
+## Form and infolist layout conventions
+
+**Forms:**
+
+- Every field must be inside a `Section` — no bare fields at the top level.
+- Never wrap sections in `Grid::make(2)` — sections stack full-width by design.
+- Each `Section` uses `->columns(2)` internally; wide fields use `->columnSpanFull()`.
+
+**Infolists (View pages):**
+
+- Maximum 2 sections — consolidate fields rather than adding a third section.
+- No `Grid::make(2)` wrappers — same full-width stacked rule as forms.
+- `TextEntry::url()` requires a callback: `->url(fn (?string $state): ?string => $state)`.
+
+**Tables:**
+
+- `recordActions([ViewAction::make(), EditAction::make()])` — View always first.
+- `toolbarActions([BulkActionGroup::make([...])])` — never `bulkActions`.
 
 ## Adding a resource
 
 1. `php artisan make:filament-resource ModelName --generate --soft-deletes` (omit `--soft-deletes` if the model does not use it).
-2. Place the resource under `app/Filament/Resources/` and point it at the correct model class.
-3. Add a permission (e.g. `manage blog`, `manage faq`, `manage testimonials`) in `database/seeders/RoleAndPermissionSeeder.php` and assign it to the admin role.
+2. Move the generated form definition to `Schemas/<SingularName>Form.php` and table definition to `Tables/<PluralName>Table.php`.
+3. Add a permission (e.g. `manage faq`) in `database/seeders/RoleAndPermissionSeeder.php` and assign it to the admin role.
+4. Add a View page (`View<SingularName>.php`) using `HasSoftDeleteActions` if the model uses soft deletes.
 
 ## Translatable models (Lara Zeus)
 

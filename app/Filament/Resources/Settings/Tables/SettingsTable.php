@@ -14,10 +14,12 @@ class SettingsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('key')
             ->columns([
                 TextColumn::make('key')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->copyable(),
                 ...CommonColumns::timestampColumns(),
             ])
             ->filters([

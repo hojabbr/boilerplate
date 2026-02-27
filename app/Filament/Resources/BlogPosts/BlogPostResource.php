@@ -16,7 +16,6 @@ use BackedEnum;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -51,42 +50,38 @@ class BlogPostResource extends Resource
     {
         return $schema
             ->components([
-                Grid::make(2)
+                Section::make('Content')
                     ->schema([
-                        Section::make('Content')
-                            ->schema([
-                                TextEntry::make('title'),
-                                TextEntry::make('slug')
-                                    ->copyable(),
-                                TextEntry::make('language.name')
-                                    ->label('Language')
-                                    ->badge(),
-                                TextEntry::make('published_at')
-                                    ->label('Published')
-                                    ->dateTime()
-                                    ->placeholder('Draft'),
-                                TextEntry::make('excerpt')
-                                    ->columnSpanFull(),
-                                TextEntry::make('body')
-                                    ->html()
-                                    ->columnSpanFull(),
-                                TextEntry::make('meta_description')
-                                    ->columnSpanFull(),
-                                TextEntry::make('tags.name')
-                                    ->label('Tags')
-                                    ->badge(),
-                            ])
-                            ->columns(2),
-                        Section::make('Gallery')
-                            ->schema([
-                                SpatieMediaLibraryImageEntry::make('media')
-                                    ->collection('gallery')
-                                    ->conversion('card')
-                                    ->columnSpanFull(),
-                            ])
-                            ->collapsible()
+                        TextEntry::make('title'),
+                        TextEntry::make('slug')
+                            ->copyable(),
+                        TextEntry::make('language.name')
+                            ->label('Language')
+                            ->badge(),
+                        TextEntry::make('published_at')
+                            ->label('Published')
+                            ->dateTime()
+                            ->placeholder('Draft'),
+                        TextEntry::make('excerpt')
                             ->columnSpanFull(),
-                    ]),
+                        TextEntry::make('body')
+                            ->html()
+                            ->columnSpanFull(),
+                        TextEntry::make('meta_description')
+                            ->columnSpanFull(),
+                        TextEntry::make('tags.name')
+                            ->label('Tags')
+                            ->badge(),
+                    ])
+                    ->columns(2),
+                Section::make('Gallery')
+                    ->schema([
+                        SpatieMediaLibraryImageEntry::make('media')
+                            ->collection('gallery')
+                            ->conversion('card')
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible(),
             ]);
     }
 
