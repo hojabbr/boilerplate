@@ -1,3 +1,11 @@
+## [1.6.0](https://github.com/hojabbr/boilerplate/compare/v1.5.0...v1.6.0) (2026-02-27)
+
+### Features
+
+- add FAQ and testimonial features with corresponding models, controllers, and policies ([84b96a2](https://github.com/hojabbr/boilerplate/commit/84b96a2c9e8f1aca178605e2d893e2d618bda9b8))
+- add FAQ and testimonial features with corresponding models, controllers, and policies ([75f425a](https://github.com/hojabbr/boilerplate/commit/75f425acfb949768817abb0f00167f2342dcf1ec))
+- enhance navigation search functionality to include FAQs and testimonials ([5e5bb56](https://github.com/hojabbr/boilerplate/commit/5e5bb564de9e7365d6557e8aef9157301c5859aa))
+
 ## [1.5.0](https://github.com/hojabbr/boilerplate/compare/v1.4.0...v1.5.0) (2026-02-23)
 
 ### Features
