@@ -1,3 +1,9 @@
+## [1.8.0](https://github.com/hojabbr/boilerplate/compare/v1.7.0...v1.8.0) (2026-02-27)
+
+### Features
+
+- Update SEO titles in Blog, Contact, and Page controllers; enhance PublicLayout with logo support ([65023e7](https://github.com/hojabbr/boilerplate/commit/65023e7c0179ae8e1b452ae6bd8ac0fae07510e8))
+
 ## [1.7.0](https://github.com/hojabbr/boilerplate/compare/v1.6.0...v1.7.0) (2026-02-27)
 
 ### Features
