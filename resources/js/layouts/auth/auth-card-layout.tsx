@@ -19,7 +19,10 @@ export default function AuthCardLayout({
     title?: string;
     description?: string;
 }>) {
-    const { locale } = usePage().props as { locale?: string };
+    const { locale, logo_url } = usePage().props as {
+        locale?: string;
+        logo_url?: string | null;
+    };
     const prefix = locale ? `/${locale}` : '';
 
     return (
@@ -30,7 +33,10 @@ export default function AuthCardLayout({
                     className="flex items-center gap-2 self-center font-medium"
                 >
                     <div className="flex h-9 w-9 items-center justify-center">
-                        <AppLogoIcon className="size-9 fill-current text-black dark:text-white" />
+                        <AppLogoIcon
+                            src={logo_url}
+                            className="size-9 fill-current text-black dark:text-white"
+                        />
                     </div>
                 </Link>
 

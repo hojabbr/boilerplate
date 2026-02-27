@@ -1,6 +1,7 @@
 <?php
 
 use App\Core\Http\Controllers\TranslationsCsvController;
+use App\Core\Http\Controllers\WebManifestController;
 use App\Domains\Blog\Http\Controllers\BlogController;
 use App\Domains\Contact\Http\Controllers\ContactController;
 use App\Domains\Dashboard\Http\Controllers\DashboardController;
@@ -11,6 +12,12 @@ use App\Domains\Search\Http\Controllers\SearchController;
 use App\Domains\Testimonial\Http\Controllers\TestimonialController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Mcamara\LaravelLocalization\Middleware\LocaleCookieRedirect;
+
+Route::get('/site.webmanifest', WebManifestController::class)
+    ->middleware('web')
+    ->withoutMiddleware(LocaleCookieRedirect::class)
+    ->name('webmanifest');
 
 // Root path: ensure web middleware (and thus LocaleCookieRedirect) runs so
 // a visit to / redirects to the user's chosen locale from cookie/session.

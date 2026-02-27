@@ -30,7 +30,7 @@ class LandingController extends Controller
             'settings' => $settings,
             'features' => $pageProps->featuresArray(),
             'seo' => [
-                'title' => __('Welcome').' - '.$companyName,
+                'title' => __('Welcome'),
                 'description' => $settings['tagline'],
             ],
             'messages' => [

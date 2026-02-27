@@ -3,6 +3,7 @@
 namespace App\Core\Providers\Filament;
 
 use App\Core\Middleware\EnsureUserHasAdminRole;
+use App\Core\Models\Setting;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -30,6 +31,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandLogo(fn () => view('filament.components.brand-logo'))
+            ->brandLogoHeight('2rem')
+            ->favicon(fn () => Setting::site()->getFirstMediaUrl('favicon') ?: asset('favicon/favicon.ico'))
             ->databaseNotifications()
             ->maxContentWidth(Width::Full)
             ->plugin(TranslatableLocalesPlugin::make())

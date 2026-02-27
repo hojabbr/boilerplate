@@ -21,9 +21,19 @@
 
         <title inertia>{{ $siteName ?? config('app.name', 'Laravel') }}</title>
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        @php
+            $setting = \App\Core\Models\Setting::site();
+            $icon192 = $setting->getFirstMediaUrl('manifest_icon_192');
+            $faviconManaged = $setting->getFirstMediaUrl('favicon') ?: $icon192;
+            $faviconIco = $faviconManaged ?: asset('favicon/favicon.ico');
+            $appleTouchIcon = $setting->getFirstMediaUrl('apple_touch_icon') ?: ($icon192 ?: asset('favicon/apple-touch-icon.png'));
+        @endphp
+        <link rel="icon" href="{{ $faviconIco }}" sizes="any">
+        @unless($faviconManaged)
+            <link rel="icon" href="{{ asset('favicon/favicon.svg') }}" type="image/svg+xml">
+        @endunless
+        <link rel="apple-touch-icon" href="{{ $appleTouchIcon }}">
+        <link rel="manifest" href="{{ route('webmanifest') }}">
 
         <link rel="preload" href="/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="/fonts/vazirmatn-variable.woff2" as="font" type="font/woff2" crossorigin>

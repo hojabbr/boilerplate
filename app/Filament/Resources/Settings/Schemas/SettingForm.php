@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Settings\Schemas;
 
 use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -39,6 +40,43 @@ class SettingForm
                     ->schema([
                         KeyValue::make('social_links'),
                     ]),
+                Section::make('Branding')
+                    ->description('Upload branding assets. Leave empty to use the default files from /public/favicon/.')
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('app_logo')
+                            ->label('App logo')
+                            ->collection('app_logo')
+                            ->image()
+                            ->visibility('public')
+                            ->helperText('Displayed in the admin sidebar and on the frontend. SVG or PNG recommended.'),
+                        SpatieMediaLibraryFileUpload::make('favicon')
+                            ->label('Favicon (.ico or .png)')
+                            ->collection('favicon')
+                            ->acceptedFileTypes(['image/x-icon', 'image/vnd.microsoft.icon', 'image/png'])
+                            ->visibility('public')
+                            ->helperText('Browser tab icon. Use a 32×32 or 48×48 .ico or .png.'),
+                        SpatieMediaLibraryFileUpload::make('apple_touch_icon')
+                            ->label('Apple touch icon')
+                            ->collection('apple_touch_icon')
+                            ->image()
+                            ->visibility('public')
+                            ->helperText('180×180 PNG shown when added to iOS home screen.'),
+                        SpatieMediaLibraryFileUpload::make('manifest_icon_192')
+                            ->label('PWA icon 192×192')
+                            ->collection('manifest_icon_192')
+                            ->image()
+                            ->visibility('public')
+                            ->helperText('192×192 PNG for the web app manifest.'),
+                        SpatieMediaLibraryFileUpload::make('manifest_icon_512')
+                            ->label('PWA icon 512×512')
+                            ->collection('manifest_icon_512')
+                            ->image()
+                            ->visibility('public')
+                            ->helperText('512×512 PNG for the web app manifest.'),
+                    ])
+                    ->visible(fn ($livewire) => $livewire->getRecord()?->getAttribute('key') === 'site')
+                    ->columns(2)
+                    ->collapsed(),
                 Section::make('Blog')
                     ->description('Override blog config. Leave empty to use config/env defaults.')
                     ->schema([

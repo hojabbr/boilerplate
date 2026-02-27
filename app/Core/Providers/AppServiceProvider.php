@@ -29,6 +29,7 @@ use App\Domains\Page\Observers\PageObserver;
 use App\Domains\Testimonial\Models\Testimonial;
 use App\Domains\Testimonial\Observers\TestimonialObserver;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +37,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Pennant\Feature;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -75,6 +77,19 @@ class AppServiceProvider extends ServiceProvider
         Testimonial::observe(TestimonialObserver::class);
         LandingSection::observe(LandingSectionObserver::class);
         LandingSectionItem::observe(LandingSectionItemObserver::class);
+
+        // Clear the site settings cache when branding media is uploaded or removed.
+        Media::created(function (Media $media): void {
+            if ($media->model_type === Setting::class) {
+                Cache::forget(Setting::siteCacheKey());
+            }
+        });
+        Media::deleted(function (Media $media): void {
+            if ($media->model_type === Setting::class) {
+                Cache::forget(Setting::siteCacheKey());
+            }
+        });
+
         $this->registerPolicies();
         Gate::define('use-translation-manager', fn (?User $user) => $user !== null && $user->can('manage translations'));
         $this->injectSupportedLocalesFromDb();

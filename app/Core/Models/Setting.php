@@ -4,14 +4,16 @@ namespace App\Core\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Translatable\HasTranslations;
 
 /**
  * @mixin IdeHelperSetting
  */
-class Setting extends Model
+class Setting extends Model implements HasMedia
 {
-    use HasTranslations;
+    use HasTranslations, InteractsWithMedia;
 
     /**
      * @var list<string>
@@ -95,5 +97,18 @@ class Setting extends Model
         $int = $value !== null ? (int) $value : 0;
 
         return $int > 0 ? $int : (int) config('blog.translation_body_chunk_size', 6000);
+    }
+
+    /**
+     * Register media collections for branding assets.
+     * Each is a single-file public collection so the latest upload replaces the previous one.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('app_logo')->singleFile()->useDisk('public');
+        $this->addMediaCollection('favicon')->singleFile()->useDisk('public');
+        $this->addMediaCollection('apple_touch_icon')->singleFile()->useDisk('public');
+        $this->addMediaCollection('manifest_icon_192')->singleFile()->useDisk('public');
+        $this->addMediaCollection('manifest_icon_512')->singleFile()->useDisk('public');
     }
 }

@@ -285,6 +285,7 @@ class HandleInertiaRequests extends Middleware
         $setting = Setting::site();
         $siteName = $setting->company_name ?: config('app.name');
         $siteTagline = $setting->tagline ?: config('app.description');
+        $logoUrl = $setting->getFirstMediaUrl('app_logo') ?: null;
         View::share('siteName', $siteName);
         View::share('siteTagline', $siteTagline);
 
@@ -292,6 +293,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => $siteName,
             'site_tagline' => $siteTagline,
+            'logo_url' => $logoUrl,
             'auth' => [
                 'user' => $request->user(),
             ],

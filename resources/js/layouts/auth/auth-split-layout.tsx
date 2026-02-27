@@ -8,9 +8,10 @@ export default function AuthSplitLayout({
     title,
     description,
 }: AuthLayoutProps) {
-    const { name, locale } = usePage().props as {
+    const { name, locale, logo_url } = usePage().props as {
         name?: string;
         locale?: string;
+        logo_url?: string | null;
     };
     const prefix = locale ? `/${locale}` : '';
 
@@ -22,7 +23,10 @@ export default function AuthSplitLayout({
                     href={prefix ? prefix : home.url()}
                     className="relative z-20 flex items-center text-lg font-medium"
                 >
-                    <AppLogoIcon className="me-2 size-8 fill-current text-white" />
+                    <AppLogoIcon
+                        src={logo_url}
+                        className="me-2 size-8 fill-current text-white"
+                    />
                     {name}
                 </Link>
             </div>
@@ -32,7 +36,10 @@ export default function AuthSplitLayout({
                         href={prefix ? prefix : home.url()}
                         className="relative z-20 flex items-center justify-center lg:hidden"
                     >
-                        <AppLogoIcon className="h-10 fill-current text-black sm:h-12" />
+                        <AppLogoIcon
+                            src={logo_url}
+                            className="h-10 fill-current text-black sm:h-12"
+                        />
                     </Link>
                     <div className="flex flex-col items-start gap-2 text-start sm:items-center sm:text-center">
                         <h1 className="text-xl font-medium">{title}</h1>

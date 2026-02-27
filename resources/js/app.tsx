@@ -30,7 +30,7 @@ function pagePath(name: string): string {
 }
 
 createInertiaApp({
-    title: (title) => (title ? `${title} | ${appName}` : appName),
+    title: (title) => (title ? `${title} - ${appName}` : appName),
     resolve: (name) => resolvePageComponent(pagePath(name), pageGlob),
     setup({ el, App, props }) {
         const { locale, dir, supported_locale_codes } = props.initialPage

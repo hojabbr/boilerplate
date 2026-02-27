@@ -52,9 +52,10 @@ const activeItemStyles = 'text-foreground bg-muted';
 
 export function AppHeader() {
     const page = usePage();
-    const { auth, locale } = page.props as {
+    const { auth, locale, logo_url } = page.props as {
         auth: { user: User };
         locale?: string;
+        logo_url?: string | null;
     };
     const prefix = locale ? `/${locale}` : '';
     const getInitials = useInitials();
@@ -90,7 +91,10 @@ export function AppHeader() {
                                     Navigation Menu
                                 </SheetTitle>
                                 <SheetHeader className="flex justify-start text-start">
-                                    <AppLogoIcon className="h-6 w-6 fill-current text-foreground" />
+                                    <AppLogoIcon
+                                        src={logo_url}
+                                        className="h-6 w-6 fill-current text-foreground"
+                                    />
                                 </SheetHeader>
                                 <div className="flex h-full flex-1 flex-col space-y-4 p-4">
                                     <div className="flex h-full flex-col justify-between text-sm">

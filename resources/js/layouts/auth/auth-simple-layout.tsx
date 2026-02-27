@@ -10,7 +10,10 @@ export default function AuthSimpleLayout({
     title,
     description,
 }: AuthLayoutProps) {
-    const { locale } = usePage().props as { locale?: string };
+    const { locale, logo_url } = usePage().props as {
+        locale?: string;
+        logo_url?: string | null;
+    };
     const prefix = locale ? `/${locale}` : '';
 
     return (
@@ -23,7 +26,10 @@ export default function AuthSimpleLayout({
                             className="flex flex-col items-center gap-2 font-medium"
                         >
                             <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-foreground" />
+                                <AppLogoIcon
+                                    src={logo_url}
+                                    className="size-9 fill-current text-foreground"
+                                />
                             </div>
                             <span className="sr-only">{title}</span>
                         </Link>
