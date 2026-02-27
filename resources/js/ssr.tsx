@@ -26,7 +26,7 @@ createServer(
         createInertiaApp({
             page,
             render: ReactDOMServer.renderToString,
-            title: (title) => (title ? `${title} | ${appName}` : appName),
+            title: (title) => title || appName,
             resolve: (name) => resolvePageComponent(pagePath(name), pageGlob),
             setup: ({ App, props }) => {
                 const { dir } = (props.initialPage?.props ?? {}) as {
@@ -44,5 +44,5 @@ createServer(
                 );
             },
         }),
-    { cluster: true },
+    { cluster: true, port: 13715 },
 );
