@@ -1,3 +1,9 @@
+## [1.9.0](https://github.com/hojabbr/boilerplate/compare/v1.8.0...v1.9.0) (2026-02-27)
+
+### Features
+
+- Enhance SEO and social sharing capabilities; add Twitter handle extraction and structured data for blog and FAQ pages ([5ee32f5](https://github.com/hojabbr/boilerplate/commit/5ee32f5218b004fe8a1de49d6569536f91b65f72))
+
 ## [1.8.0](https://github.com/hojabbr/boilerplate/compare/v1.7.0...v1.8.0) (2026-02-27)
 
 ### Features
