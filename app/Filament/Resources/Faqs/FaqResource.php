@@ -15,6 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class FaqResource extends Resource
@@ -23,7 +24,7 @@ class FaqResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Content;
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 3;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQuestionMarkCircle;
 
@@ -37,6 +38,21 @@ class FaqResource extends Resource
     public static function table(Table $table): Table
     {
         return FaqsTable::configure($table);
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['question'];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Language' => $record->language?->name ?? '—',
+        ];
     }
 
     public static function getRelations(): array

@@ -6,6 +6,7 @@ use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\Roles\Pages\CreateRole;
 use App\Filament\Resources\Roles\Pages\EditRole;
 use App\Filament\Resources\Roles\Pages\ListRoles;
+use App\Filament\Resources\Roles\RelationManagers\UsersRelationManager;
 use App\Filament\Resources\Roles\Schemas\RoleForm;
 use App\Filament\Resources\Roles\Tables\RolesTable;
 use BackedEnum;
@@ -40,7 +41,7 @@ class RoleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            UsersRelationManager::class,
         ];
     }
 

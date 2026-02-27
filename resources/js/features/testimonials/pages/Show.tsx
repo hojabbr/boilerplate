@@ -74,10 +74,7 @@ export default function TestimonialsShow({
                                 ease: 'easeOut',
                             }}
                         >
-                            <Card
-                                variant="glass"
-                                className="card-inner-glow flex h-full flex-col rounded-2xl border border-border p-6 shadow-lg"
-                            >
+                            <Card className="card-inner-glow flex h-full flex-col rounded-2xl border border-border p-6 shadow-lg">
                                 <Quote
                                     className="mb-4 size-8 text-primary/60"
                                     aria-hidden

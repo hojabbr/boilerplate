@@ -7,14 +7,20 @@ use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
+use App\Filament\Resources\Users\Pages\ViewUser;
+use App\Filament\Resources\Users\RelationManagers\RolesRelationManager;
 use App\Filament\Resources\Users\Schemas\UserForm;
 use App\Filament\Resources\Users\Tables\UsersTable;
 use BackedEnum;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
@@ -39,10 +45,61 @@ class UserResource extends Resource
         return UsersTable::configure($table);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Grid::make(2)
+                    ->schema([
+                        Section::make('Account')
+                            ->schema([
+                                TextEntry::make('name'),
+                                TextEntry::make('email')
+                                    ->label('Email address')
+                                    ->copyable(),
+                                TextEntry::make('email_verified_at')
+                                    ->label('Email verified')
+                                    ->dateTime()
+                                    ->placeholder('—'),
+                                TextEntry::make('two_factor_confirmed_at')
+                                    ->label('2FA confirmed')
+                                    ->dateTime()
+                                    ->placeholder('—'),
+                            ])
+                            ->columns(2),
+                        Section::make('Timestamps')
+                            ->schema([
+                                TextEntry::make('created_at')->dateTime(),
+                                TextEntry::make('updated_at')->dateTime(),
+                                TextEntry::make('deleted_at')
+                                    ->label('Deleted at')
+                                    ->dateTime()
+                                    ->placeholder('—'),
+                            ])
+                            ->columns(2),
+                    ]),
+            ]);
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email'];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Email' => $record->email ?? '—',
+        ];
+    }
+
     public static function getRelations(): array
     {
         return [
-            //
+            RolesRelationManager::class,
         ];
     }
 
@@ -51,6 +108,7 @@ class UserResource extends Resource
         return [
             'index' => ListUsers::route('/'),
             'create' => CreateUser::route('/create'),
+            'view' => ViewUser::route('/{record}'),
             'edit' => EditUser::route('/{record}/edit'),
         ];
     }

@@ -16,7 +16,7 @@ class TestimonialForm
     {
         return $schema
             ->components([
-                Section::make()
+                Section::make('Testimonial')
                     ->schema([
                         Select::make('language_id')
                             ->relationship(

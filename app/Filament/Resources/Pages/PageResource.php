@@ -15,6 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
 
@@ -40,6 +41,22 @@ class PageResource extends Resource
     public static function table(Table $table): Table
     {
         return PagesTable::configure($table);
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'slug'];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Type' => $record->type ?? '—',
+            'Active' => $record->is_active ? 'Yes' : 'No',
+        ];
     }
 
     public static function getRelations(): array

@@ -16,7 +16,7 @@ class FaqForm
     {
         return $schema
             ->components([
-                Section::make()
+                Section::make('FAQ')
                     ->schema([
                         Select::make('language_id')
                             ->relationship(

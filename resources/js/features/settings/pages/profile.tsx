@@ -18,7 +18,7 @@ export default function Profile({
     mustVerifyEmail: boolean;
     status?: string;
 }) {
-    const { auth, translations } = usePage().props as {
+    const { auth, locale, translations } = usePage().props as {
         auth: {
             user: {
                 name: string;
@@ -26,9 +26,11 @@ export default function Profile({
                 email_verified_at: string | null;
             };
         };
+        locale?: string;
         translations?: Record<string, string>;
     };
     const t = translations ?? {};
+    const prefix = locale ? `/${locale}` : '';
 
     return (
         <AppLayout>

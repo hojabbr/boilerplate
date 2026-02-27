@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Pages\Tables;
 
+use App\Filament\Support\CommonColumns;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -19,8 +20,12 @@ class PagesTable
     {
         return $table
             ->columns([
-                TextColumn::make('slug'),
-                TextColumn::make('title'),
+                TextColumn::make('slug')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('title')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('type'),
                 IconColumn::make('is_active')
                     ->boolean()
@@ -36,6 +41,7 @@ class PagesTable
                     ->sortable(),
                 TextColumn::make('order')
                     ->sortable(),
+                ...CommonColumns::timestampColumns(),
             ])
             ->filters([
                 TrashedFilter::make(),

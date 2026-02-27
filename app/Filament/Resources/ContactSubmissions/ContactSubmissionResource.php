@@ -4,11 +4,12 @@ namespace App\Filament\Resources\ContactSubmissions;
 
 use App\Domains\Contact\Models\ContactSubmission;
 use App\Filament\Enums\NavigationGroup;
-use App\Filament\Resources\ContactSubmissions\Pages\EditContactSubmission;
 use App\Filament\Resources\ContactSubmissions\Pages\ListContactSubmissions;
+use App\Filament\Resources\ContactSubmissions\Pages\ViewContactSubmission;
 use App\Filament\Resources\ContactSubmissions\Schemas\ContactSubmissionForm;
 use App\Filament\Resources\ContactSubmissions\Tables\ContactSubmissionsTable;
 use BackedEnum;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -22,9 +23,9 @@ class ContactSubmissionResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Content;
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 5;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInboxStack;
 
     protected static ?string $recordTitleAttribute = 'email';
 
@@ -43,6 +44,22 @@ class ContactSubmissionResource extends Resource
         return ContactSubmissionsTable::configure($table);
     }
 
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                TextEntry::make('name'),
+                TextEntry::make('email'),
+                TextEntry::make('subject'),
+                TextEntry::make('message')
+                    ->columnSpanFull(),
+                TextEntry::make('locale')
+                    ->badge(),
+                TextEntry::make('created_at')
+                    ->dateTime(),
+            ]);
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -54,7 +71,7 @@ class ContactSubmissionResource extends Resource
     {
         return [
             'index' => ListContactSubmissions::route('/'),
-            'edit' => EditContactSubmission::route('/{record}/edit'),
+            'view' => ViewContactSubmission::route('/{record}'),
         ];
     }
 

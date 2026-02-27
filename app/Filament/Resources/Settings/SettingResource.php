@@ -22,9 +22,9 @@ class SettingResource extends Resource
 
     protected static ?string $model = Setting::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Content;
+    protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Settings;
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 1;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 

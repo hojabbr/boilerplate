@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\LanguageLineResource\Pages;
+namespace App\Filament\Resources\LanguageLines\Pages;
 
-use App\Filament\Resources\LanguageLineResource;
+use App\Filament\Resources\LanguageLines\LanguageLineResource;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Contracts\Support\Arrayable;
 

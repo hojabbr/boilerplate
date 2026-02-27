@@ -71,6 +71,22 @@ class Language extends Model
     }
 
     /**
+     * @return HasMany<\App\Domains\Faq\Models\Faq, $this>
+     */
+    public function faqs(): HasMany
+    {
+        return $this->hasMany(\App\Domains\Faq\Models\Faq::class);
+    }
+
+    /**
+     * @return HasMany<\App\Domains\Testimonial\Models\Testimonial, $this>
+     */
+    public function testimonials(): HasMany
+    {
+        return $this->hasMany(\App\Domains\Testimonial\Models\Testimonial::class);
+    }
+
+    /**
      * Pages are row-per-locale when pages.language_id exists. Currently not in schema.
      *
      * @return HasMany<\App\Domains\Page\Models\Page, $this>

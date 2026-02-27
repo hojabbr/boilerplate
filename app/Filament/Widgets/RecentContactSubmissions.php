@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class RecentContactSubmissions extends TableWidget
 {
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 4;
 
     public function table(Table $table): Table
     {

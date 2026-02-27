@@ -1,18 +1,10 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\LanguageLines\Tables;
 
-use App\Filament\Enums\NavigationGroup;
-use App\Filament\Resources\LanguageLineResource\Pages\CreateLanguageLine;
-use App\Filament\Resources\LanguageLineResource\Pages\EditLanguageLine;
-use App\Filament\Resources\LanguageLineResource\Pages\FillMissingTranslations;
-use App\Filament\Resources\LanguageLineResource\Pages\ListLanguageLines;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Select;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -21,70 +13,20 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Spatie\TranslationLoader\LanguageLine;
 
-class LanguageLineResource extends Resource
+class LanguageLinesTable
 {
-    protected static ?string $model = LanguageLine::class;
-
-    protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Settings;
-
-    protected static ?int $navigationSort = 2;
-
-    protected static \BackedEnum|string|null $navigationIcon = Heroicon::OutlinedLanguage;
-
-    protected static ?string $recordTitleAttribute = 'key';
-
-    public static function getModelLabel(): string
-    {
-        return __('Translation');
-    }
-
-    public static function getPluralModelLabel(): string
-    {
-        return __('Translations');
-    }
-
-    public static function getNavigationLabel(): string
-    {
-        return __('Translation Manager');
-    }
-
-    public static function form(Schema $schema): Schema
-    {
-        $locales = array_keys(config('laravellocalization.supportedLocales', []));
-
-        $components = [
-            \Filament\Forms\Components\TextInput::make('group')
-                ->label(__('Group'))
-                ->required()
-                ->maxLength(255)
-                ->default('*'),
-            \Filament\Forms\Components\TextInput::make('key')
-                ->label(__('Key'))
-                ->required()
-                ->maxLength(255),
-        ];
-
-        foreach ($locales as $locale) {
-            $components[] = \Filament\Forms\Components\TextInput::make('text.'.$locale)
-                ->label(__('Translation').' ('.$locale.')')
-                ->maxLength(65535);
-        }
-
-        return $schema->components($components);
-    }
-
-    public static function table(Table $table): Table
+    public static function configure(Table $table): Table
     {
         $locales = array_keys(config('laravellocalization.supportedLocales', []));
         $localeOptions = array_combine($locales, $locales);
 
         return $table
             ->columns([
-                \Filament\Tables\Columns\TextColumn::make('group')
+                TextColumn::make('group')
                     ->label(__('Group'))
                     ->searchable()
                     ->sortable(),
-                \Filament\Tables\Columns\TextColumn::make('key')
+                TextColumn::make('key')
                     ->label(__('Key'))
                     ->searchable()
                     ->sortable(),
@@ -97,7 +39,7 @@ class LanguageLineResource extends Resource
 
                         return array_keys(array_filter($text, fn ($v) => $v !== null && (string) $v !== ''));
                     }),
-                \Filament\Tables\Columns\TextColumn::make('text_preview')
+                TextColumn::make('text_preview')
                     ->label(__('Preview'))
                     ->getStateUsing(function (LanguageLine $record): string {
                         $fallback = config('app.fallback_locale', 'en');
@@ -165,30 +107,5 @@ class LanguageLineResource extends Resource
                 ]),
             ])
             ->defaultSort('key');
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => ListLanguageLines::route('/'),
-            'create' => CreateLanguageLine::route('/create'),
-            'fill-missing' => FillMissingTranslations::route('/fill-missing'),
-            'edit' => EditLanguageLine::route('/{record}/edit'),
-        ];
-    }
-
-    public static function canCreate(): bool
-    {
-        return true;
-    }
-
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
-    {
-        return parent::getEloquentQuery();
-    }
-
-    public static function canViewAny(): bool
-    {
-        return \Illuminate\Support\Facades\Gate::allows('use-translation-manager');
     }
 }

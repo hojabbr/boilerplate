@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources\ContactSubmissions\Tables;
 
+use App\Filament\Support\CommonColumns;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -17,16 +18,27 @@ class ContactSubmissionsTable
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('email'),
-                TextColumn::make('subject'),
-                TextColumn::make('created_at')->dateTime(),
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('email')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('subject')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('locale')
+                    ->badge(),
+                TextColumn::make('message')
+                    ->limit(40)
+                    ->toggleable(isToggledHiddenByDefault: true),
+                ...CommonColumns::timestampColumns(),
             ])
             ->filters([
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                EditAction::make(),
+                ViewAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

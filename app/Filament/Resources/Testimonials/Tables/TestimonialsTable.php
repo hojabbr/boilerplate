@@ -2,13 +2,14 @@
 
 namespace App\Filament\Resources\Testimonials\Tables;
 
+use App\Filament\Support\CommonColumns;
+use App\Filament\Support\CommonFilters;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -27,13 +28,10 @@ class TestimonialsTable
                 TextColumn::make('author')->searchable()->sortable(),
                 TextColumn::make('role')->placeholder('—'),
                 TextColumn::make('sort_order')->sortable(),
+                ...CommonColumns::timestampColumns(),
             ])
             ->filters([
-                SelectFilter::make('language_id')
-                    ->relationship('language', 'name', fn ($q) => $q ? $q->orderBy('sort_order') : $q)
-                    ->label('Language')
-                    ->searchable()
-                    ->preload(),
+                CommonFilters::languageFilter(),
                 TrashedFilter::make(),
             ])
             ->recordActions([

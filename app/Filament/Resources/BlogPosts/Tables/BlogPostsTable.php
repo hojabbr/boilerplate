@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\BlogPosts\Tables;
 
+use App\Filament\Support\CommonColumns;
+use App\Filament\Support\CommonFilters;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -32,8 +34,10 @@ class BlogPostsTable
                 TextColumn::make('slug')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('published_at')->dateTime()->sortable(),
+                ...CommonColumns::timestampColumns(),
             ])
             ->filters([
+                CommonFilters::languageFilter(),
                 SelectFilter::make('blog_post_series_id')
                     ->label('Series')
                     ->relationship('series', 'name')

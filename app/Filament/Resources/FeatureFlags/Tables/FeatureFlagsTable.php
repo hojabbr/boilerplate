@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\FeatureFlags\Tables;
 
+use App\Filament\Support\CommonColumns;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -20,9 +20,12 @@ class FeatureFlagsTable
                     ->searchable()
                     ->sortable()
                     ->color('gray'),
-                IconColumn::make('is_active')
-                    ->boolean()
-                    ->label('Active'),
+                TextColumn::make('is_active')
+                    ->label('Active')
+                    ->badge()
+                    ->formatStateUsing(fn (bool $state): string => $state ? 'Active' : 'Inactive')
+                    ->color(fn (bool $state): string => $state ? 'success' : 'gray'),
+                ...CommonColumns::timestampColumns(),
             ])
             ->recordActions([
                 EditAction::make(),

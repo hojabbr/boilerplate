@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Settings\Tables;
 
+use App\Filament\Support\CommonColumns;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -14,7 +15,10 @@ class SettingsTable
     {
         return $table
             ->columns([
-                TextColumn::make('key'),
+                TextColumn::make('key')
+                    ->searchable()
+                    ->sortable(),
+                ...CommonColumns::timestampColumns(),
             ])
             ->filters([
                 //

@@ -7,6 +7,9 @@ use App\Filament\Enums\NavigationGroup;
 use App\Filament\Resources\Languages\Pages\AddLanguage;
 use App\Filament\Resources\Languages\Pages\EditLanguage;
 use App\Filament\Resources\Languages\Pages\ListLanguages;
+use App\Filament\Resources\Languages\RelationManagers\BlogPostsRelationManager;
+use App\Filament\Resources\Languages\RelationManagers\FaqsRelationManager;
+use App\Filament\Resources\Languages\RelationManagers\TestimonialsRelationManager;
 use App\Filament\Resources\Languages\Schemas\LanguageForm;
 use App\Filament\Resources\Languages\Tables\LanguagesTable;
 use BackedEnum;
@@ -21,9 +24,9 @@ class LanguageResource extends Resource
 {
     protected static ?string $model = Language::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Content;
+    protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Settings;
 
-    protected static ?int $navigationSort = 7;
+    protected static ?int $navigationSort = 2;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLanguage;
 
@@ -42,7 +45,9 @@ class LanguageResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            BlogPostsRelationManager::class,
+            FaqsRelationManager::class,
+            TestimonialsRelationManager::class,
         ];
     }
 

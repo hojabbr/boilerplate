@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\LanguageLineResource\Pages;
+namespace App\Filament\Resources\LanguageLines\Pages;
 
 use App\Core\Services\TranslationFileImporter;
-use App\Filament\Resources\LanguageLineResource;
+use App\Filament\Resources\LanguageLines\LanguageLineResource;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Resources\Pages\ListRecords;

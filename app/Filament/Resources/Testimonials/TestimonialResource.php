@@ -15,6 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestimonialResource extends Resource
@@ -23,7 +24,7 @@ class TestimonialResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = NavigationGroup::Content;
 
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 4;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenterText;
 
@@ -37,6 +38,21 @@ class TestimonialResource extends Resource
     public static function table(Table $table): Table
     {
         return TestimonialsTable::configure($table);
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['author', 'quote'];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Language' => $record->language?->name ?? '—',
+        ];
     }
 
     public static function getRelations(): array

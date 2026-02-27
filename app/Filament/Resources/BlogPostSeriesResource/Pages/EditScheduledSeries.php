@@ -6,6 +6,7 @@ use App\Core\Models\Language;
 use App\Core\Services\Ai\Support\AiProviderOptions;
 use App\Domains\Blog\Support\ImageStyleOptions;
 use App\Filament\Resources\BlogPostSeriesResource;
+use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -22,7 +23,9 @@ class EditScheduledSeries extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        return [];
+        return [
+            DeleteAction::make(),
+        ];
     }
 
     protected function mutateFormDataBeforeFill(array $data): array
