@@ -1,3 +1,9 @@
+## [1.13.0](https://github.com/hojabbr/boilerplate/compare/v1.12.0...v1.13.0) (2026-03-11)
+
+### Features
+
+- Implement sitemap generation and caching with observers for dynamic content updates ([2b3b0a8](https://github.com/hojabbr/boilerplate/commit/2b3b0a842fdf355943d71857a6b189dbf64b316c))
+
 ## [1.12.0](https://github.com/hojabbr/boilerplate/compare/v1.11.1...v1.12.0) (2026-03-11)
 
 ### Features
