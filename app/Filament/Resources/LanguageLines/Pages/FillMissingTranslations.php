@@ -14,8 +14,10 @@ use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Text;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Js;
 use Illuminate\Support\Str;
 use Spatie\TranslationLoader\LanguageLine;
@@ -128,7 +130,7 @@ class FillMissingTranslations extends Page
                 ->livewireSubmitHandler('saveMissing')
                 ->footer([
                     Actions::make($this->getFormActions())
-                        ->alignment(\Filament\Support\Enums\Alignment::End)
+                        ->alignment(Alignment::End)
                         ->key('form-actions'),
                 ]),
         ]);
@@ -244,7 +246,7 @@ class FillMissingTranslations extends Page
             }
         }
 
-        \Illuminate\Support\Facades\Cache::forget(LanguageLine::getCacheKey('*', $locale));
+        Cache::forget(LanguageLine::getCacheKey('*', $locale));
 
         Notification::make()
             ->title(__('Translations saved'))

@@ -1,10 +1,17 @@
 <?php
 
+use App\Core\Providers\AppServiceProvider;
+use App\Core\Providers\Filament\AdminPanelProvider;
+use App\Core\Providers\FortifyServiceProvider;
+use App\Core\Providers\HorizonServiceProvider;
+use App\Core\Providers\TelescopeServiceProvider;
+use Spatie\TranslationLoader\TranslationServiceProvider;
+
 return [
-    App\Core\Providers\AppServiceProvider::class,
-    Spatie\TranslationLoader\TranslationServiceProvider::class,
-    App\Core\Providers\Filament\AdminPanelProvider::class,
-    App\Core\Providers\FortifyServiceProvider::class,
-    App\Core\Providers\HorizonServiceProvider::class,
-    App\Core\Providers\TelescopeServiceProvider::class,
+    AppServiceProvider::class,
+    TranslationServiceProvider::class,
+    AdminPanelProvider::class,
+    FortifyServiceProvider::class,
+    HorizonServiceProvider::class,
+    TelescopeServiceProvider::class,
 ];

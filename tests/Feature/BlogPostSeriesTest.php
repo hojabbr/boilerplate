@@ -2,11 +2,13 @@
 
 use App\Domains\Auth\Models\User;
 use App\Domains\Blog\Models\BlogPostSeries;
+use App\Domains\Blog\Policies\BlogPostSeriesPolicy;
 use Carbon\Carbon;
+use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function (): void {
-    $this->seed(\Database\Seeders\RoleAndPermissionSeeder::class);
+    $this->seed(RoleAndPermissionSeeder::class);
 });
 
 test('BlogPostSeries stores and retrieves array casts correctly', function (): void {
@@ -90,7 +92,7 @@ test('BlogPostSeriesPolicy allows viewAny only when user can manage blog', funct
 
     $userWithoutBlog = User::factory()->create();
 
-    $policy = new \App\Domains\Blog\Policies\BlogPostSeriesPolicy;
+    $policy = new BlogPostSeriesPolicy;
 
     expect($policy->viewAny($userWithBlog))->toBeTrue()
         ->and($policy->viewAny($userWithoutBlog))->toBeFalse();

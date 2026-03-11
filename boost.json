@@ -13,13 +13,16 @@
     ],
     "sail": true,
     "skills": [
+        "configuring-horizon",
         "pennant-development",
+        "scout-development",
+        "socialite-development",
         "wayfinder-development",
         "pest-testing",
         "inertia-react-development",
         "tailwindcss-development",
-        "developing-with-ai-sdk",
-        "developing-with-fortify",
+        "ai-sdk-development",
+        "fortify-development",
         "medialibrary-development",
         "laravel-permission-development"
     ]

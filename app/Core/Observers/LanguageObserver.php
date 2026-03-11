@@ -5,6 +5,7 @@ namespace App\Core\Observers;
 use App\Core\Models\Language;
 use App\Core\Services\SupportedLocalesService;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -65,7 +66,7 @@ class LanguageObserver
         if ($language->isForceDeleting()) {
             return;
         }
-        if (\Illuminate\Support\Facades\Schema::hasColumn('pages', 'language_id')) {
+        if (Schema::hasColumn('pages', 'language_id')) {
             $language->pages()->each(fn ($page) => $page->delete());
         }
     }
@@ -76,7 +77,7 @@ class LanguageObserver
     public function restored(Language $language): void
     {
         Cache::forget(SupportedLocalesService::CACHE_KEY);
-        if (\Illuminate\Support\Facades\Schema::hasColumn('pages', 'language_id')) {
+        if (Schema::hasColumn('pages', 'language_id')) {
             $language->pages()->withTrashed()->each(fn ($page) => $page->restore());
         }
     }

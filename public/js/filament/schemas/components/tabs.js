@@ -1,8 +1,8 @@
-function I({
+function v({
     activeTab: w,
     isScrollable: f,
-    isTabPersistedInQueryString: g,
-    livewireId: m,
+    isTabPersistedInQueryString: m,
+    livewireId: g,
     tab: T,
     tabQueryStringKey: r,
 }) {
@@ -17,17 +17,17 @@ function I({
         init() {
             let t = this.getTabs(),
                 e = new URLSearchParams(window.location.search);
-            (g && e.has(r) && t.includes(e.get(r)) && (this.tab = e.get(r)),
+            (m && e.has(r) && t.includes(e.get(r)) && (this.tab = e.get(r)),
+                (!this.tab || !t.includes(this.tab)) && (this.tab = t[w - 1]),
                 this.$watch('tab', () => {
                     (this.updateQueryString(), this.autofocusFields());
                 }),
-                (!this.tab || !t.includes(this.tab)) && (this.tab = t[w - 1]),
-                this.autofocusFields(),
+                this.autofocusFields(!0),
                 (this.unsubscribeLivewireHook = Livewire.interceptMessage(
-                    ({ message: n, onSuccess: o }) => {
-                        o(() => {
+                    ({ message: i, onSuccess: a }) => {
+                        a(() => {
                             this.$nextTick(() => {
-                                if (n.component.id !== m) return;
+                                if (i.component.id !== g) return;
                                 let l = this.getTabs();
                                 l.includes(this.tab) ||
                                     (this.tab = l[w - 1] ?? this.tab);
@@ -67,27 +67,27 @@ function I({
                 Math.ceil(parseFloat(e.paddingRight))
             );
         },
-        findOverflowIndex(t, e, n, o, l, h) {
-            let u = t.map((i) => Math.ceil(i.clientWidth)),
-                b = t.map((i) => {
-                    let d = i.querySelector('.fi-tabs-item-label'),
-                        s = i.querySelector('.fi-badge'),
-                        a = Math.ceil(d.clientWidth),
-                        c = s ? Math.ceil(s.clientWidth) : 0;
+        findOverflowIndex(t, e, i, a, l, h) {
+            let u = t.map((n) => Math.ceil(n.clientWidth)),
+                b = t.map((n) => {
+                    let c = n.querySelector('.fi-tabs-item-label'),
+                        s = n.querySelector('.fi-badge'),
+                        o = Math.ceil(c.clientWidth),
+                        d = s ? Math.ceil(s.clientWidth) : 0;
                     return {
-                        label: a,
-                        badge: c,
-                        total: a + (c > 0 ? o + c : 0),
+                        label: o,
+                        badge: d,
+                        total: o + (d > 0 ? a + d : 0),
                     };
                 });
-            for (let i = 0; i < t.length; i++) {
-                let d = u.slice(0, i + 1).reduce((p, y) => p + y, 0),
-                    s = i * n,
-                    a = b.slice(i + 1),
-                    c = a.length > 0,
-                    W = c ? Math.max(...a.map((p) => p.total)) : 0,
-                    D = c ? l + W + o + h + n : 0;
-                if (d + s + D > e) return i;
+            for (let n = 0; n < t.length; n++) {
+                let c = u.slice(0, n + 1).reduce((p, y) => p + y, 0),
+                    s = n * i,
+                    o = b.slice(n + 1),
+                    d = o.length > 0,
+                    D = d ? Math.max(...o.map((p) => p.total)) : 0,
+                    W = d ? l + D + a + h + i : 0;
+                if (c + s + W > e) return n;
             }
             return -1;
         },
@@ -105,17 +105,27 @@ function I({
                 : [];
         },
         updateQueryString() {
-            if (!g) return;
+            if (!m) return;
             let t = new URL(window.location.href);
             (t.searchParams.set(r, this.tab),
                 history.replaceState(null, document.title, t.toString()));
         },
-        autofocusFields() {
-            this.$nextTick(() =>
-                this.$el
-                    .querySelector('.fi-sc-tabs-tab.fi-active [autofocus]')
-                    ?.focus(),
-            );
+        autofocusFields(t = !1) {
+            this.$nextTick(() => {
+                if (
+                    t &&
+                    document.activeElement &&
+                    document.activeElement !== document.body &&
+                    this.$el.compareDocumentPosition(document.activeElement) &
+                        Node.DOCUMENT_POSITION_PRECEDING
+                )
+                    return;
+                let e = this.$el.querySelectorAll(
+                    '.fi-sc-tabs-tab.fi-active [autofocus]',
+                );
+                for (let i of e)
+                    if ((i.focus(), document.activeElement === i)) break;
+            });
         },
         debouncedUpdateTabsWithinDropdown() {
             (clearTimeout(this.resizeDebounceTimer),
@@ -130,17 +140,17 @@ function I({
                 await this.$nextTick());
             let t = this.$el.querySelector('.fi-tabs'),
                 e = t.querySelector('.fi-tabs-item:last-child'),
-                n = Array.from(t.children).slice(0, -1),
-                o = n.map((s) => s.style.display);
-            (n.forEach((s) => (s.style.display = '')), t.offsetHeight);
+                i = Array.from(t.children).slice(0, -1),
+                a = i.map((s) => s.style.display);
+            (i.forEach((s) => (s.style.display = '')), t.offsetHeight);
             let l = this.calculateAvailableWidth(t),
                 h = this.calculateContainerGap(t),
                 u = this.calculateDropdownIconWidth(e),
-                b = this.calculateTabItemGap(n[0]),
-                i = this.calculateTabItemPadding(n[0]),
-                d = this.findOverflowIndex(n, l, h, b, i, u);
-            (n.forEach((s, a) => (s.style.display = o[a])),
-                d !== -1 && (this.withinDropdownIndex = d),
+                b = this.calculateTabItemGap(i[0]),
+                n = this.calculateTabItemPadding(i[0]),
+                c = this.findOverflowIndex(i, l, h, b, n, u);
+            (i.forEach((s, o) => (s.style.display = a[o])),
+                c !== -1 && (this.withinDropdownIndex = c),
                 (this.withinDropdownMounted = !0));
         },
         destroy() {
@@ -154,4 +164,4 @@ function I({
         },
     };
 }
-export { I as default };
+export { v as default };

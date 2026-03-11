@@ -37,6 +37,20 @@ php artisan migrate
 
 Optional: `php artisan db:seed` to seed languages, settings, and optional content.
 
+## Composer install with Docker (optional)
+
+If you don't have Composer installed locally, use Docker to install dependencies:
+
+```bash
+docker run --rm \
+  -v $(pwd):/app \
+  -w /app \
+  composer:latest install \
+  --ignore-platform-reqs
+```
+
+The `--ignore-platform-reqs` flag allows the installation to proceed even if your Docker image's PHP version differs slightly. After running this command, continue with `.env` setup, key generation, and other installation steps. This approach lets you bootstrap the project and use `./vendor/bin/sail up --build` or `docker compose build` without requiring Composer on your host machine.
+
 ## With Sail (Docker)
 
 ```bash

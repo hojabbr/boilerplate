@@ -11,33 +11,50 @@ use App\Core\Features\PageFeature;
 use App\Core\Features\RegistrationFeature;
 use App\Core\Features\TestimonialFeature;
 use App\Core\Inertia\TestingViewFinder;
+use App\Core\Models\FeatureFlag;
 use App\Core\Models\Language;
 use App\Core\Models\Setting;
 use App\Core\Observers\LanguageObserver;
 use App\Core\Observers\SettingObserver;
+use App\Core\Policies\FeatureFlagPolicy;
+use App\Core\Policies\LanguageLinePolicy;
+use App\Core\Policies\LanguagePolicy;
 use App\Core\Services\PagePropsService as CorePagePropsService;
 use App\Core\Services\SupportedLocalesService;
 use App\Domains\Auth\Models\User;
+use App\Domains\Auth\Policies\UserPolicy;
+use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Blog\Models\BlogPostSeries;
+use App\Domains\Blog\Policies\BlogPostPolicy;
+use App\Domains\Blog\Policies\BlogPostSeriesPolicy;
+use App\Domains\Contact\Models\ContactSubmission;
+use App\Domains\Contact\Policies\ContactSubmissionPolicy;
 use App\Domains\Faq\Models\Faq;
 use App\Domains\Faq\Observers\FaqObserver;
+use App\Domains\Faq\Policies\FaqPolicy;
 use App\Domains\Landing\Models\LandingSection;
 use App\Domains\Landing\Models\LandingSectionItem;
 use App\Domains\Landing\Observers\LandingSectionItemObserver;
 use App\Domains\Landing\Observers\LandingSectionObserver;
+use App\Domains\Landing\Policies\LandingSectionPolicy;
 use App\Domains\Page\Models\Page;
 use App\Domains\Page\Observers\PageObserver;
+use App\Domains\Page\Policies\PagePolicy;
 use App\Domains\Testimonial\Models\Testimonial;
 use App\Domains\Testimonial\Observers\TestimonialObserver;
+use App\Domains\Testimonial\Policies\TestimonialPolicy;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Pennant\Feature;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\TranslationLoader\LanguageLine;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -101,17 +118,17 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function registerPolicies(): void
     {
-        Gate::policy(\App\Domains\Auth\Models\User::class, \App\Domains\Auth\Policies\UserPolicy::class);
-        Gate::policy(\App\Domains\Blog\Models\BlogPost::class, \App\Domains\Blog\Policies\BlogPostPolicy::class);
-        Gate::policy(\App\Domains\Blog\Models\BlogPostSeries::class, \App\Domains\Blog\Policies\BlogPostSeriesPolicy::class);
-        Gate::policy(\App\Domains\Contact\Models\ContactSubmission::class, \App\Domains\Contact\Policies\ContactSubmissionPolicy::class);
-        Gate::policy(\App\Domains\Faq\Models\Faq::class, \App\Domains\Faq\Policies\FaqPolicy::class);
-        Gate::policy(\App\Domains\Page\Models\Page::class, \App\Domains\Page\Policies\PagePolicy::class);
-        Gate::policy(\App\Domains\Testimonial\Models\Testimonial::class, \App\Domains\Testimonial\Policies\TestimonialPolicy::class);
-        Gate::policy(\App\Domains\Landing\Models\LandingSection::class, \App\Domains\Landing\Policies\LandingSectionPolicy::class);
-        Gate::policy(\App\Core\Models\FeatureFlag::class, \App\Core\Policies\FeatureFlagPolicy::class);
-        Gate::policy(\App\Core\Models\Language::class, \App\Core\Policies\LanguagePolicy::class);
-        Gate::policy(\Spatie\TranslationLoader\LanguageLine::class, \App\Core\Policies\LanguageLinePolicy::class);
+        Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(BlogPost::class, BlogPostPolicy::class);
+        Gate::policy(BlogPostSeries::class, BlogPostSeriesPolicy::class);
+        Gate::policy(ContactSubmission::class, ContactSubmissionPolicy::class);
+        Gate::policy(Faq::class, FaqPolicy::class);
+        Gate::policy(Page::class, PagePolicy::class);
+        Gate::policy(Testimonial::class, TestimonialPolicy::class);
+        Gate::policy(LandingSection::class, LandingSectionPolicy::class);
+        Gate::policy(FeatureFlag::class, FeatureFlagPolicy::class);
+        Gate::policy(Language::class, LanguagePolicy::class);
+        Gate::policy(LanguageLine::class, LanguageLinePolicy::class);
     }
 
     /**
@@ -134,7 +151,7 @@ class AppServiceProvider extends ServiceProvider
         Config::set('laravellocalization.supportedLocales', $locales);
         try {
             $defaultQuery = Language::query()->where('is_default', true);
-            if (\Illuminate\Support\Facades\Schema::hasColumn((new Language)->getTable(), 'is_enabled')) {
+            if (Schema::hasColumn((new Language)->getTable(), 'is_enabled')) {
                 $defaultQuery->where('is_enabled', true);
             }
             $defaultCode = $defaultQuery->value('code') ?? array_key_first($locales);

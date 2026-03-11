@@ -3,6 +3,7 @@
 namespace App\Domains\Blog\Models;
 
 use App\Domains\Auth\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,8 +16,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $purpose
  * @property string|null $objective
  * @property string|null $topics
- * @property \Carbon\Carbon $start_date
- * @property \Carbon\Carbon $end_date
+ * @property Carbon $start_date
+ * @property Carbon $end_date
  * @property array<int, int> $days_of_week
  * @property array<int, int> $run_at_hours
  * @property int $posts_per_run
@@ -28,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $image_style
  * @property array<int, string>|null $image_styles
  * @property bool $publish_immediately
- * @property \Carbon\Carbon|null $last_run_at
+ * @property Carbon|null $last_run_at
  * @property int $posts_generated
  * @property bool $is_active
  *

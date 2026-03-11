@@ -125,6 +125,20 @@ A production-ready starter for **Laravel 12**, **Inertia 2**, and **React 19** w
 
     Optional: `php artisan db:seed`.
 
+### Composer install with Docker (optional)
+
+If you don't have Composer installed locally, use Docker to install dependencies:
+
+```bash
+docker run --rm \
+  -v $(pwd):/app \
+  -w /app \
+  composer:latest install \
+  --ignore-platform-reqs
+```
+
+Then continue with `.env`, `php artisan key:generate`, and other setup steps. This allows you to build and run Sail or Docker Compose without a local Composer installation.
+
 ### With Sail (Docker)
 
 ```bash

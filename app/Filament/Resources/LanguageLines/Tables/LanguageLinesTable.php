@@ -11,6 +11,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Spatie\TranslationLoader\LanguageLine;
 
 class LanguageLinesTable
@@ -46,7 +47,7 @@ class LanguageLinesTable
                         $text = $record->text ?? [];
                         $value = $text[$fallback] ?? (is_array($text) ? (string) reset($text) : '');
 
-                        return \Illuminate\Support\Str::limit((string) $value, 50);
+                        return Str::limit((string) $value, 50);
                     }),
             ])
             ->filters([

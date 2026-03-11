@@ -1,5 +1,10 @@
 <?php
 
+use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Faq\Models\Faq;
+use App\Domains\Page\Models\Page;
+use App\Domains\Testimonial\Models\Testimonial;
+
 return [
 
     /*
@@ -140,16 +145,16 @@ return [
         'host' => env('MEILISEARCH_HOST', 'http://localhost:7700'),
         'key' => env('MEILISEARCH_KEY'),
         'index-settings' => [
-            \App\Domains\Blog\Models\BlogPost::class => [
+            BlogPost::class => [
                 'filterableAttributes' => ['language_id'],
             ],
-            \App\Domains\Faq\Models\Faq::class => [
+            Faq::class => [
                 'filterableAttributes' => ['language_id'],
             ],
-            \App\Domains\Page\Models\Page::class => [
+            Page::class => [
                 'filterableAttributes' => ['is_active'],
             ],
-            \App\Domains\Testimonial\Models\Testimonial::class => [
+            Testimonial::class => [
                 'filterableAttributes' => ['language_id'],
             ],
         ],

@@ -14,7 +14,7 @@ class EnsureAuthFeaturesEnabled
      * When login is disabled, allow login if the intended destination is the Filament admin panel
      * so admins can still sign in.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {

@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mcamara\LaravelLocalization\LaravelLocalization;
+use Tests\TestCase;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,8 +15,8 @@ use Mcamara\LaravelLocalization\LaravelLocalization;
 |
 */
 
-pest()->extend(Tests\TestCase::class)
-    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+pest()->extend(TestCase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -45,7 +47,7 @@ expect()->extend('toBeOne', function () {
 
 function refreshApplicationWithLocale(string $locale): void
 {
-    /** @var \Tests\TestCase $test */
+    /** @var TestCase $test */
     $test = test();
 
     $test->tearDown();

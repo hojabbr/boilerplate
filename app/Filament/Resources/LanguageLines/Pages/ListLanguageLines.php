@@ -6,6 +6,7 @@ use App\Core\Services\TranslationFileImporter;
 use App\Filament\Resources\LanguageLines\LanguageLineResource;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Html;
 use Filament\Schemas\Components\Section;
@@ -94,7 +95,7 @@ class ListLanguageLines extends ListRecords
                     foreach ($locales as $locale) {
                         Cache::forget(LanguageLine::getCacheKey('*', $locale));
                     }
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->title(__('Translations cleared'))
                         ->body(__(':count translation line(s) removed.', ['count' => $count]))
                         ->success()
@@ -109,7 +110,7 @@ class ListLanguageLines extends ListRecords
                 ->modalSubmitActionLabel(__('Import'))
                 ->action(function (): void {
                     $result = app(TranslationFileImporter::class)->import();
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->title(__('Imported from lang files'))
                         ->body(__('Imported :count key(s) from :files locale file(s).', ['count' => $result['total_keys'], 'files' => $result['files_read']]))
                         ->success()
@@ -146,7 +147,7 @@ class ListLanguageLines extends ListRecords
                         $filesWritten++;
                     }
 
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->title(__('Exported to lang files'))
                         ->body(__('Exported :count key(s) to :files locale file(s).', ['count' => $totalKeys, 'files' => $filesWritten]))
                         ->success()
@@ -172,7 +173,7 @@ class ListLanguageLines extends ListRecords
                     }
                     $path = is_string($path) ? $path : null;
                     if ($path === null || ! Storage::exists($path)) {
-                        \Filament\Notifications\Notification::make()
+                        Notification::make()
                             ->title(__('Import failed'))
                             ->body(__('Could not read uploaded file.'))
                             ->danger()
@@ -183,7 +184,7 @@ class ListLanguageLines extends ListRecords
                     $fullPath = Storage::path($path);
                     $handle = fopen($fullPath, 'r');
                     if ($handle === false) {
-                        \Filament\Notifications\Notification::make()
+                        Notification::make()
                             ->title(__('Import failed'))
                             ->body(__('Could not open file.'))
                             ->danger()
@@ -232,7 +233,7 @@ class ListLanguageLines extends ListRecords
                     }
                     fclose($handle);
                     Storage::delete($path);
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->title(__('CSV imported'))
                         ->body(__(':count row(s) imported.', ['count' => $imported]))
                         ->success()

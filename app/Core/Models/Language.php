@@ -3,6 +3,9 @@
 namespace App\Core\Models;
 
 use App\Domains\Blog\Models\BlogPost;
+use App\Domains\Faq\Models\Faq;
+use App\Domains\Page\Models\Page;
+use App\Domains\Testimonial\Models\Testimonial;
 use Database\Factories\LanguageFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -71,29 +74,29 @@ class Language extends Model
     }
 
     /**
-     * @return HasMany<\App\Domains\Faq\Models\Faq, $this>
+     * @return HasMany<Faq, $this>
      */
     public function faqs(): HasMany
     {
-        return $this->hasMany(\App\Domains\Faq\Models\Faq::class);
+        return $this->hasMany(Faq::class);
     }
 
     /**
-     * @return HasMany<\App\Domains\Testimonial\Models\Testimonial, $this>
+     * @return HasMany<Testimonial, $this>
      */
     public function testimonials(): HasMany
     {
-        return $this->hasMany(\App\Domains\Testimonial\Models\Testimonial::class);
+        return $this->hasMany(Testimonial::class);
     }
 
     /**
      * Pages are row-per-locale when pages.language_id exists. Currently not in schema.
      *
-     * @return HasMany<\App\Domains\Page\Models\Page, $this>
+     * @return HasMany<Page, $this>
      */
     public function pages(): HasMany
     {
-        return $this->hasMany(\App\Domains\Page\Models\Page::class);
+        return $this->hasMany(Page::class);
     }
 
     /**

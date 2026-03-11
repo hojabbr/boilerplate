@@ -1,9 +1,9 @@
 ---
 name: pennant-development
-description: "Manages feature flags with Laravel Pennant. Activates when creating, checking, or toggling feature flags; showing or hiding features conditionally; implementing A/B testing; working with @feature directive; or when the user mentions feature flags, feature toggles, Pennant, conditional features, rollouts, or gradually enabling features."
+description: 'Use when working with Laravel Pennant the official Laravel feature flag package. Trigger whenever the query mentions Pennant by name or involves feature flags or feature toggles in a Laravel project. Tasks include defining feature flags checking whether features are active creating class based features in `app/Features` using Blade `@feature` directives scoping flags to users or teams building custom Pennant storage drivers protecting routes with feature flags testing feature flags with Pest or PHPUnit and implementing A B testing or gradual rollouts with feature flags. Do not trigger for generic Laravel configuration authorization policies authentication or non Pennant feature management systems.'
 license: MIT
 metadata:
-  author: laravel
+    author: laravel
 ---
 
 # Pennant Features
@@ -25,6 +25,7 @@ Use `search-docs` for detailed Pennant patterns and documentation.
 ### Defining Features
 
 <!-- Defining Features -->
+
 ```php
 use Laravel\Pennant\Feature;
 
@@ -36,6 +37,7 @@ Feature::define('new-dashboard', function (User $user) {
 ### Checking Features
 
 <!-- Checking Features -->
+
 ```php
 if (Feature::active('new-dashboard')) {
     // Feature is active
@@ -50,6 +52,7 @@ if (Feature::for($user)->active('new-dashboard')) {
 ### Blade Directive
 
 <!-- Blade Directive -->
+
 ```blade
 @feature('new-dashboard')
     <x-new-dashboard />
@@ -61,6 +64,7 @@ if (Feature::for($user)->active('new-dashboard')) {
 ### Activating / Deactivating
 
 <!-- Activating Features -->
+
 ```php
 Feature::activate('new-dashboard');
 Feature::for($user)->activate('new-dashboard');

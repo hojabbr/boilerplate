@@ -6,6 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Pennant\Feature;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 beforeEach(function () {
     Feature::activate('blog');
@@ -60,5 +61,5 @@ test('force deleting blog post removes associated media', function () {
 
     $post->forceDelete();
 
-    expect(\Spatie\MediaLibrary\MediaCollections\Models\Media::find($mediaId))->toBeNull();
+    expect(Media::find($mediaId))->toBeNull();
 });

@@ -1,6 +1,7 @@
 <?php
 
 use Inertia\Testing\AssertableInertia as Assert;
+use Laravel\Pennant\Feature;
 
 test('shared props include canonical_url and hreflang_urls for SEO', function () {
     refreshApplicationWithLocale('en');
@@ -44,7 +45,7 @@ test('welcome page has seo prop with title and description from settings', funct
 test('contact page has seo prop with title and description', function () {
     refreshApplicationWithLocale('en');
 
-    \Laravel\Pennant\Feature::activate('contact-form');
+    Feature::activate('contact-form');
 
     $response = $this->get(route('contact.show'));
 
@@ -61,7 +62,7 @@ test('contact page has seo prop with title and description', function () {
 test('blog index has seo prop with title and description', function () {
     refreshApplicationWithLocale('en');
 
-    \Laravel\Pennant\Feature::activate('blog');
+    Feature::activate('blog');
 
     $response = $this->get(route('blog.index'));
 

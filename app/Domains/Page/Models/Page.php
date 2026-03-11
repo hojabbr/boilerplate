@@ -3,6 +3,7 @@
 namespace App\Domains\Page\Models;
 
 use Database\Factories\PageFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ use Laravel\Scout\Searchable;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Translatable\HasTranslations;
 
 /**
@@ -62,8 +64,8 @@ class Page extends Model implements HasMedia
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder<Page>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<Page>
+     * @param  Builder<Page>  $query
+     * @return Builder<Page>
      */
     public function scopeActive($query)
     {
@@ -87,7 +89,7 @@ class Page extends Model implements HasMedia
             ->acceptsMimeTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']);
     }
 
-    public function registerMediaConversions(?\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null): void
+    public function registerMediaConversions(?Media $media = null): void
     {
         $this->addMediaConversion('thumb')
             ->performOnCollections('gallery')

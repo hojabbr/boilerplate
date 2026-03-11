@@ -2,6 +2,7 @@
 
 use App\Core\Models\Language;
 use App\Core\Services\SupportedLocalesService;
+use App\Domains\Auth\Models\User;
 use Illuminate\Support\Facades\Config;
 use Inertia\Testing\AssertableInertia as Assert;
 use Mcamara\LaravelLocalization\LaravelLocalization;
@@ -45,7 +46,7 @@ test('localized route returns locale_switch_urls with correct structure and loca
 test('localized dashboard route returns locale in shared props', function () {
     refreshApplicationWithLocale('en');
 
-    $user = \App\Domains\Auth\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     $response = $this->actingAs($user)
         ->get(route('dashboard'));

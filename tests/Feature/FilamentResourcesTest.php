@@ -2,6 +2,7 @@
 
 use App\Domains\Contact\Models\ContactSubmission;
 use App\Filament\Resources\BlogPosts\BlogPostResource;
+use App\Filament\Resources\BlogPosts\RelationManagers\TagsRelationManager;
 use App\Filament\Resources\ContactSubmissions\ContactSubmissionResource;
 
 test('unauthenticated user is redirected from admin panel', function (): void {
@@ -29,5 +30,5 @@ test('ContactSubmissionResource has view page route', function (): void {
 
 test('BlogPostResource has tags relation manager', function (): void {
     $relations = BlogPostResource::getRelations();
-    expect($relations)->toContain(\App\Filament\Resources\BlogPosts\RelationManagers\TagsRelationManager::class);
+    expect($relations)->toContain(TagsRelationManager::class);
 });

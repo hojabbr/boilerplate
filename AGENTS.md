@@ -35,6 +35,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - @inertiajs/react (INERTIA_REACT) - v2
 - react (REACT) - v19
 - tailwindcss (TAILWINDCSS) - v4
+- @laravel/echo-react (ECHO_REACT) - v2
 - @laravel/vite-plugin-wayfinder (WAYFINDER_VITE) - v0
 - eslint (ESLINT) - v9
 - laravel-echo (ECHO) - v2
@@ -44,13 +45,16 @@ This application is a Laravel application and its main Laravel ecosystems packag
 
 This project has domain-specific skills available. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
 
-- `pennant-development` — Manages feature flags with Laravel Pennant. Activates when creating, checking, or toggling feature flags; showing or hiding features conditionally; implementing A/B testing; working with @feature directive; or when the user mentions feature flags, feature toggles, Pennant, conditional features, rollouts, or gradually enabling features.
+- `configuring-horizon` — Use this skill whenever the user mentions Horizon by name in a Laravel context. Covers the full Horizon lifecycle: installing Horizon (horizon:install, Sail setup), configuring config/horizon.php (supervisor blocks, queue assignments, balancing strategies, minProcesses/maxProcesses), fixing the dashboard (authorization via Gate::define viewHorizon, blank metrics, horizon:snapshot scheduling), and troubleshooting production issues (worker crashes, timeout chain ordering, LongWaitDetected notifications, waits config). Also covers job tagging and silencing. Do not use for generic Laravel queues without Horizon, SQS or database drivers, standalone Redis setup, Linux supervisord, Telescope, or job batching.
+- `pennant-development` — Use when working with Laravel Pennant the official Laravel feature flag package. Trigger whenever the query mentions Pennant by name or involves feature flags or feature toggles in a Laravel project. Tasks include defining feature flags checking whether features are active creating class based features in `app/Features` using Blade `@feature` directives scoping flags to users or teams building custom Pennant storage drivers protecting routes with feature flags testing feature flags with Pest or PHPUnit and implementing A B testing or gradual rollouts with feature flags. Do not trigger for generic Laravel configuration authorization policies authentication or non Pennant feature management systems.
+- `scout-development` — Develops full-text search with Laravel Scout. Activates when installing or configuring Scout; choosing a search engine (Algolia, Meilisearch, Typesense, Database, Collection); adding the Searchable trait to models; customizing toSearchableArray or searchableAs; importing or flushing search indexes; writing search queries with where clauses, pagination, or soft deletes; configuring index settings; troubleshooting search results; or when the user mentions Scout, full-text search, search indexing, or search engines in a Laravel project. Make sure to use this skill whenever the user works with search functionality in Laravel, even if they don&#039;t explicitly mention Scout.
+- `socialite-development` — Manages OAuth social authentication with Laravel Socialite. Activate when adding social login providers; configuring OAuth redirect/callback flows; retrieving authenticated user details; customizing scopes or parameters; setting up community providers; testing with Socialite fakes; or when the user mentions social login, OAuth, Socialite, or third-party authentication.
 - `wayfinder-development` — Activates whenever referencing backend routes in frontend components. Use when importing from @/actions or @/routes, calling Laravel routes from TypeScript, or working with Wayfinder route functions.
 - `pest-testing` — Tests applications using the Pest 4 PHP framework. Activates when writing tests, creating unit or feature tests, adding assertions, testing Livewire components, browser testing, debugging test failures, working with datasets or mocking; or when the user mentions test, spec, TDD, expects, assertion, coverage, or needs to verify functionality works.
 - `inertia-react-development` — Develops Inertia.js v2 React client-side applications. Activates when creating React pages, forms, or navigation; using &lt;Link&gt;, &lt;Form&gt;, useForm, or router; working with deferred props, prefetching, or polling; or when user mentions React with Inertia, React pages, React forms, or React navigation.
 - `tailwindcss-development` — Styles applications using Tailwind CSS v4 utilities. Activates when adding styles, restyling components, working with gradients, spacing, layout, flex, grid, responsive design, dark mode, colors, typography, or borders; or when the user mentions CSS, styling, classes, Tailwind, restyle, hero section, cards, buttons, or any visual/UI changes.
-- `developing-with-ai-sdk` — Builds AI agents, generates text and chat responses, produces images, synthesizes audio, transcribes speech, generates vector embeddings, reranks documents, and manages files and vector stores using the Laravel AI SDK (laravel/ai). Supports structured output, streaming, tools, conversation memory, middleware, queueing, broadcasting, and provider failover. Use when building, editing, updating, debugging, or testing any AI functionality, including agents, LLMs, chatbots, text generation, image generation, audio, transcription, embeddings, RAG, similarity search, vector stores, prompting, structured output, or any AI provider (OpenAI, Anthropic, Gemini, Cohere, Groq, xAI, ElevenLabs, Jina, OpenRouter).
-- `developing-with-fortify` — Laravel Fortify headless authentication backend development. Activate when implementing authentication features including login, registration, password reset, email verification, two-factor authentication (2FA/TOTP), profile updates, headless auth, authentication scaffolding, or auth guards in Laravel applications.
+- `ai-sdk-development` — Builds AI agents, generates text and chat responses, produces images, synthesizes audio, transcribes speech, generates vector embeddings, reranks documents, and manages files and vector stores using the Laravel AI SDK (laravel/ai). Supports structured output, streaming, tools, conversation memory, middleware, queueing, broadcasting, and provider failover. Use when building, editing, updating, debugging, or testing any AI functionality, including agents, LLMs, chatbots, text generation, image generation, audio, transcription, embeddings, RAG, similarity search, vector stores, prompting, structured output, or any AI provider (OpenAI, Anthropic, Gemini, Cohere, Groq, xAI, ElevenLabs, Jina, OpenRouter).
+- `fortify-development` — Laravel Fortify headless authentication backend development. Activate when implementing authentication features including login, registration, password reset, email verification, two-factor authentication (2FA/TOTP), profile updates, headless auth, authentication scaffolding, or auth guards in Laravel applications.
 - `medialibrary-development` — Build and work with spatie/laravel-medialibrary features including associating files with Eloquent models, defining media collections and conversions, generating responsive images, and retrieving media URLs and paths.
 - `laravel-permission-development` — Build and work with Spatie Laravel Permission features, including roles, permissions, middleware, policies, teams, and Blade directives.
 
@@ -87,19 +91,23 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 - Laravel Boost is an MCP server that comes with powerful tools designed specifically for this application. Use them.
 
-## Artisan
+## Artisan Commands
 
-- Use the `list-artisan-commands` tool when you need to call an Artisan command to double-check the available parameters.
+- Run Artisan commands directly via the command line (e.g., `vendor/bin/sail artisan route:list`, `vendor/bin/sail artisan tinker --execute &quot;...&quot;`).
+- Use `vendor/bin/sail artisan list` to discover available commands and `vendor/bin/sail artisan [command] --help` to check parameters.
 
 ## URLs
 
 - Whenever you share a project URL with the user, you should use the `get-absolute-url` tool to ensure you're using the correct scheme, domain/IP, and port.
 
-## Tinker / Debugging
+## Debugging
 
-- You should use the `tinker` tool when you need to execute PHP to debug code or query Eloquent models directly.
 - Use the `database-query` tool when you only need to read from the database.
 - Use the `database-schema` tool to inspect table structure before writing migrations or models.
+- To execute PHP code for debugging, run `vendor/bin/sail artisan tinker --execute &quot;your code here&quot;` directly.
+- To read configuration values, read the config files directly or run `vendor/bin/sail artisan config:show [key]`.
+- To inspect routes, run `vendor/bin/sail artisan route:list` directly.
+- To check environment variables, read the `.env` file directly.
 
 ## Reading Browser Logs With the `browser-logs` Tool
 
@@ -180,26 +188,26 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
 - Run the minimum number of tests needed to ensure code quality and speed. Use `vendor/bin/sail artisan test --compact` with a specific filename or filter.
 
-=== inertia-laravel/v2 rules ===
+=== inertia-laravel/core rules ===
 
 # Inertia
 
 - Inertia creates fully client-side rendered SPAs without modern SPA complexity, leveraging existing server-side patterns.
-- Components live in `resources/js/pages` (unless specified in `vite.config.js`). Use `Inertia::render()` for server-side routing instead of Blade views.
+- Components live in `resources/js/Pages` (unless specified in `vite.config.js`). Use `Inertia::render()` for server-side routing instead of Blade views.
 - ALWAYS use `search-docs` tool for version-specific Inertia documentation and updated code examples.
 - IMPORTANT: Activate `inertia-react-development` when working with Inertia client-side patterns.
 
 # Inertia v2
 
 - Use all Inertia features from v1 and v2. Check the documentation before making changes to ensure the correct approach.
-- New features: deferred props, infinite scrolling (merging props + `WhenVisible`), lazy loading on scroll, polling, prefetching.
+- New features: deferred props, infinite scroll, merging props, polling, prefetching, once props, flash data.
 - When using deferred props, add an empty state with a pulsing or animated skeleton.
 
 === laravel/core rules ===
 
 # Do Things the Laravel Way
 
-- Use `vendor/bin/sail artisan make:` commands to create new files (i.e. migrations, controllers, models, etc.). You can list available Artisan commands using the `list-artisan-commands` tool.
+- Use `vendor/bin/sail artisan make:` commands to create new files (i.e. migrations, controllers, models, etc.). You can list available Artisan commands using `vendor/bin/sail artisan list` and check their parameters with `vendor/bin/sail artisan [command] --help`.
 - If you're creating a generic PHP class, use `vendor/bin/sail artisan make:class`.
 - Pass `--no-interaction` to all Artisan commands to ensure they work without user input. You should also pass the correct `--options` to ensure correct behavior.
 
@@ -213,7 +221,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 
 ### Model Creation
 
-- When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `list-artisan-commands` to check the available options to `vendor/bin/sail artisan make:model`.
+- When creating new models, create useful factories and seeders for them too. Ask the user if they need any other things, using `vendor/bin/sail artisan make:model --help` to check the available options.
 
 ### APIs & Eloquent Resources
 
@@ -275,14 +283,6 @@ protected function isAccessible(User $user, ?string $path = null): bool
 
 - Casts can and likely should be set in a `casts()` method on a model rather than the `$casts` property. Follow existing conventions from other models.
 
-=== pennant/core rules ===
-
-# Laravel Pennant
-
-- This application uses Laravel Pennant for feature flag management, providing a flexible system for controlling feature availability across different organizations and user types.
-- IMPORTANT: Always use `search-docs` tool for version-specific Pennant documentation and updated code examples.
-- IMPORTANT: Activate `pennant-development` every time you're working with a Pennant or feature-flag-related task.
-
 === wayfinder/core rules ===
 
 # Laravel Wayfinder
@@ -330,22 +330,22 @@ Wayfinder generates TypeScript functions for Laravel routes. Import from `@/acti
 
 ## Filament
 
-- Filament is used by this application. Follow existing conventions for how and where it's implemented.
+- Filament is used by this application. Follow the existing conventions for how and where it is implemented.
 - Filament is a Server-Driven UI (SDUI) framework for Laravel that lets you define user interfaces in PHP using structured configuration objects. Built on Livewire, Alpine.js, and Tailwind CSS.
-- Use the `search-docs` tool for official documentation on Artisan commands, code examples, testing, relationships, and idiomatic practices.
+- Use the `search-docs` tool for official documentation on Artisan commands, code examples, testing, relationships, and idiomatic practices. If `search-docs` is unavailable, refer to https://filamentphp.com/docs.
 
 ### Artisan
 
-- Use Filament-specific Artisan commands to create files. Find them with `list-artisan-commands` or `php artisan --help`.
-- Inspect required options and always pass `--no-interaction`.
+- Always use Filament-specific Artisan commands to create files. Find available commands with the `list-artisan-commands` tool, or run `php artisan --help`.
+- Always inspect required options before running a command, and always pass `--no-interaction`.
 
 ### Patterns
 
-Use static `make()` methods to initialize components. Most configuration methods accept a `Closure` for dynamic values.
+Always use static `make()` methods to initialize components. Most configuration methods accept a `Closure` for dynamic values.
 
 Use `Get $get` to read other form field values for conditional logic:
 
-<code-snippet name="Conditional form field" lang="php">
+<code-snippet name="Conditional form field visibility" lang="php">
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
@@ -363,7 +363,7 @@ TextInput::make('company_name')
 
 Use `state()` with a `Closure` to compute derived column values:
 
-<code-snippet name="Computed table column" lang="php">
+<code-snippet name="Computed table column value" lang="php">
 use Filament\Tables\Columns\TextColumn;
 
 TextColumn::make('full_name')
@@ -371,97 +371,110 @@ TextColumn::make('full_name')
 
 </code-snippet>
 
-Actions encapsulate a button with optional modal form and logic:
+Actions encapsulate a button with an optional modal form and logic:
 
 <code-snippet name="Action with modal form" lang="php">
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
 
 Action::make('updateEmail')
-->form([
-TextInput::make('email')->email()->required(),
+->schema([
+TextInput::make('email')
+->email()
+->required(),
 ])
-->action(fn (array $data, User $record): void => $record->update($data)),
+->action(fn (array $data, User $record) => $record->update($data))
 
 </code-snippet>
 
 ### Testing
 
-Authenticate before testing panel functionality. Filament uses Livewire, so use `livewire()` or `Livewire::test()`:
+Always authenticate before testing panel functionality. Filament uses Livewire, so use `Livewire::test()` or `livewire()` (available when `pestphp/pest-plugin-livewire` is in `composer.json`):
 
-<code-snippet name="Filament Table Test" lang="php">
-    livewire(ListUsers::class)
-        ->assertCanSeeTableRecords($users)
-        ->searchTable($users->first()->name)
-        ->assertCanSeeTableRecords($users->take(1))
-        ->assertCanNotSeeTableRecords($users->skip(1));
+<code-snippet name="Table test" lang="php">
+use function Pest\Livewire\livewire;
 
-</code-snippet>
-
-<code-snippet name="Filament Create Resource Test" lang="php">
-    livewire(CreateUser::class)
-        ->fillForm([
-            'name' => 'Test',
-            'email' => 'test@example.com',
-        ])
-        ->call('create')
-        ->assertNotified()
-        ->assertRedirect();
-
-    assertDatabaseHas(User::class, [
-        'name' => 'Test',
-        'email' => 'test@example.com',
-    ]);
+livewire(ListUsers::class)
+->assertCanSeeTableRecords($users)
+    ->searchTable($users->first()->name)
+->assertCanSeeTableRecords($users->take(1))
+    ->assertCanNotSeeTableRecords($users->skip(1));
 
 </code-snippet>
 
-<code-snippet name="Testing Validation" lang="php">
-    livewire(CreateUser::class)
-        ->fillForm([
-            'name' => null,
-            'email' => 'invalid-email',
-        ])
-        ->call('create')
-        ->assertHasFormErrors([
-            'name' => 'required',
-            'email' => 'email',
-        ])
-        ->assertNotNotified();
+<code-snippet name="Create resource test" lang="php">
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Livewire\livewire;
+
+livewire(CreateUser::class)
+->fillForm([
+'name' => 'Test',
+'email' => 'test@example.com',
+])
+->call('create')
+->assertNotified()
+->assertRedirect();
+
+assertDatabaseHas(User::class, [
+'name' => 'Test',
+'email' => 'test@example.com',
+]);
 
 </code-snippet>
 
-<code-snippet name="Calling Actions" lang="php">
-    use Filament\Actions\DeleteAction;
-    use Filament\Actions\Testing\TestAction;
+<code-snippet name="Testing validation" lang="php">
+use function Pest\Livewire\livewire;
 
-    livewire(EditUser::class, ['record' => $user->id])
-        ->callAction(DeleteAction::class)
-        ->assertNotified()
-        ->assertRedirect();
-
-    livewire(ListUsers::class)
-        ->callAction(TestAction::make('promote')->table($user), [
-            'role' => 'admin',
-        ])
-        ->assertNotified();
+livewire(CreateUser::class)
+->fillForm([
+'name' => null,
+'email' => 'invalid-email',
+])
+->call('create')
+->assertHasFormErrors([
+'name' => 'required',
+'email' => 'email',
+])
+->assertNotNotified();
 
 </code-snippet>
+
+<code-snippet name="Calling actions in pages" lang="php">
+use Filament\Actions\DeleteAction;
+use function Pest\Livewire\livewire;
+
+livewire(EditUser::class, ['record' => $user->id])
+->callAction(DeleteAction::class)
+->assertNotified()
+->assertRedirect();
+
+</code-snippet>
+
+<code-snippet name="Calling actions in tables" lang="php">
+use Filament\Actions\Testing\TestAction;
+use function Pest\Livewire\livewire;
+
+livewire(ListUsers::class)
+->callAction(TestAction::make('promote')->table($user), [
+'role' => 'admin',
+])
+->assertNotified();
+
+</code-snippet>
+
+### Correct Namespaces
+
+- Form fields (`TextInput`, `Select`, etc.): `Filament\Forms\Components\`
+- Infolist entries (`TextEntry`, `IconEntry`, etc.): `Filament\Infolists\Components\`
+- Layout components (`Grid`, `Section`, `Fieldset`, `Tabs`, `Wizard`, etc.): `Filament\Schemas\Components\`
+- Schema utilities (`Get`, `Set`, etc.): `Filament\Schemas\Components\Utilities\`
+- Actions (`DeleteAction`, `CreateAction`, etc.): `Filament\Actions\`. Never use `Filament\Tables\Actions\`, `Filament\Forms\Actions\`, or any other sub-namespace for actions.
+- Icons: `Filament\Support\Icons\Heroicon` enum (e.g., `Heroicon::PencilSquare`)
 
 ### Common Mistakes
 
-**Commonly Incorrect Namespaces:**
-
-- Form fields (TextInput, Select, etc.): `Filament\Forms\Components\`
-- Infolist entries (for read-only views) (TextEntry, IconEntry, etc.): `Filament\Infolists\Components\`
-- Layout components (Grid, Section, Fieldset, Tabs, Wizard, etc.): `Filament\Schemas\Components\`
-- Schema utilities (Get, Set, etc.): `Filament\Schemas\Components\Utilities\`
-- Actions: `Filament\Actions\` (no `Filament\Tables\Actions\` etc.)
-- Icons: `Filament\Support\Icons\Heroicon` enum (e.g., `Heroicon::PencilSquare`)
-
-**Recent breaking changes to Filament:**
-
-- File visibility is `private` by default. Use `->visibility('public')` for public access.
-- `Grid`, `Section`, and `Fieldset` no longer span all columns by default.
+- **Never assume public file visibility.** File visibility is `private` by default. Always use `->visibility('public')` when public access is needed.
+- **Never assume full-width layout.** `Grid`, `Section`, and `Fieldset` do not span all columns by default. Explicitly set column spans when needed.
 
 === laravel/ai rules ===
 

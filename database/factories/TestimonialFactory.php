@@ -7,7 +7,7 @@ use App\Domains\Testimonial\Models\Testimonial;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Domains\Testimonial\Models\Testimonial>
+ * @extends Factory<Testimonial>
  */
 class TestimonialFactory extends Factory
 {

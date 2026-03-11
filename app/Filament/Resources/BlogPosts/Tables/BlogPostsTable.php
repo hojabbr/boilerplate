@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\BlogPosts\Tables;
 
+use App\Filament\Resources\BlogPostSeriesResource;
 use App\Filament\Support\CommonColumns;
 use App\Filament\Support\CommonFilters;
 use Filament\Actions\BulkActionGroup;
@@ -29,7 +30,7 @@ class BlogPostsTable
                 TextColumn::make('series.name')
                     ->label('Series')
                     ->placeholder('—')
-                    ->url(fn ($record) => $record->blog_post_series_id ? \App\Filament\Resources\BlogPostSeriesResource::getUrl('view', ['record' => $record->series]) : null)
+                    ->url(fn ($record) => $record->blog_post_series_id ? BlogPostSeriesResource::getUrl('view', ['record' => $record->series]) : null)
                     ->color('primary')
                     ->sortable(),
                 TextColumn::make('slug')

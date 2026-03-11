@@ -16,6 +16,7 @@ use Filament\Schemas\Components\EmbeddedSchema;
 use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Js;
@@ -61,7 +62,7 @@ class AddLanguage extends Page
                 ->livewireSubmitHandler('addLanguage')
                 ->footer([
                     Actions::make($this->getFormActions())
-                        ->alignment(\Filament\Support\Enums\Alignment::End)
+                        ->alignment(Alignment::End)
                         ->key('form-actions'),
                 ]),
         ]);

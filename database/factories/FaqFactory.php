@@ -7,7 +7,7 @@ use App\Domains\Faq\Models\Faq;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Domains\Faq\Models\Faq>
+ * @extends Factory<Faq>
  */
 class FaqFactory extends Factory
 {

@@ -13,6 +13,7 @@ use App\Domains\Blog\Queries\GetLastBlogPostTitles;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Ai\Enums\Lab;
+use Laravel\Ai\Image;
 use Laravel\Ai\Responses\AgentResponse;
 use Laravel\Ai\Responses\StructuredAgentResponse;
 
@@ -462,7 +463,7 @@ class BlogPostGenerationService
     {
         try {
             $prompt = $this->buildFeaturedImagePrompt($title, $excerpt, $imageStyle);
-            $response = \Laravel\Ai\Image::of($prompt)
+            $response = Image::of($prompt)
                 ->landscape()
                 ->quality('high')
                 ->generate($providerKey);

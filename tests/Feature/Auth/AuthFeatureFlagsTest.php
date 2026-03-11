@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Auth\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 use Laravel\Pennant\Feature;
 
@@ -33,7 +34,7 @@ test('login route returns 200 when login feature is inactive but intended url is
 
 test('login store route is allowed when login feature is inactive but intended url is admin panel', function () {
     Feature::for(null)->deactivate('login');
-    $user = \App\Domains\Auth\Models\User::factory()->create();
+    $user = User::factory()->create();
 
     $response = $this->withSession(['url.intended' => 'http://localhost/admin'])
         ->post(route('login.store'), [

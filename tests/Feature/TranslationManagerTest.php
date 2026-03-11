@@ -1,8 +1,11 @@
 <?php
 
 use App\Domains\Auth\Models\User;
+use Database\Seeders\RoleAndPermissionSeeder;
+use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 use Spatie\TranslationLoader\LanguageLine;
 
 beforeEach(function (): void {
@@ -17,7 +20,7 @@ test('user with manage translations permission can use translation manager gate'
     $user->givePermissionTo('manage translations');
     $this->actingAs($user);
 
-    expect(\Illuminate\Support\Facades\Gate::allows('use-translation-manager'))->toBeTrue();
+    expect(Gate::allows('use-translation-manager'))->toBeTrue();
     expect($user->can('manage translations'))->toBeTrue();
 });
 
@@ -25,7 +28,7 @@ test('user without manage translations permission cannot use translation manager
     $user = User::factory()->create();
 
     $this->actingAs($user);
-    expect(\Illuminate\Support\Facades\Gate::allows('use-translation-manager'))->toBeFalse();
+    expect(Gate::allows('use-translation-manager'))->toBeFalse();
 });
 
 test('user with manage translations permission can view any language lines', function (): void {
@@ -43,11 +46,11 @@ test('user without manage translations permission cannot view any language lines
 });
 
 test('admin panel translation manager list returns 403 for user without manage translations', function (): void {
-    $this->seed(\Database\Seeders\RoleAndPermissionSeeder::class);
+    $this->seed(RoleAndPermissionSeeder::class);
     $user = User::factory()->create();
     $user->assignRole('admin');
     Role::findByName('admin')->revokePermissionTo('manage translations');
-    app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+    app()[PermissionRegistrar::class]->forgetCachedPermissions();
     $this->actingAs($user);
 
     $response = $this->get('/admin/language-lines');
@@ -65,7 +68,7 @@ test('translations csv export returns 403 without permission', function (): void
 });
 
 test('translations csv export returns csv when user has permission', function (): void {
-    $this->seed(\Database\Seeders\RoleAndPermissionSeeder::class);
+    $this->seed(RoleAndPermissionSeeder::class);
     $user = User::factory()->create();
     $user->givePermissionTo('manage translations');
     $this->actingAs($user);

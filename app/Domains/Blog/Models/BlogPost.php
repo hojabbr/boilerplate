@@ -3,6 +3,7 @@
 namespace App\Domains\Blog\Models;
 
 use App\Core\Models\Language;
+use Carbon\CarbonImmutable;
 use Database\Factories\BlogPostFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -15,9 +16,10 @@ use Laravel\Scout\Searchable;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
- * @property \Carbon\CarbonImmutable|null $published_at
+ * @property CarbonImmutable|null $published_at
  *
  * @extends Model<BlogPost>
  *
@@ -113,7 +115,7 @@ class BlogPost extends Model implements HasMedia
             ->acceptsMimeTypes(['audio/mpeg', 'audio/mp3', 'audio/wav']);
     }
 
-    public function registerMediaConversions(?\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null): void
+    public function registerMediaConversions(?Media $media = null): void
     {
         $this->addMediaConversion('thumb')
             ->performOnCollections('gallery')
