@@ -1,3 +1,9 @@
+## [1.12.0](https://github.com/hojabbr/boilerplate/compare/v1.11.1...v1.12.0) (2026-03-11)
+
+### Features
+
+- Add documentation for Horizon metrics, notifications, supervisors, and tags; introduce Laravel Fortify, Media Library, Scout, and Socialite skills ([587b62c](https://github.com/hojabbr/boilerplate/commit/587b62c02712014b16f01f4fde22873b4601790c))
+
 ## [1.11.1](https://github.com/hojabbr/boilerplate/compare/v1.11.0...v1.11.1) (2026-02-27)
 
 ### Bug Fixes
