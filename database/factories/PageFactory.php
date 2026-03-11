@@ -29,6 +29,20 @@ class PageFactory extends Factory
         ];
     }
 
+    public function active(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => true,
+        ]);
+    }
+
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => false,
+        ]);
+    }
+
     /**
      * Long HTML body resembling WYSIWYG output (paragraphs, headings, lists).
      * Uses short paragraphs and clear block structure so prose renders with proper spacing.

@@ -34,6 +34,13 @@ class BlogPostFactory extends Factory
         ];
     }
 
+    public function published(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'published_at' => now(),
+        ]);
+    }
+
     public function unpublished(): static
     {
         return $this->state(fn (array $attributes) => [

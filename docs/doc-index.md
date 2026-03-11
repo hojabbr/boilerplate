@@ -20,10 +20,11 @@ All documentation files for the [Laravel React Boilerplate](https://github.com/h
 | `overview.md`          | High-level directory structure and architecture diagram                              |
 | `backend.md`           | Core, Domains, models, jobs, conventions, ide-helper                                 |
 | `frontend.md`          | Features, pagePath, layouts, UI, theme, motion, adding pages                         |
-| `features.md`          | Section: Localization, Feature flags, Search, Admin                                  |
+| `features.md`          | Section: Localization, Feature flags, Search, Sitemap, Admin                         |
 | `localization.md`      | mcamara, route prefixes, RTL, i18next sync                                           |
 | `feature-flags.md`     | Pennant, Filament toggleable (blog, page, contact-form), Fortify (registration, 2FA) |
 | `search.md`            | Scout + Meilisearch, adding searchable models                                        |
+| `sitemap.md`           | Dynamic XML sitemap at /sitemap.xml; feature-flag aware, multi-locale, auto-cached   |
 | `admin.md`             | Filament 5, resources, permissions, Lara Zeus translatable                           |
 | `development.md`       | Section: Extending, Scaffolding, Testing                                             |
 | `extending.md`         | How to add domains, models, pages, feature flags, Filament; convention table         |

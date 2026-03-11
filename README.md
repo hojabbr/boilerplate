@@ -3,7 +3,7 @@
 [![CI](https://github.com/hojabbr/boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/hojabbr/boilerplate/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A production-ready starter for **Laravel 12**, **Inertia 2**, and **React 19** with localization, Filament admin, feature flags, full-text search, and real-time support. Use it as a template or clone to build full-stack apps without redoing auth, i18n, theme, or tooling.
+A production-ready starter for **Laravel 12**, **Inertia 2**, and **React 19** with localization, Filament admin, feature flags, full-text search, XML sitemap, and real-time support. Use it as a template or clone to build full-stack apps without redoing auth, i18n, theme, or tooling.
 
 **DOCUMENTATION:** [hojabbr.github.io/boilerplate/](https://hojabbr.github.io/boilerplate/)
 
@@ -17,6 +17,7 @@ A production-ready starter for **Laravel 12**, **Inertia 2**, and **React 19** w
 - **Localization** — Route prefixes per locale (mcamara), translatable content (Spatie), RTL (e.g. Arabic, Farsi)
 - **Theme** — Light / dark / system with persistent preference (cookie + localStorage)
 - **Search** — Laravel Scout + Meilisearch for typo-tolerant, faceted search
+- **Sitemap** — Dynamic XML sitemap at `/sitemap.xml` with feature-flag awareness, multi-locale support, and auto-invalidated caching
 - **Real-time** — Laravel Reverb (WebSockets) + Laravel Echo for broadcasts
 - **Feature flags** — Laravel Pennant to toggle blog, static pages, contact form, registration, 2FA
 - **Code quality** — Pint, PHPStan, ESLint, Prettier, Husky + Commitlint, optional semantic-release
@@ -159,6 +160,7 @@ cp .env.example .env
 - **Frontend (Vite):** `npm run dev`
 - **All-in-one (server, queue, logs, Vite):** `composer run dev` (with Sail, run inside the container)
 - **Admin:** [http://localhost/admin](http://localhost/admin) (locale-independent)
+- **Sitemap:** [http://localhost/sitemap.xml](http://localhost/sitemap.xml) — XML sitemap with all enabled features across all locales, cached and auto-invalidated on content changes.
 - **Scaffolding:** `php artisan boilerplate:domain` and `php artisan boilerplate:locale` (use `--dry-run`, `--rollback=<name>`). See [docs: Scaffolding](docs/scaffolding.md).
 
 ---

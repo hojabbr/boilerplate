@@ -9,6 +9,7 @@ use App\Domains\Faq\Http\Controllers\FaqController;
 use App\Domains\Landing\Http\Controllers\LandingController;
 use App\Domains\Page\Http\Controllers\PageController;
 use App\Domains\Search\Http\Controllers\SearchController;
+use App\Domains\Sitemap\Http\Controllers\SitemapController;
 use App\Domains\Testimonial\Http\Controllers\TestimonialController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -18,6 +19,11 @@ Route::get('/site.webmanifest', WebManifestController::class)
     ->middleware('web')
     ->withoutMiddleware(LocaleCookieRedirect::class)
     ->name('webmanifest');
+
+Route::get('/sitemap.xml', SitemapController::class)
+    ->middleware('web')
+    ->withoutMiddleware(LocaleCookieRedirect::class)
+    ->name('sitemap');
 
 // Root path: ensure web middleware (and thus LocaleCookieRedirect) runs so
 // a visit to / redirects to the user's chosen locale from cookie/session.

@@ -16,6 +16,7 @@ use App\Core\Models\Language;
 use App\Core\Models\Setting;
 use App\Core\Observers\LanguageObserver;
 use App\Core\Observers\SettingObserver;
+use App\Core\Observers\SitemapCacheObserver;
 use App\Core\Policies\FeatureFlagPolicy;
 use App\Core\Policies\LanguageLinePolicy;
 use App\Core\Policies\LanguagePolicy;
@@ -89,9 +90,10 @@ class AppServiceProvider extends ServiceProvider
         // Observers run for all CRUD (create/update/delete/restore/force delete) from Filament, API, tinker, etc.
         Language::observe(LanguageObserver::class);
         Setting::observe(SettingObserver::class);
-        Page::observe(PageObserver::class);
-        Faq::observe(FaqObserver::class);
-        Testimonial::observe(TestimonialObserver::class);
+        BlogPost::observe(SitemapCacheObserver::class);
+        Page::observe([PageObserver::class, SitemapCacheObserver::class]);
+        Faq::observe([FaqObserver::class, SitemapCacheObserver::class]);
+        Testimonial::observe([TestimonialObserver::class, SitemapCacheObserver::class]);
         LandingSection::observe(LandingSectionObserver::class);
         LandingSectionItem::observe(LandingSectionItemObserver::class);
 
